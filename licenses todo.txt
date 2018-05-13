@@ -1,0 +1,5 @@
+v1.0.0
+-	Implement License item
+
+-	Implement game mode overrides
+-	Setup project

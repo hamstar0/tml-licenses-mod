@@ -1,0 +1,7 @@
+author = hamstar
+version = 0.8.0
+displayName = Licenses
+modReferences = HamstarHelpers@1.4.8, Nihilism@1.5.4, Rewards@1.4.10
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
+includePDB = true
+homepage = https://forums.terraria.org/index.php?threads/nihilism-empties-the-game.60333/

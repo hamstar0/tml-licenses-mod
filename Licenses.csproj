@@ -55,6 +55,7 @@
     <Compile Include="API.cs" />
     <Compile Include="API_Call.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Items\LicenseItem.cs" />
     <Compile Include="LicensesMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

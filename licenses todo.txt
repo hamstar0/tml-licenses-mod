@@ -1,5 +1,9 @@
 v1.0.0
 -	Implement License item
+	-	Implement 'Is Accessory' setting
+	-	Implement 'Is Inventory' setting
+	-	Create graphic
+	-	Define item
 
 -	Implement game mode overrides
 -	Setup project

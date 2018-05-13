@@ -98,7 +98,7 @@ namespace Licenses {
 			RewardsAPI.SuppressAutoSavingOn();
 
 			NihilismAPI.SetItemsBlacklistPattern( this.Config.ItemBlacklistPattern );
-			foreach( string name in this.Config.StarterItems ) {
+			foreach( string name in this.Config.FreeStarterItems ) {
 				NihilismAPI.SetItemsWhitelistEntry( name );
 			}
 			NihilismAPI.NihilateCurrentWorld();

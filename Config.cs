@@ -15,8 +15,10 @@ namespace Licenses {
 
 		public bool DebugModeInfo = false;
 
+		public bool ClearWayfarer = true;
+
 		public string ItemBlacklistPattern = "(.*?)";
-		public ISet<string> StarterItems = new HashSet<string>();
+		public ISet<string> FreeStarterItems = new HashSet<string>();
 
 		public int LicensesPerPack = 3;
 		public int LicenseCostInPP = 10;
@@ -25,26 +27,26 @@ namespace Licenses {
 		////////////////
 
 		public void SetDefaults() {
-			this.StarterItems.Add( "Copper Pickaxe" );
-			this.StarterItems.Add( "Copper Axe" );
-			this.StarterItems.Add( "Copper Shortsword" );
-			this.StarterItems.Add( "Wood Sword" );
-			this.StarterItems.Add( "Wood Bow" );
-			this.StarterItems.Add( "Wood Arrow" );
-			this.StarterItems.Add( "Bucket" );
+			this.FreeStarterItems.Add( "Copper Pickaxe" );
+			this.FreeStarterItems.Add( "Copper Axe" );
+			this.FreeStarterItems.Add( "Copper Shortsword" );
+			this.FreeStarterItems.Add( "Wood Sword" );
+			this.FreeStarterItems.Add( "Wood Bow" );
+			this.FreeStarterItems.Add( "Wood Arrow" );
+			this.FreeStarterItems.Add( "Bucket" );
 
-			this.StarterItems.Add( "Wood" );
-			this.StarterItems.Add( "Dirt" );
-			this.StarterItems.Add( "Stone" );
+			this.FreeStarterItems.Add( "Wood" );
+			this.FreeStarterItems.Add( "Dirt" );
+			this.FreeStarterItems.Add( "Stone" );
 
-			this.StarterItems.Add( "Torch" );
-			this.StarterItems.Add( "Work Bench" );
-			this.StarterItems.Add( "Table" );
-			this.StarterItems.Add( "Chair" );
-			this.StarterItems.Add( "Furnace" );
-			this.StarterItems.Add( "Iron Anvil" );
-			this.StarterItems.Add( "Lead Anvil" );
-			this.StarterItems.Add( "Bottle" );
+			this.FreeStarterItems.Add( "Torch" );
+			this.FreeStarterItems.Add( "Work Bench" );
+			this.FreeStarterItems.Add( "Table" );
+			this.FreeStarterItems.Add( "Chair" );
+			this.FreeStarterItems.Add( "Furnace" );
+			this.FreeStarterItems.Add( "Iron Anvil" );
+			this.FreeStarterItems.Add( "Lead Anvil" );
+			this.FreeStarterItems.Add( "Bottle" );
 		}
 		
 		

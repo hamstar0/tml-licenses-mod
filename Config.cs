@@ -16,6 +16,7 @@ namespace Licenses {
 		public bool DebugModeInfo = false;
 
 		public bool ResetWayfarerShop = true;
+		public bool FullNihilismBlacklistReset = true;
 
 		public string ItemBlacklistPattern = "(.*?)";
 		public ISet<string> FreeStarterItems = new HashSet<string>();
@@ -28,6 +29,12 @@ namespace Licenses {
 
 		public void SetDefaults() {
 			this.FreeStarterItems.Add( "License" );
+			this.FreeStarterItems.Add( "Wayfarer's Pack" );
+
+			this.FreeStarterItems.Add( "Copper Coin" );
+			this.FreeStarterItems.Add( "Silver Coin" );
+			this.FreeStarterItems.Add( "Gold Coin" );
+			this.FreeStarterItems.Add( "Platinum Coin" );
 
 			this.FreeStarterItems.Add( "Copper Pickaxe" );
 			this.FreeStarterItems.Add( "Copper Axe" );
@@ -37,9 +44,17 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Wood Arrow" );
 			this.FreeStarterItems.Add( "Bucket" );
 
+			this.FreeStarterItems.Add( "Gel" );
+
 			this.FreeStarterItems.Add( "Wood" );
 			this.FreeStarterItems.Add( "Dirt" );
 			this.FreeStarterItems.Add( "Stone" );
+			this.FreeStarterItems.Add( "Clay" );
+			this.FreeStarterItems.Add( "Mud" );
+			this.FreeStarterItems.Add( "Sand" );
+			this.FreeStarterItems.Add( "Silt" );
+			this.FreeStarterItems.Add( "Snow" );
+			this.FreeStarterItems.Add( "Ice" );
 
 			this.FreeStarterItems.Add( "Torch" );
 			this.FreeStarterItems.Add( "Work Bench" );

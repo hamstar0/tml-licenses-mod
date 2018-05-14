@@ -1,9 +1,25 @@
-v1.0.0
+v0.9.0
 -	Implement License item
-	-	Implement 'Is Accessory' setting
-	-	Implement 'Is Inventory' setting
+	-	Implement permission effect
 	-	Create graphic
-	-	Define item
 
+	-	Define item
 -	Implement game mode overrides
 -	Setup project
+
+
+
+Plan 1
+-	Players need licenses to use items
+-	Licenses bought from a Wayfarer NPC with PP (progress points)
+-	Player combines item with license of its matching rarity to license it (assigned license)
+-	Licenses can upgrade in rarity by combining 2 of a given rarity
+-	Licenses are consumed on use, giving permanent, intrinsic item permissions
+Plan 1.1 (needs entity classes mod)
+-	Licenses are not consumed, but added to a license board
+-	License boards store licenses on a grid as a contiguous area
+-	Licenses can only be added next to licenses of similar item types
+-	A starter license exists on the board that is 'similar' to any item type
+-	Licenses of a given tier/rarity must exist next at least 2 of previous tier
+-	Item similarity defined by damage class (not type) or composition (alleged base material)
+

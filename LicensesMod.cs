@@ -14,7 +14,7 @@ namespace Licenses {
 		public static LicensesMod Instance { get; private set; }
 
 		public static string GithubUserName { get { return "hamstar0"; } }
-		public static string GithubProjectName { get { return "tml-magicpaint-mod"; } }
+		public static string GithubProjectName { get { return "tml-licenses-mod"; } }
 
 		public static string ConfigFileRelativePath {
 			get { return ConfigurationDataBase.RelativePath + Path.DirectorySeparatorChar + LicensesConfigData.ConfigFileName; }
@@ -104,7 +104,7 @@ namespace Licenses {
 			NihilismAPI.NihilateCurrentWorld();
 
 			var item_def = new ShopPackItemDefinition {
-				Name = "Item License",
+				Name = "License",
 				Stack = this.Config.LicensesPerPack,
 				CrimsonWorldOnly = null
 			};
@@ -114,7 +114,10 @@ namespace Licenses {
 				Items = new ShopPackItemDefinition[] { item_def }
 			};
 
-			RewardsAPI.ShopClear();
+			if( this.Config.ClearWayfarer ) {
+				RewardsAPI.ShopClear();
+			}
+
 			RewardsAPI.ShopAddPack( def );
 		}
 	}

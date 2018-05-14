@@ -21,7 +21,7 @@ namespace Licenses {
 		public ISet<string> FreeStarterItems = new HashSet<string>();
 
 		public int LicensesPerPack = 3;
-		public int LicenseCostInPP = 10;
+		public int LicenseCostInPP = 5;
 
 
 		////////////////

@@ -1,15 +1,16 @@
 v0.9.0
--	Implement License item
-	-	Implement permission effect
-	-	Create graphic
+-	@Test
 
+-	Implement License item
+	-	Create graphic
+	-	Implement permission effect
 	-	Define item
 -	Implement game mode overrides
 -	Setup project
 
 
 
-Plan 1
+Plan 1 (old)
 -	Players need licenses to use items
 -	Licenses bought from a Wayfarer NPC with PP (progress points)
 -	Player combines item with license of its matching rarity to license it (assigned license)

@@ -93,13 +93,15 @@ namespace Licenses {
 
 		////////////////
 
-		public void LoadGameMode () {
+		public void LoadGameMode() {
+			if( !TmlLoadHelpers.IsWorldLoaded() ) { return; }
+
 			NihilismAPI.SuppressAutoSavingOn();
 			RewardsAPI.SuppressAutoSavingOn();
 
-			NihilismAPI.SetItemsBlacklistPattern( this.Config.ItemBlacklistPattern );
+			NihilismAPI.SetItemsBlacklistPattern( this.Config.ItemBlacklistPattern, true );
 			foreach( string name in this.Config.FreeStarterItems ) {
-				NihilismAPI.SetItemsWhitelistEntry( name );
+				NihilismAPI.SetItemsWhitelistEntry( name, true );
 			}
 			NihilismAPI.NihilateCurrentWorld();
 
@@ -114,7 +116,7 @@ namespace Licenses {
 				Items = new ShopPackItemDefinition[] { item_def }
 			};
 
-			if( this.Config.ClearWayfarer ) {
+			if( this.Config.ResetWayfarerShop ) {
 				RewardsAPI.ShopClear();
 			}
 

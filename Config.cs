@@ -15,7 +15,7 @@ namespace Licenses {
 
 		public bool DebugModeInfo = false;
 
-		public bool ClearWayfarer = true;
+		public bool ResetWayfarerShop = true;
 
 		public string ItemBlacklistPattern = "(.*?)";
 		public ISet<string> FreeStarterItems = new HashSet<string>();
@@ -27,6 +27,8 @@ namespace Licenses {
 		////////////////
 
 		public void SetDefaults() {
+			this.FreeStarterItems.Add( "License" );
+
 			this.FreeStarterItems.Add( "Copper Pickaxe" );
 			this.FreeStarterItems.Add( "Copper Axe" );
 			this.FreeStarterItems.Add( "Copper Shortsword" );

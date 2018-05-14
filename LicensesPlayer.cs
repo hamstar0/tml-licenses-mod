@@ -1,5 +1,10 @@
-﻿using Nihilism;
+﻿using HamstarHelpers.TmlHelpers;
+using Licenses.Items;
+using Microsoft.Xna.Framework;
+using Nihilism;
 using System.Collections.Generic;
+using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -7,6 +12,8 @@ using Terraria.ModLoader.IO;
 namespace Licenses {
 	class LicensesPlayer : ModPlayer {
 		private readonly ISet<string> Licenses = new HashSet<string>();
+
+		public bool LicenseMode = false;
 
 
 		////////////////
@@ -16,18 +23,25 @@ namespace Licenses {
 
 			if( tag.ContainsKey("license_count") ) {
 				int count = tag.GetInt( "license_count" );
+				string[] licenses = new string[count];
 
 				for( int i=0; i<count; i++ ) {
 					string item_name = tag.GetString( "license_" + i );
 
-					this.LicenseItem( item_name );
+					licenses[i] = item_name;
 				}
+
+				TmlLoadHelpers.AddWorldLoadPromise( () => {
+					foreach( string item_name in licenses ) {
+						this.AddItemLicense( item_name, false );
+					}
+				} );
 			}
 		}
 
 		public override TagCompound Save() {
 			var tags = new TagCompound {
-				["license_count"] = this.Licenses.Count
+				{ "license_count", this.Licenses.Count }
 			};
 
 			int i = 0;
@@ -41,10 +55,45 @@ namespace Licenses {
 
 		////////////////
 
-		public void LicenseItem( string item_name ) {
-			this.Licenses.Add( item_name );
+		public override void PreUpdate() {
+			if( this.player.whoAmI != Main.myPlayer ) { return; }
 
-			NihilismAPI.SetItemsWhitelistEntry( item_name );
+			Item item = Main.mouseItem;
+
+			if( item != null && !item.IsAir ) {
+				if( item.type == this.mod.ItemType<LicenseItem>() ) {
+					this.LicenseMode = true;
+				} else {
+					if( this.LicenseMode ) {
+						if( !this.Licenses.Contains( item.Name ) ) {
+							if( LicenseItem.AttemptToLicenseItem( this.player, item ) ) {
+								Main.NewText( item.Name + " is now usable.", Color.Lime );
+							} else {
+								Main.NewText( "Not enough licenses for " + item.Name + ": " + LicenseItem.ComputeNeededLicenses(item) + " needed", Color.Red );
+							}
+						} else {
+							Main.NewText( item.Name + " is already licensed.", Color.Yellow );
+						}
+
+						this.LicenseMode = false;
+					}
+				}
+			} else {
+				this.LicenseMode = false;
+			}
+		}
+
+
+		////////////////
+
+		public void AddItemLicense( string item_name, bool play_sound ) {
+			this.Licenses.Add( item_name );
+			
+			NihilismAPI.SetItemsWhitelistEntry( item_name, true );
+
+			if( play_sound ) {
+				Main.PlaySound( SoundID.Unlock, player.position );
+			}
 		}
 	}
 }

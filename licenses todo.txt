@@ -1,6 +1,5 @@
 v1.0.0
 -	@Test MP
-
 -	Remove Nihilism inbox message
 -	Give free licenses to starter players
 -	Add more default items

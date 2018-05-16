@@ -19,6 +19,9 @@ namespace Licenses {
 		////////////////
 
 		public override void Load( TagCompound tag ) {
+			var self = this;
+			var mymod = (LicensesMod)this.mod;
+
 			this.Licenses.Clear();
 
 			if( tag.ContainsKey("license_count") ) {
@@ -33,7 +36,14 @@ namespace Licenses {
 
 				TmlLoadHelpers.AddWorldLoadPromise( () => {
 					foreach( string item_name in licenses ) {
-						this.AddItemLicense( item_name, false );
+						self.AddItemLicense( item_name, false );
+					}
+				} );
+			} else {
+				// Preload starter item licenses
+				TmlLoadHelpers.AddWorldLoadPromise( () => {
+					foreach( string item_name in mymod.Config.FreeStarterItems ) {
+						self.AddItemLicense( item_name, false );
 					}
 				} );
 			}
@@ -58,11 +68,6 @@ namespace Licenses {
 		public override void SetupStartInventory( IList<Item> items ) {
 			var mymod = (LicensesMod)this.mod;
 			if( mymod.Config.NewPlayerStarterLicenses == 0 ) { return; }
-			
-			// Preload starter item licenses
-			foreach( string item_name in mymod.Config.FreeStarterItems ) {
-				this.AddItemLicense( item_name, false );
-			}
 
 			Item licenses = new Item();
 			licenses.SetDefaults( mymod.ItemType<LicenseItem>(), true );

@@ -43,6 +43,7 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Gold Coin" );
 			this.FreeStarterItems.Add( "Platinum Coin" );
 
+			this.FreeStarterItems.Add( "Blowpipe" );
 			this.FreeStarterItems.Add( "Copper Pickaxe" );
 			this.FreeStarterItems.Add( "Copper Axe" );
 			this.FreeStarterItems.Add( "Copper Shortsword" );
@@ -60,6 +61,8 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Gel" );
 			this.FreeStarterItems.Add( "Mushroom" );
 			this.FreeStarterItems.Add( "Fallen Star" );
+			this.FreeStarterItems.Add( "Acorn" );
+			this.FreeStarterItems.Add( "Seed" );
 
 			this.FreeStarterItems.Add( "Wood" );
 			this.FreeStarterItems.Add( "Dirt Block" );

@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.TmlHelpers;
+﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.Utilities.Config;
 using HamstarHelpers.Utilities.Messages;
 using Nihilism;
@@ -96,7 +97,7 @@ namespace Licenses {
 
 		public void LoadGameMode() {
 			if( !TmlLoadHelpers.IsWorldLoaded() ) { return; }
-
+			
 			NihilismAPI.SuppressAutoSavingOn();
 			RewardsAPI.SuppressAutoSavingOn();
 
@@ -131,9 +132,9 @@ namespace Licenses {
 			RewardsAPI.ShopAddPack( def );
 
 			if( this.Config.ForceSpawnWayfarer ) {
-				RewardsAPI.SpawnWayfarer();
+				RewardsAPI.SpawnWayfarer( false );
 			}
-			
+
 			InboxMessages.ReadMessage( "nihilism_init" );
 		}
 	}

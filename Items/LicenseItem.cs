@@ -8,7 +8,14 @@ using Terraria.ModLoader;
 namespace Licenses.Items {
 	class LicenseItem : ModItem {
 		public static int ComputeNeededLicenses( Item item ) {
-			return item.rare > 0 ? item.rare : 1;
+			var mymod = LicensesMod.Instance;
+			int cost = mymod.Config.ItemLicenseCostBase;
+
+			if( mymod.Config.ItemLicenseCostIncreasesWithRarity ) {
+				cost += item.rare > 0 ? item.rare : 0;
+			}
+
+			return cost;
 		}
 
 

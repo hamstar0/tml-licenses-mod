@@ -55,6 +55,25 @@ namespace Licenses {
 
 		////////////////
 
+		public override void SetupStartInventory( IList<Item> items ) {
+			var mymod = (LicensesMod)this.mod;
+			if( mymod.Config.NewPlayerStarterLicenses == 0 ) { return; }
+			
+			// Preload starter item licenses
+			foreach( string item_name in mymod.Config.FreeStarterItems ) {
+				this.AddItemLicense( item_name, false );
+			}
+
+			Item licenses = new Item();
+			licenses.SetDefaults( mymod.ItemType<LicenseItem>(), true );
+			licenses.stack = mymod.Config.NewPlayerStarterLicenses;
+			
+			items.Add( licenses );
+		}
+
+
+		////////////////
+
 		public override void PreUpdate() {
 			if( this.player.whoAmI != Main.myPlayer ) { return; }
 

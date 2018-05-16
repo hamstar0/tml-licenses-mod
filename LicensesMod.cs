@@ -1,5 +1,6 @@
 ﻿using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.Utilities.Config;
+using HamstarHelpers.Utilities.Messages;
 using Nihilism;
 using Rewards;
 using Rewards.Items;
@@ -128,6 +129,12 @@ namespace Licenses {
 			}
 
 			RewardsAPI.ShopAddPack( def );
+
+			if( this.Config.ForceSpawnWayfarer ) {
+				RewardsAPI.SpawnWayfarer();
+			}
+			
+			InboxMessages.ReadMessage( "nihilism_init" );
 		}
 	}
 }

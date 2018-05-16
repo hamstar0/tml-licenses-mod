@@ -1,6 +1,11 @@
+v1.0.0
+-	@Test MP
+
+-	Remove Nihilism inbox message
+-	Give free licenses to starter players
+-	Add more default items
 v0.9.0
 -	@Test
-
 -	Implement License item
 	-	Create graphic
 	-	Implement permission effect

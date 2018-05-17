@@ -22,7 +22,7 @@ namespace Licenses {
 		public ISet<string> FreeStarterItems = new HashSet<string>();
 
 		public int LicensesPerPack = 3;
-		public int LicenseCostInPP = 5;
+		public int LicenseCostInPP = 3;
 
 		public int ItemLicenseCostBase = 1;
 		public bool ItemLicenseCostIncreasesWithRarity = true;
@@ -105,6 +105,9 @@ namespace Licenses {
 			}
 
 			if( vers_since < new Version(1, 0, 1) ) {
+				if( this.LicenseCostInPP == 5 ) {
+					this.NewPlayerStarterLicenses = new_config.NewPlayerStarterLicenses;
+				}
 				if( this.NewPlayerStarterLicenses == 3 ) {
 					this.NewPlayerStarterLicenses = new_config.NewPlayerStarterLicenses;
 				}

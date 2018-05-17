@@ -1,5 +1,5 @@
 author = hamstar
-version = 1.0.0
+version = 1.0.1
 displayName = Licenses
 modReferences = HamstarHelpers@1.4.9, Nihilism@1.5.5, Rewards@1.4.11
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*

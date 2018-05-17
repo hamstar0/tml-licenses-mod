@@ -36,14 +36,14 @@ namespace Licenses {
 
 				TmlLoadHelpers.AddWorldLoadPromise( () => {
 					foreach( string item_name in licenses ) {
-						self.AddItemLicense( item_name, false );
+						self.SetItemNameLicense( item_name, false );
 					}
 				} );
 			} else {
 				// Preload starter item licenses
 				TmlLoadHelpers.AddWorldLoadPromise( () => {
 					foreach( string item_name in mymod.Config.FreeStarterItems ) {
-						self.AddItemLicense( item_name, false );
+						self.SetItemNameLicense( item_name, false );
 					}
 				} );
 			}
@@ -85,18 +85,20 @@ namespace Licenses {
 			Item item = Main.mouseItem;
 
 			if( item != null && !item.IsAir ) {
+				string item_name = LicenseItem.GetItemName( item );
+
 				if( item.type == this.mod.ItemType<LicenseItem>() ) {
 					this.LicenseMode = true;
 				} else {
 					if( this.LicenseMode ) {
-						if( !this.Licenses.Contains( item.Name ) ) {
+						if( !this.Licenses.Contains( item_name ) ) {
 							if( LicenseItem.AttemptToLicenseItem( this.player, item ) ) {
-								Main.NewText( item.Name + " is now usable.", Color.Lime );
+								Main.NewText( item_name + " is now usable.", Color.Lime );
 							} else {
-								Main.NewText( "Not enough licenses for " + item.Name + ": " + LicenseItem.ComputeNeededLicenses(item) + " needed", Color.Red );
+								Main.NewText( "Not enough licenses for " + item_name + ": " + LicenseItem.ComputeNeededLicenses(item) + " needed", Color.Red );
 							}
 						} else {
-							Main.NewText( item.Name + " is already licensed.", Color.Yellow );
+							Main.NewText( item_name + " is already licensed.", Color.Yellow );
 						}
 
 						this.LicenseMode = false;
@@ -110,7 +112,7 @@ namespace Licenses {
 
 		////////////////
 
-		public void AddItemLicense( string item_name, bool play_sound ) {
+		internal void SetItemNameLicense( string item_name, bool play_sound ) {
 			this.Licenses.Add( item_name );
 			
 			NihilismAPI.SetItemsWhitelistEntry( item_name, true );

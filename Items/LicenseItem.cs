@@ -7,12 +7,17 @@ using Terraria.ModLoader;
 
 namespace Licenses.Items {
 	class LicenseItem : ModItem {
+		public static string GetItemName( Item item ) {
+			return Lang.GetItemNameValue( item.type );  //item.Name;
+		}
+
+
 		public static int ComputeNeededLicenses( Item item ) {
 			var mymod = LicensesMod.Instance;
 			int cost = mymod.Config.ItemLicenseCostBase;
 
 			if( mymod.Config.ItemLicenseCostIncreasesWithRarity ) {
-				cost += item.rare > 0 ? item.rare : 0;
+				cost += item.rare >= 0 ? item.rare : 0;
 			}
 
 			return cost;
@@ -28,8 +33,10 @@ namespace Licenses.Items {
 				return false;
 			}
 
+			string item_name = LicenseItem.GetItemName( item );
+
 			var myplayer = player.GetModPlayer<LicensesPlayer>();
-			myplayer.AddItemLicense( item.Name, true );
+			myplayer.SetItemNameLicense( item_name, true );
 
 			PlayerItemHelpers.RemoveInventoryItemQuantity( player, license_type, needed );
 

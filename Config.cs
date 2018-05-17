@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Licenses {
 	public class LicensesConfigData : ConfigurationDataBase {
-		public readonly static Version ConfigVersion = new Version( 1, 0, 0, 1 );
+		public readonly static Version ConfigVersion = new Version( 1, 0, 1 );
 		public readonly static string ConfigFileName = "Licenses Config.json";
 
 
@@ -27,10 +27,10 @@ namespace Licenses {
 		public int ItemLicenseCostBase = 1;
 		public bool ItemLicenseCostIncreasesWithRarity = true;
 
-		public int NewPlayerStarterLicenses = 3;
+		public int NewPlayerStarterLicenses = 8;
 
 		public bool ForceSpawnWayfarer = true;
-
+		
 
 		////////////////
 
@@ -44,6 +44,7 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Platinum Coin" );
 
 			this.FreeStarterItems.Add( "Blowpipe" );
+			this.FreeStarterItems.Add( "Seed" );
 			this.FreeStarterItems.Add( "Copper Pickaxe" );
 			this.FreeStarterItems.Add( "Copper Axe" );
 			this.FreeStarterItems.Add( "Copper Shortsword" );
@@ -54,6 +55,7 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Rope" );
 			this.FreeStarterItems.Add( "Rope Coil" );
 			this.FreeStarterItems.Add( "Bucket" );
+			this.FreeStarterItems.Add( "Bug Net" );
 
 			this.FreeStarterItems.Add( "Lesser Healing Potion" );
 			this.FreeStarterItems.Add( "Lesser Mana Potion" );
@@ -62,7 +64,6 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Mushroom" );
 			this.FreeStarterItems.Add( "Fallen Star" );
 			this.FreeStarterItems.Add( "Acorn" );
-			this.FreeStarterItems.Add( "Seed" );
 
 			this.FreeStarterItems.Add( "Wood" );
 			this.FreeStarterItems.Add( "Dirt Block" );
@@ -101,6 +102,15 @@ namespace Licenses {
 
 			if( vers_since >= LicensesConfigData.ConfigVersion ) {
 				return false;
+			}
+
+			if( vers_since < new Version(1, 0, 1) ) {
+				if( this.NewPlayerStarterLicenses == 3 ) {
+					this.NewPlayerStarterLicenses = new_config.NewPlayerStarterLicenses;
+				}
+				if( this.FreeStarterItems.Count == 46 ) {	// Crude...
+					this.FreeStarterItems = new_config.FreeStarterItems;	//+3
+				}
 			}
 
 			this.VersionSinceUpdate = LicensesConfigData.ConfigVersion.ToString();

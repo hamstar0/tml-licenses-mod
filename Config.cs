@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Licenses {
 	public class LicensesConfigData : ConfigurationDataBase {
-		public readonly static Version ConfigVersion = new Version( 1, 0, 1, 1 );
+		public readonly static Version ConfigVersion = new Version( 1, 0, 2 );
 		public readonly static string ConfigFileName = "Licenses Config.json";
 
 
@@ -30,7 +30,7 @@ namespace Licenses {
 		public int NewPlayerStarterLicenses = 8;
 
 		public bool ForceSpawnWayfarer = true;
-		
+
 
 		////////////////
 
@@ -56,6 +56,9 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Rope Coil" );
 			this.FreeStarterItems.Add( "Bucket" );
 			this.FreeStarterItems.Add( "Bug Net" );
+			this.FreeStarterItems.Add( "Glowstick" );
+			this.FreeStarterItems.Add( "Sticky Glowstick" );
+			this.FreeStarterItems.Add( "Bouncy Glowstick" );
 
 			this.FreeStarterItems.Add( "Lesser Healing Potion" );
 			this.FreeStarterItems.Add( "Lesser Mana Potion" );
@@ -66,6 +69,10 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Acorn" );
 
 			this.FreeStarterItems.Add( "Wood" );
+			this.FreeStarterItems.Add( "Rich Mahogany" );
+			this.FreeStarterItems.Add( "Boreal Wood" );
+			this.FreeStarterItems.Add( "Palm Wood" );
+
 			this.FreeStarterItems.Add( "Dirt Block" );
 			this.FreeStarterItems.Add( "Stone Block" );
 			this.FreeStarterItems.Add( "Clay Block" );
@@ -74,6 +81,8 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Silt Block" );
 			this.FreeStarterItems.Add( "Snow Block" );
 			this.FreeStarterItems.Add( "Ice Block" );
+
+			this.FreeStarterItems.Add( "Wood Platform" );
 
 			this.FreeStarterItems.Add( "Wood Wall" );
 			this.FreeStarterItems.Add( "Dirt Wall" );
@@ -89,6 +98,10 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Lead Anvil" );
 			this.FreeStarterItems.Add( "Bottle" );
 			this.FreeStarterItems.Add( "Chest" );
+			this.FreeStarterItems.Add( "Wooden Door" );
+			this.FreeStarterItems.Add( "Minecart Track" );
+
+			this.FreeStarterItems.Add( "Sunglasses" );
 		}
 		
 		
@@ -114,7 +127,12 @@ namespace Licenses {
 					this.NewPlayerStarterLicenses = new_config.NewPlayerStarterLicenses;
 				}
 				if( this.FreeStarterItems.Count == 46 ) {	// Crude...
-					this.FreeStarterItems = new_config.FreeStarterItems;	//+3
+					this.FreeStarterItems = new_config.FreeStarterItems;
+				}
+			}
+			if( vers_since < new Version( 1, 0, 2 ) ) {
+				if( this.FreeStarterItems.Count == 47 ) {   // Crude...
+					this.FreeStarterItems = new_config.FreeStarterItems;
 				}
 			}
 

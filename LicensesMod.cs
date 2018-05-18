@@ -100,7 +100,7 @@ namespace Licenses {
 			
 			NihilismAPI.SuppressAutoSavingOn();
 			RewardsAPI.SuppressAutoSavingOn();
-
+			
 			NihilismAPI.SetItemsBlacklistPattern( this.Config.ItemBlacklistPattern, true );
 
 			if( this.Config.FullNihilismBlacklistReset ) {

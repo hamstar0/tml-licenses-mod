@@ -35,14 +35,12 @@ namespace Licenses {
 				}
 
 				TmlLoadHelpers.AddWorldLoadPromise( () => {
-					foreach( string item_name in licenses ) {
+					// Preload starter item licenses
+					foreach( string item_name in mymod.Config.FreeStarterItems ) {
 						self.SetItemNameLicense( item_name, false );
 					}
-				} );
-			} else {
-				// Preload starter item licenses
-				TmlLoadHelpers.AddWorldLoadPromise( () => {
-					foreach( string item_name in mymod.Config.FreeStarterItems ) {
+
+					foreach( string item_name in licenses ) {
 						self.SetItemNameLicense( item_name, false );
 					}
 				} );

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Licenses {
 	public class LicensesConfigData : ConfigurationDataBase {
-		public readonly static Version ConfigVersion = new Version( 1, 0, 1 );
+		public readonly static Version ConfigVersion = new Version( 1, 0, 1, 1 );
 		public readonly static string ConfigFileName = "Licenses Config.json";
 
 
@@ -103,6 +103,8 @@ namespace Licenses {
 			if( vers_since >= LicensesConfigData.ConfigVersion ) {
 				return false;
 			}
+
+			new_config.SetDefaults();
 
 			if( vers_since < new Version(1, 0, 1) ) {
 				if( this.LicenseCostInPP == 5 ) {

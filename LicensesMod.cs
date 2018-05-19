@@ -57,7 +57,7 @@ namespace Licenses {
 
 			this.LoadConfig();
 
-			TmlLoadHelpers.AddWorldLoadPromise( this.LoadGameMode );
+			TmlLoadHelpers.AddWorldLoadEachPromise( this.LoadGameMode );
 		}
 
 		private void LoadConfig() {

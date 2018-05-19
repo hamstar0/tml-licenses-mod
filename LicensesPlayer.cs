@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.TmlHelpers;
 using Licenses.Items;
 using Microsoft.Xna.Framework;
 using Nihilism;
@@ -74,17 +75,19 @@ namespace Licenses {
 		public override void OnEnterWorld( Player player ) {
 			if( player.whoAmI != this.player.whoAmI || player.whoAmI != Main.myPlayer ) { return; }
 
-			var mymod = (LicensesMod)this.mod;
+			TmlLoadHelpers.AddWorldLoadOncePromise( () => {
+				var mymod = (LicensesMod)this.mod;
 
-			// Preload starter item licenses
-			foreach( string item_name in mymod.Config.FreeStarterItems ) {
-				this.SetItemNameLicense( item_name, false );
-			}
+				// Preload starter item licenses
+				foreach( string item_name in mymod.Config.FreeStarterItems ) {
+					this.SetItemNameLicense( item_name, false );
+				}
 
-			foreach( string item_name in this.LoadLicenses ) {
-				this.SetItemNameLicense( item_name, false );
-			}
-			this.LoadLicenses.Clear();
+				foreach( string item_name in this.LoadLicenses ) {
+					this.SetItemNameLicense( item_name, false );
+				}
+				this.LoadLicenses.Clear();
+			} );
 		}
 
 

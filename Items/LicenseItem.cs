@@ -1,5 +1,6 @@
 ﻿using HamstarHelpers.ItemHelpers;
 using HamstarHelpers.PlayerHelpers;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
@@ -19,8 +20,19 @@ namespace Licenses.Items {
 			if( mymod.Config.ItemLicenseCostIncreasesWithRarity ) {
 				cost += item.rare >= 0 ? item.rare : 0;
 			}
+			
+			if( mymod.Config.ArmorLicenseCostMultiplier != 1f ) {
+				if( ItemAttributeHelpers.IsArmor(item) ) {
+					cost = (int)( (float)cost * mymod.Config.ArmorLicenseCostMultiplier );
+				}
+			}
+			if( mymod.Config.AccessoryLicenseCostMultiplier != 1f ) {
+				if( item.accessory ) {
+					cost = (int)( (float)cost * mymod.Config.AccessoryLicenseCostMultiplier);
+				}
+			}
 
-			return cost;
+			return Math.Max( cost, 1 );
 		}
 
 
@@ -48,7 +60,7 @@ namespace Licenses.Items {
 
 		public override void SetStaticDefaults() {
 			this.DisplayName.SetDefault( "License" );
-			this.Tooltip.SetDefault( "Select a license and click on an item to license it" );
+			this.Tooltip.SetDefault( "Click on an item with this to license it" );
 		}
 
 		public override void SetDefaults() {

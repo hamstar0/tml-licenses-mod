@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Licenses {
 	public class LicensesConfigData : ConfigurationDataBase {
-		public readonly static Version ConfigVersion = new Version( 1, 0, 2 );
+		public readonly static Version ConfigVersion = new Version( 1, 0, 3 );
 		public readonly static string ConfigFileName = "Licenses Config.json";
 
 
@@ -21,11 +21,13 @@ namespace Licenses {
 		public string ItemBlacklistPattern = "(.*?)";
 		public ISet<string> FreeStarterItems = new HashSet<string>();
 
-		public int LicensesPerPack = 3;
+		public int LicensesPerPack = 5;
 		public int LicenseCostInPP = 3;
 
 		public int ItemLicenseCostBase = 1;
 		public bool ItemLicenseCostIncreasesWithRarity = true;
+		public float ArmorLicenseCostMultiplier = 1f / 3f;
+		public float AccessoryLicenseCostMultiplier = 1f;
 
 		public int NewPlayerStarterLicenses = 8;
 
@@ -48,13 +50,17 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Copper Pickaxe" );
 			this.FreeStarterItems.Add( "Copper Axe" );
 			this.FreeStarterItems.Add( "Copper Shortsword" );
+			this.FreeStarterItems.Add( "Wood Fishing Pole" );
 			this.FreeStarterItems.Add( "Wooden Sword" );
 			this.FreeStarterItems.Add( "Wooden Bow" );
 			this.FreeStarterItems.Add( "Wooden Arrow" );
 			this.FreeStarterItems.Add( "Wooden Hammer" );
 			this.FreeStarterItems.Add( "Rope" );
 			this.FreeStarterItems.Add( "Rope Coil" );
-			this.FreeStarterItems.Add( "Bucket" );
+			this.FreeStarterItems.Add( "Empty Bucket" );
+			this.FreeStarterItems.Add( "Water Bucket" );
+			this.FreeStarterItems.Add( "Lava Bucket" );
+			this.FreeStarterItems.Add( "Honey Bucket" );
 			this.FreeStarterItems.Add( "Bug Net" );
 			this.FreeStarterItems.Add( "Glowstick" );
 			this.FreeStarterItems.Add( "Sticky Glowstick" );
@@ -89,6 +95,7 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Stone Wall" );
 
 			this.FreeStarterItems.Add( "Torch" );
+			this.FreeStarterItems.Add( "Campfire" );
 			this.FreeStarterItems.Add( "Work Bench" );
 			this.FreeStarterItems.Add( "Wooden Table" );
 			this.FreeStarterItems.Add( "Wooden Chair" );
@@ -98,9 +105,13 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Lead Anvil" );
 			this.FreeStarterItems.Add( "Bottle" );
 			this.FreeStarterItems.Add( "Chest" );
+			this.FreeStarterItems.Add( "Barrel" );
 			this.FreeStarterItems.Add( "Wooden Door" );
 			this.FreeStarterItems.Add( "Minecart Track" );
 
+			this.FreeStarterItems.Add( "Wood Helmet" );
+			this.FreeStarterItems.Add( "Wood Breastplate" );
+			this.FreeStarterItems.Add( "Wood Greaves" );
 			this.FreeStarterItems.Add( "Sunglasses" );
 		}
 		
@@ -121,18 +132,16 @@ namespace Licenses {
 
 			if( vers_since < new Version(1, 0, 1) ) {
 				if( this.LicenseCostInPP == 5 ) {
-					this.NewPlayerStarterLicenses = new_config.NewPlayerStarterLicenses;
+					this.LicenseCostInPP = new_config.LicenseCostInPP;
 				}
 				if( this.NewPlayerStarterLicenses == 3 ) {
 					this.NewPlayerStarterLicenses = new_config.NewPlayerStarterLicenses;
 				}
-				if( this.FreeStarterItems.Count == 46 ) {	// Crude...
-					this.FreeStarterItems = new_config.FreeStarterItems;
-				}
 			}
-			if( vers_since < new Version( 1, 0, 2 ) ) {
-				if( this.FreeStarterItems.Count == 47 ) {   // Crude...
-					this.FreeStarterItems = new_config.FreeStarterItems;
+			if( vers_since < new Version( 1, 0, 3 ) ) {
+				this.FreeStarterItems = new_config.FreeStarterItems;	// Sorry!
+				if( this.LicensesPerPack == 3 ) {
+					this.LicensesPerPack = new_config.LicensesPerPack;
 				}
 			}
 

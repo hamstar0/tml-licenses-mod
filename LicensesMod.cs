@@ -134,7 +134,7 @@ namespace Licenses {
 			if( this.Config.ForceSpawnWayfarer ) {
 				RewardsAPI.SpawnWayfarer( false );
 			}
-
+			
 			InboxMessages.ReadMessage( "nihilism_init" );
 		}
 	}

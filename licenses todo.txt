@@ -1,3 +1,6 @@
+v1.1.0
+-	Add license setting for placeables (createTile != -1, createWall != -1)
+
 v1.0.0
 -	@Test MP
 -	Remove Nihilism inbox message

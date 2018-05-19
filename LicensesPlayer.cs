@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.TmlHelpers;
+﻿using HamstarHelpers.DebugHelpers;
 using Licenses.Items;
 using Microsoft.Xna.Framework;
 using Nihilism;
@@ -11,12 +11,19 @@ using Terraria.ModLoader.IO;
 
 namespace Licenses {
 	class LicensesPlayer : ModPlayer {
-		private readonly ISet<string> Licenses = new HashSet<string>();
+		public override bool CloneNewInstances { get { return false; } }
+
+		private readonly ISet<string> LoadLicenses = new HashSet<string>();
+		public ISet<string> Licenses { get; private set; }
 
 		public bool LicenseMode = false;
 
 
 		////////////////
+
+		public override void Initialize() {
+			this.Licenses = new HashSet<string>();
+		}
 
 		public override void Load( TagCompound tag ) {
 			var self = this;
@@ -31,19 +38,8 @@ namespace Licenses {
 				for( int i=0; i<count; i++ ) {
 					string item_name = tag.GetString( "license_" + i );
 
-					licenses[i] = item_name;
+					this.LoadLicenses.Add( item_name );
 				}
-
-				TmlLoadHelpers.AddWorldLoadPromise( () => {
-					// Preload starter item licenses
-					foreach( string item_name in mymod.Config.FreeStarterItems ) {
-						self.SetItemNameLicense( item_name, false );
-					}
-
-					foreach( string item_name in licenses ) {
-						self.SetItemNameLicense( item_name, false );
-					}
-				} );
 			}
 		}
 
@@ -62,7 +58,7 @@ namespace Licenses {
 
 
 		////////////////
-
+		
 		public override void SetupStartInventory( IList<Item> items ) {
 			var mymod = (LicensesMod)this.mod;
 			if( mymod.Config.NewPlayerStarterLicenses == 0 ) { return; }
@@ -72,6 +68,23 @@ namespace Licenses {
 			licenses.stack = mymod.Config.NewPlayerStarterLicenses;
 			
 			items.Add( licenses );
+		}
+
+
+		public override void OnEnterWorld( Player player ) {
+			if( player.whoAmI != this.player.whoAmI || player.whoAmI != Main.myPlayer ) { return; }
+
+			var mymod = (LicensesMod)this.mod;
+
+			// Preload starter item licenses
+			foreach( string item_name in mymod.Config.FreeStarterItems ) {
+				this.SetItemNameLicense( item_name, false );
+			}
+
+			foreach( string item_name in this.LoadLicenses ) {
+				this.SetItemNameLicense( item_name, false );
+			}
+			this.LoadLicenses.Clear();
 		}
 
 

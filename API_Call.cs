@@ -1,6 +1,7 @@
 ﻿using System;
 using Terraria;
 
+
 namespace Licenses {
 	public static partial class LicensesAPI {
 		internal static object Call( string call_type, params object[] args ) {

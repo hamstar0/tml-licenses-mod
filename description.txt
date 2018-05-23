@@ -1,1 +1,3 @@
 Items require licenses to be used. Licenses are acquired with game progression (purchased via. Rewards points). Configurable.
+
+Note: This mod fully overrides default Rewards and Nihilism settings.

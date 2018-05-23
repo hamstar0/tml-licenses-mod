@@ -8,26 +8,23 @@ using Terraria.ModLoader;
 
 namespace Licenses.Items {
 	class LicenseItem : ModItem {
-		public static string GetItemName( Item item ) {
-			return Lang.GetItemNameValue( item.type );  //item.Name;
-		}
-
-
 		public static int ComputeNeededLicenses( Item item ) {
 			var mymod = LicensesMod.Instance;
 			int cost = mymod.Config.ItemLicenseCostBase;
+			Item default_of_item = new Item();
+			default_of_item.SetDefaults( item.type, true );
 
 			if( mymod.Config.ItemLicenseCostIncreasesWithRarity ) {
-				cost += item.rare >= 0 ? item.rare : 0;
+				cost += default_of_item.rare >= 0 ? default_of_item.rare : 0;
 			}
 			
 			if( mymod.Config.ArmorLicenseCostMultiplier != 1f ) {
-				if( ItemAttributeHelpers.IsArmor(item) ) {
+				if( ItemAttributeHelpers.IsArmor( default_of_item ) ) {
 					cost = (int)( (float)cost * mymod.Config.ArmorLicenseCostMultiplier );
 				}
 			}
 			if( mymod.Config.AccessoryLicenseCostMultiplier != 1f ) {
-				if( item.accessory ) {
+				if( default_of_item.accessory ) {
 					cost = (int)( (float)cost * mymod.Config.AccessoryLicenseCostMultiplier);
 				}
 			}
@@ -38,17 +35,17 @@ namespace Licenses.Items {
 
 		public static bool AttemptToLicenseItem( Player player, Item item ) {
 			int license_type = LicensesMod.Instance.ItemType<LicenseItem>();
-			int count = ItemFinderHelpers.CountTotalOfEach( player.inventory, new HashSet<int> { license_type } );
+			int total_licenses = ItemFinderHelpers.CountTotalOfEach( player.inventory, new HashSet<int> { license_type } );
 			int needed = LicenseItem.ComputeNeededLicenses( item );
 			
-			if( count < needed ) {
+			if( total_licenses < needed ) {
 				return false;
 			}
 
-			string item_name = LicenseItem.GetItemName( item );
+			string real_item_name = ItemIdentityHelpers.GetQualifiedName( item );
 
 			var myplayer = player.GetModPlayer<LicensesPlayer>();
-			myplayer.SetItemNameLicense( item_name, true );
+			myplayer.SetItemNameLicense( real_item_name, true );
 
 			PlayerItemHelpers.RemoveInventoryItemQuantity( player, license_type, needed );
 

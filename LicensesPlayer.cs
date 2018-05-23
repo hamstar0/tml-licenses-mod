@@ -1,4 +1,6 @@
 ﻿using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.ItemHelpers;
+using HamstarHelpers.PlayerHelpers;
 using HamstarHelpers.TmlHelpers;
 using Licenses.Items;
 using Microsoft.Xna.Framework;
@@ -15,7 +17,7 @@ namespace Licenses {
 		public override bool CloneNewInstances { get { return false; } }
 
 		private readonly ISet<string> LoadLicenses = new HashSet<string>();
-		public ISet<string> Licenses { get; private set; }
+		public ISet<string> LicensedItems { get; private set; }
 
 		public bool LicenseMode = false;
 
@@ -23,14 +25,14 @@ namespace Licenses {
 		////////////////
 
 		public override void Initialize() {
-			this.Licenses = new HashSet<string>();
+			this.LicensedItems = new HashSet<string>();
 		}
 
 		public override void Load( TagCompound tag ) {
 			var self = this;
 			var mymod = (LicensesMod)this.mod;
 
-			this.Licenses.Clear();
+			this.LicensedItems.Clear();
 
 			if( tag.ContainsKey("license_count") ) {
 				int count = tag.GetInt( "license_count" );
@@ -46,11 +48,11 @@ namespace Licenses {
 
 		public override TagCompound Save() {
 			var tags = new TagCompound {
-				{ "license_count", this.Licenses.Count }
+				{ "license_count", this.LicensedItems.Count }
 			};
 
 			int i = 0;
-			foreach( string name in this.Licenses ) {
+			foreach( string name in this.LicensedItems ) {
 				tags["license_" + i++] = name;
 			}
 
@@ -93,26 +95,27 @@ namespace Licenses {
 
 		////////////////
 
-		public override void PreUpdate() {
+		public override void PostUpdate() {
 			if( this.player.whoAmI != Main.myPlayer ) { return; }
 
 			Item item = Main.mouseItem;
 
 			if( item != null && !item.IsAir ) {
-				string item_name = LicenseItem.GetItemName( item );
-
+				string real_item_name = ItemIdentityHelpers.GetQualifiedName( item );
+				
 				if( item.type == this.mod.ItemType<LicenseItem>() ) {
 					this.LicenseMode = true;
 				} else {
 					if( this.LicenseMode ) {
-						if( !this.Licenses.Contains( item_name ) ) {
+						if( !this.LicensedItems.Contains( real_item_name ) ) {
 							if( LicenseItem.AttemptToLicenseItem( this.player, item ) ) {
-								Main.NewText( item_name + " is now usable.", Color.Lime );
+								Main.NewText( item.Name + " is now usable.", Color.Lime );
 							} else {
-								Main.NewText( "Not enough licenses for " + item_name + ": " + LicenseItem.ComputeNeededLicenses(item) + " needed", Color.Red );
+								int needed = LicenseItem.ComputeNeededLicenses( item );
+								Main.NewText( "Not enough licenses for " + item.Name + ": " + needed + " needed", Color.Red );
 							}
 						} else {
-							Main.NewText( item_name + " is already licensed.", Color.Yellow );
+							Main.NewText( item.Name + " is already licensed.", Color.Yellow );
 						}
 
 						this.LicenseMode = false;
@@ -127,7 +130,7 @@ namespace Licenses {
 		////////////////
 
 		internal void SetItemNameLicense( string item_name, bool play_sound ) {
-			this.Licenses.Add( item_name );
+			this.LicensedItems.Add( item_name );
 			
 			NihilismAPI.SetItemsWhitelistEntry( item_name, true );
 

@@ -1,4 +1,5 @@
-﻿using Licenses.Items;
+﻿using HamstarHelpers.ItemHelpers;
+using Licenses.Items;
 using Terraria;
 
 
@@ -16,7 +17,7 @@ namespace Licenses {
 		////////////////
 
 		public static void LicenseItemForCurrentPlayer( Item item, bool play_sound ) {
-			string item_name = LicenseItem.GetItemName( item );
+			string item_name = ItemIdentityHelpers.GetQualifiedName( item );
 			var myplayer = Main.LocalPlayer.GetModPlayer<LicensesPlayer>();
 
 			myplayer.SetItemNameLicense( item_name, play_sound );

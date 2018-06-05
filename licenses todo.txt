@@ -1,5 +1,12 @@
 v1.1.0
--	Add license setting for placeables (createTile != -1, createWall != -1)
+-	Add license setting to exempt placeables (createTile != -1, createWall != -1)
+-	Set recipes to need special kind of licenses
+-	Add Tier 1 (adjacent-only), Tier 2 (semi-adjacent), and Tier 3 (arbitrary) licenses
+-	@Plan for adjacency
+	-	Rarity (exponential)
+	-	Damage type
+	-	Damage sub-type
+	-	Main crafting ingredient
 
 v1.0.0
 -	@Test MP

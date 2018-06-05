@@ -1,6 +1,5 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.ItemHelpers;
-using HamstarHelpers.PlayerHelpers;
 using HamstarHelpers.TmlHelpers;
 using Licenses.Items;
 using Microsoft.Xna.Framework;
@@ -53,7 +52,7 @@ namespace Licenses {
 
 			int i = 0;
 			foreach( string name in this.LicensedItems ) {
-				tags["license_" + i++] = name;
+				tags["license_" +i++] = name;
 			}
 
 			return tags;
@@ -77,7 +76,7 @@ namespace Licenses {
 		public override void OnEnterWorld( Player player ) {
 			if( player.whoAmI != this.player.whoAmI || player.whoAmI != Main.myPlayer ) { return; }
 
-			TmlLoadHelpers.AddWorldLoadOncePromise( () => {
+			TmlLoadHelpers.AddCustomPromise( "NihilismOnEnterWorld", () => {
 				var mymod = (LicensesMod)this.mod;
 
 				// Preload starter item licenses
@@ -89,6 +88,13 @@ namespace Licenses {
 					this.SetItemNameLicense( item_name, false );
 				}
 				this.LoadLicenses.Clear();
+
+				TmlLoadHelpers.TriggerCustomPromise( "LicensesOnEnterWorld" );
+				TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
+					TmlLoadHelpers.ClearCustomPromise( "LicensesOnEnterWorld" );
+				} );
+
+				return false;
 			} );
 		}
 

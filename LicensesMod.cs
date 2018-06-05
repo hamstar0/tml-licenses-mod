@@ -96,8 +96,6 @@ namespace Licenses {
 		////////////////
 
 		public void LoadGameMode() {
-			if( !TmlLoadHelpers.IsWorldLoaded() ) { return; }
-			
 			NihilismAPI.SuppressAutoSavingOn();
 			RewardsAPI.SuppressAutoSavingOn();
 			

@@ -1,5 +1,4 @@
 ﻿using HamstarHelpers.Utilities.Errors;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 

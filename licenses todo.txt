@@ -1,12 +1,12 @@
 v1.2.0
--	Add Lottery Licenses
+-	Add Contract License
 	-	@Plan
 		-	Unlocks an item, permalocks another (same tier)
 		-	Cheaper, but still scales by tier
+
 -	Add setting for free recipes
 -	Add setting for free 'materials'
--	Add setting for free 'placeables' (createTile != -1, createWall != -1)
-
+-	Add setting for free 'placeables'
 -	@Add item classes to Nihilism
 -	Add console command to list licenses
 v1.0.0

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Licenses {
 	public class LicensesConfigData : ConfigurationDataBase {
-		public readonly static Version ConfigVersion = new Version( 1, 1, 2 );
+		public readonly static Version ConfigVersion = new Version( 1, 2, 0 );
 		public readonly static string ConfigFileName = "Licenses Config.json";
 
 
@@ -18,8 +18,7 @@ namespace Licenses {
 
 		public bool ResetWayfarerShop = true;
 		public bool FullNihilismBlacklistReset = true;
-
-		public string ItemBlacklistPattern = "(.*?)";
+		
 		public ISet<string> FreeStarterItems = new HashSet<string>();
 
 		public int LicensesPerPack = 5;
@@ -42,6 +41,9 @@ namespace Licenses {
 		////////////////
 
 		public void SetDefaults() {
+			this.FreeStarterItems.Add( "Any Wood Equipment" );
+			this.FreeStarterItems.Add( "Any Copper Or Tin Equipment" );
+
 			this.FreeStarterItems.Add( "License" );
 			this.FreeStarterItems.Add( "Wayfarer's Pack" );
 
@@ -52,14 +54,6 @@ namespace Licenses {
 
 			this.FreeStarterItems.Add( "Blowpipe" );
 			this.FreeStarterItems.Add( "Seed" );
-			this.FreeStarterItems.Add( "Copper Pickaxe" );
-			this.FreeStarterItems.Add( "Copper Axe" );
-			this.FreeStarterItems.Add( "Copper Shortsword" );
-			this.FreeStarterItems.Add( "Wood Fishing Pole" );
-			this.FreeStarterItems.Add( "Wooden Sword" );
-			this.FreeStarterItems.Add( "Wooden Bow" );
-			this.FreeStarterItems.Add( "Wooden Arrow" );
-			this.FreeStarterItems.Add( "Wooden Hammer" );
 			this.FreeStarterItems.Add( "Rope" );
 			this.FreeStarterItems.Add( "Rope Coil" );
 			this.FreeStarterItems.Add( "Empty Bucket" );
@@ -113,10 +107,7 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Barrel" );
 			this.FreeStarterItems.Add( "Wooden Door" );
 			this.FreeStarterItems.Add( "Minecart Track" );
-
-			this.FreeStarterItems.Add( "Wood Helmet" );
-			this.FreeStarterItems.Add( "Wood Breastplate" );
-			this.FreeStarterItems.Add( "Wood Greaves" );
+			
 			this.FreeStarterItems.Add( "Sunglasses" );
 		}
 		
@@ -132,9 +123,10 @@ namespace Licenses {
 			if( vers_since >= LicensesConfigData.ConfigVersion ) {
 				return false;
 			}
-
-			new_config.SetDefaults();
-
+			
+			if( vers_since < new Version( 1, 0, 0 ) ) {
+				new_config.SetDefaults();
+			}
 			if( vers_since < new Version(1, 0, 1) ) {
 				if( this.LicenseCostInPP == 5 ) {
 					this.LicenseCostInPP = new_config.LicenseCostInPP;
@@ -149,10 +141,28 @@ namespace Licenses {
 					this.LicensesPerPack = new_config.LicensesPerPack;
 				}
 			}
+			if( vers_since < new Version( 1, 2, 0 ) ) {
+				new_config.SetDefaults();
+			}
 
 			this.VersionSinceUpdate = LicensesConfigData.ConfigVersion.ToString();
 
 			return true;
+		}
+
+
+		public void UpdateForSettings() {
+			if( this.FreeMaterials ) {
+				this.FreeStarterItems.Add( "Any Plain Material" );
+			} else {
+				this.FreeStarterItems.Remove( "Any Plain Material" );
+			}
+
+			if( this.FreePlaceables ) {
+				this.FreeStarterItems.Add( "Any Placeable" );
+			} else {
+				this.FreeStarterItems.Remove( "Any Placeable" );
+			}
 		}
 	}
 }

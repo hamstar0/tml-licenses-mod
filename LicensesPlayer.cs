@@ -136,9 +136,15 @@ namespace Licenses {
 		////////////////
 
 		internal void SetItemNameLicense( string item_name, bool play_sound ) {
+			var mymod = (LicensesMod)this.mod;
+
 			this.LicensedItems.Add( item_name );
 			
 			NihilismAPI.SetItemsWhitelistEntry( item_name, true );
+
+			if( !mymod.Config.FreeRecipes ) {
+				NihilismAPI.SetRecipeWhitelistEntry( item_name, true );
+			}
 
 			if( play_sound ) {
 				Main.PlaySound( SoundID.Unlock, player.position );

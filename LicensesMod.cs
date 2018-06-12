@@ -1,6 +1,7 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.TmlHelpers;
 using HamstarHelpers.Utilities.Config;
+using HamstarHelpers.Utilities.EntityGroups;
 using HamstarHelpers.Utilities.Messages;
 using Nihilism;
 using Rewards;
@@ -57,6 +58,8 @@ namespace Licenses {
 
 			this.LoadConfig();
 
+			EntityGroups.Enable();
+
 			TmlLoadHelpers.AddWorldLoadEachPromise( this.LoadGameMode );
 		}
 
@@ -71,6 +74,8 @@ namespace Licenses {
 				ErrorLogger.Log( "Licenses updated to " + LicensesConfigData.ConfigVersion.ToString() );
 				this.JsonConfig.SaveFile();
 			}
+
+			this.Config.UpdateForSettings();
 		}
 
 		public override void Unload() {

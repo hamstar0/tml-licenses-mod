@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="API.cs" />
     <Compile Include="API_Call.cs" />
+    <Compile Include="Commands\ListLicensesCommand.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Items\LicenseItem.cs" />
     <Compile Include="LicensesPlayer.cs" />

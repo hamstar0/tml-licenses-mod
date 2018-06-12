@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Licenses {
 	public class LicensesConfigData : ConfigurationDataBase {
-		public readonly static Version ConfigVersion = new Version( 1, 0, 3 );
+		public readonly static Version ConfigVersion = new Version( 1, 1, 2 );
 		public readonly static string ConfigFileName = "Licenses Config.json";
 
 
@@ -14,6 +14,7 @@ namespace Licenses {
 		public string VersionSinceUpdate = LicensesConfigData.ConfigVersion.ToString();
 
 		public bool DebugModeInfo = false;
+		//public bool DebugModeCheat = false;
 
 		public bool ResetWayfarerShop = true;
 		public bool FullNihilismBlacklistReset = true;
@@ -28,10 +29,14 @@ namespace Licenses {
 		public bool ItemLicenseCostIncreasesWithRarity = true;
 		public float ArmorLicenseCostMultiplier = 1f / 3f;
 		public float AccessoryLicenseCostMultiplier = 1f;
+		public bool FreeMaterials = true;
+		public bool FreePlaceables = true;
+		public bool FreeRecipes = true;
 
 		public int NewPlayerStarterLicenses = 8;
 
 		public bool ForceSpawnWayfarer = true;
+
 
 
 		////////////////

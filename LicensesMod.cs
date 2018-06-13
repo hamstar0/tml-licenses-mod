@@ -26,16 +26,16 @@ namespace Licenses {
 			if( Main.netMode != 0 ) {
 				throw new Exception( "Cannot reload configs outside of single player." );
 			}
-			if( !LicensesMod.Instance.JsonConfig.LoadFile() ) {
-				LicensesMod.Instance.JsonConfig.SaveFile();
+			if( !LicensesMod.Instance.ConfigJson.LoadFile() ) {
+				LicensesMod.Instance.ConfigJson.SaveFile();
 			}
 		}
 
 
 		////////////////
 
-		public JsonConfig<LicensesConfigData> JsonConfig { get; private set; }
-		public LicensesConfigData Config { get { return this.JsonConfig.Data; } }
+		public JsonConfig<LicensesConfigData> ConfigJson { get; private set; }
+		public LicensesConfigData Config { get { return this.ConfigJson.Data; } }
 
 
 		////////////////
@@ -47,7 +47,7 @@ namespace Licenses {
 				AutoloadSounds = true
 			};
 
-			this.JsonConfig = new JsonConfig<LicensesConfigData>( LicensesConfigData.ConfigFileName,
+			this.ConfigJson = new JsonConfig<LicensesConfigData>( LicensesConfigData.ConfigFileName,
 					ConfigurationDataBase.RelativePath, new LicensesConfigData() );
 		}
 
@@ -64,15 +64,15 @@ namespace Licenses {
 		}
 
 		private void LoadConfig() {
-			if( !this.JsonConfig.LoadFile() ) {
+			if( !this.ConfigJson.LoadFile() ) {
 				this.Config.SetDefaults();
-				this.JsonConfig.SaveFile();
+				this.ConfigJson.SaveFile();
 				ErrorLogger.Log( "Licenses config " + LicensesConfigData.ConfigVersion.ToString() + " created." );
 			}
 
 			if( this.Config.UpdateToLatestVersion() ) {
 				ErrorLogger.Log( "Licenses updated to " + LicensesConfigData.ConfigVersion.ToString() );
-				this.JsonConfig.SaveFile();
+				this.ConfigJson.SaveFile();
 			}
 
 			this.Config.UpdateForSettings();
@@ -105,24 +105,36 @@ namespace Licenses {
 			RewardsAPI.SuppressAutoSavingOn();
 			
 			NihilismAPI.SetItemFilter( true, true );
-			if( !this.Config.FreeRecipes ) {
-				NihilismAPI.SetRecipesFilter( true, true );
+
+			if( this.Config.OverrideNihilismDefaultFilters ) {
+				NihilismAPI.SetRecipesFilter( !this.Config.FreeRecipes, true );
+				NihilismAPI.SetNpcFilter( false, true );
+				NihilismAPI.SetNpcLootFilter( false, true );
+				NihilismAPI.ClearItemWhitelist( true );
+				NihilismAPI.ClearRecipeWhitelist( true );
+				NihilismAPI.ClearNpcWhitelist( true );
+				NihilismAPI.ClearNpcLootWhitelist( true );
 			}
 
 			foreach( string name in this.Config.FreeStarterItems ) {
-				NihilismAPI.SetItemsWhitelistEntry( name, true );
+				NihilismAPI.SetItemWhitelistEntry( name, true );
 			}
 			NihilismAPI.NihilateCurrentWorld();
 
-			var item_def = new ShopPackItemDefinition {
+			var lic_def = new ShopPackItemDefinition {
 				Name = "License",
 				Stack = this.Config.LicensesPerPack,
 				CrimsonWorldOnly = null
 			};
+			var lot_lic_def = new ShopPackItemDefinition {
+				Name = "Lottery License",
+				Stack = this.Config.WildcardLicensesPerPack,
+				CrimsonWorldOnly = null
+			};
 			var def = new ShopPackDefinition {
 				Name = "Item License Pack",
-				Price = this.Config.LicenseCostInPP,
-				Items = new ShopPackItemDefinition[] { item_def }
+				Price = this.Config.LicensePackCostInPP,
+				Items = new ShopPackItemDefinition[] { lic_def, lot_lic_def }
 			};
 
 			if( this.Config.ResetWayfarerShop ) {
@@ -134,7 +146,7 @@ namespace Licenses {
 			if( this.Config.ForceSpawnWayfarer ) {
 				RewardsAPI.SpawnWayfarer( false );
 			}
-			
+
 			InboxMessages.ReadMessage( "nihilism_init" );
 		}
 	}

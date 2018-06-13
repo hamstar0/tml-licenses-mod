@@ -1,4 +1,5 @@
-v1.2.0
+v2.0.0
+-	Set Rewards autosave to allow player PP saving
 -	Add Lottery Licence
 	-	Implement license effect
 	-	Implement item locks

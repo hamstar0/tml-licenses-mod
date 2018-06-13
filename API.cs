@@ -10,7 +10,7 @@ namespace Licenses {
 		}
 
 		public static void SaveModSettingsChanges() {
-			LicensesMod.Instance.JsonConfig.SaveFile();
+			LicensesMod.Instance.ConfigJson.SaveFile();
 		}
 
 

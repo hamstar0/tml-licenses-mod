@@ -15,7 +15,7 @@ namespace Licenses {
 	class LicensesPlayer : ModPlayer {
 		public override bool CloneNewInstances { get { return false; } }
 
-		private readonly ISet<string> LoadLicenses = new HashSet<string>();
+		private readonly ISet<string> PendingLoadLicenses = new HashSet<string>();
 		public ISet<string> LicensedItems { get; private set; }
 
 		public bool LicenseMode = false;
@@ -40,7 +40,7 @@ namespace Licenses {
 				for( int i=0; i<count; i++ ) {
 					string item_name = tag.GetString( "license_" + i );
 
-					this.LoadLicenses.Add( item_name );
+					this.PendingLoadLicenses.Add( item_name );
 				}
 			}
 		}
@@ -78,16 +78,11 @@ namespace Licenses {
 
 			TmlLoadHelpers.AddCustomPromise( "NihilismOnEnterWorld", () => {
 				var mymod = (LicensesMod)this.mod;
-
-				// Preload starter item licenses
-				foreach( string item_name in mymod.Config.FreeStarterItems ) {
+				
+				foreach( string item_name in this.PendingLoadLicenses ) {
 					this.SetItemNameLicense( item_name, false );
 				}
-
-				foreach( string item_name in this.LoadLicenses ) {
-					this.SetItemNameLicense( item_name, false );
-				}
-				this.LoadLicenses.Clear();
+				this.PendingLoadLicenses.Clear();
 
 				TmlLoadHelpers.TriggerCustomPromise( "LicensesOnEnterWorld" );
 				TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
@@ -140,7 +135,7 @@ namespace Licenses {
 
 			this.LicensedItems.Add( item_name );
 			
-			NihilismAPI.SetItemsWhitelistEntry( item_name, true );
+			NihilismAPI.SetItemWhitelistEntry( item_name, true );
 
 			if( !mymod.Config.FreeRecipes ) {
 				NihilismAPI.SetRecipeWhitelistEntry( item_name, true );

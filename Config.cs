@@ -17,16 +17,22 @@ namespace Licenses {
 		//public bool DebugModeCheat = false;
 
 		public bool ResetWayfarerShop = true;
-		
+
+		public bool OverrideNihilismDefaultFilters = true;
+
 		public ISet<string> FreeStarterItems = new HashSet<string>();
 
-		public int LicensesPerPack = 5;
-		public int LicenseCostInPP = 3;
+		public int LicensePackCostInPP = 15;
+		public int LicensesPerPack = 7;
+		public int WildcardLicensesPerPack = 15;
 
 		public int LicenseCostBase = 1;
 		public float LicenseCostRarityMultiplier = 3;
-		public float ArmorLicenseCostMultiplier = 1f / 3f;
-		public float AccessoryLicenseCostMultiplier = 1f;
+		public float LicenseCostArmorMultiplier = 1f / 3f;
+		public float LicenseCostAccessoryMultiplier = 1f;
+
+		public int WildcardLicenseCostBase = 1;
+		public int WildcardLicenseCostRarityMultiplier = 1;
 
 		public bool FreeMaterials = true;
 		public bool FreePlaceables = true;
@@ -40,11 +46,21 @@ namespace Licenses {
 
 		public string _OLD_SETTINGS_BELOW_ = "";
 
+		[Obsolete( "Not implemented" )]
 		public string ItemBlacklistPattern = "(.*?)";
+		[Obsolete( "use LicenseCostBase" )]
 		public int ItemLicenseCostBase = 1;
+		[Obsolete( "Not implemented" )]
 		public bool ItemLicenseCostIncreasesWithRarity = true;
 		//public bool LicenseCostIncreasesWithRarity = true;
+		[Obsolete( "Not implemented" )]
 		public bool FullNihilismBlacklistReset = true;
+		[Obsolete( "use LicensePackCostInPP" )]
+		public int LicenseCostInPP = 3;
+		[Obsolete( "use LicenseCostArmorMultiplier" )]
+		public float ArmorLicenseCostMultiplier = 1f / 3f;
+		[Obsolete( "use LicenseCostAccessoryMultiplier" )]
+		public float AccessoryLicenseCostMultiplier = 1f;
 
 
 
@@ -55,6 +71,7 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Any Copper Or Tin Equipment" );
 
 			this.FreeStarterItems.Add( "License" );
+			this.FreeStarterItems.Add( "Lottery License" );
 			this.FreeStarterItems.Add( "Wayfarer's Pack" );
 
 			this.FreeStarterItems.Add( "Copper Coin" );

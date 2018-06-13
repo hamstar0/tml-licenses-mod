@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 
 namespace Licenses.Items {
-	class LotteryLicenseItem : ModItem {
+	class LicenseItem : ModItem {
 		public static int ComputeNeededLicenses( Item item ) {
 			var mymod = LicensesMod.Instance;
 			Item default_of_item = new Item();
@@ -15,14 +15,14 @@ namespace Licenses.Items {
 
 			float cost = (float)mymod.Config.LicenseCostBase + ((float)default_of_item.rare * mymod.Config.LicenseCostRarityMultiplier);
 			
-			if( mymod.Config.ArmorLicenseCostMultiplier != 1f ) {
+			if( mymod.Config.LicenseCostArmorMultiplier != 1f ) {
 				if( ItemAttributeHelpers.IsArmor( default_of_item ) ) {
-					cost = (float)cost * mymod.Config.ArmorLicenseCostMultiplier;
+					cost = (float)cost * mymod.Config.LicenseCostArmorMultiplier;
 				}
 			}
-			if( mymod.Config.AccessoryLicenseCostMultiplier != 1f ) {
+			if( mymod.Config.LicenseCostAccessoryMultiplier != 1f ) {
 				if( default_of_item.accessory ) {
-					cost = (float)cost * mymod.Config.AccessoryLicenseCostMultiplier;
+					cost = (float)cost * mymod.Config.LicenseCostAccessoryMultiplier;
 				}
 			}
 
@@ -31,9 +31,9 @@ namespace Licenses.Items {
 
 
 		public static bool AttemptToLicenseItem( Player player, Item item ) {
-			int license_type = LicensesMod.Instance.ItemType<LotteryLicenseItem>();
+			int license_type = LicensesMod.Instance.ItemType<LicenseItem>();
 			int total_licenses = ItemFinderHelpers.CountTotalOfEach( player.inventory, new HashSet<int> { license_type } );
-			int needed = LotteryLicenseItem.ComputeNeededLicenses( item );
+			int needed = LicenseItem.ComputeNeededLicenses( item );
 			
 			if( total_licenses < needed ) {
 				return false;
@@ -53,8 +53,8 @@ namespace Licenses.Items {
 		////////////////
 
 		public override void SetStaticDefaults() {
-			this.DisplayName.SetDefault( "Lottery License" );
-			this.Tooltip.SetDefault( "Unlocks a random item of the indicated tier (rarity)" );
+			this.DisplayName.SetDefault( "License" );
+			this.Tooltip.SetDefault( "Select an item with this to license it" );
 		}
 
 		public override void SetDefaults() {
@@ -63,27 +63,6 @@ namespace Licenses.Items {
 			this.item.height = 16;
 			this.item.value = 0;
 			this.item.rare = 1;
-		}
-
-
-		public override void ModifyTooltips( List<TooltipLine> tooltips ) {
-			TooltipLine tip1, tip2;
-
-			tip1 = new TooltipLine( this.mod, "LotteryLicenseItem:Tip1", "Adjust stack size (right-click) to select rarity" );
-			
-			if( this.item.stack > ItemAttributeHelpers.HighestVanillaRarity ) {
-				tip2 = new TooltipLine( this.mod, "LotteryLicenseItem:Tip2", "No rarity indicated." );
-				tip2.overrideColor = ItemAttributeHelpers.RarityColor[ -1 ];
-			} else {
-				string rare_str = ItemAttributeHelpers.RarityLabel[ item.rare ];
-				string rare_clr_str = ItemAttributeHelpers.RarityColorText[ item.rare ];
-
-				tip2 = new TooltipLine( this.mod, "LotteryLicenseItem:Tip2", "Unlocks a random "+rare_str+" ("+rare_clr_str+") item" );
-				tip2.overrideColor = ItemAttributeHelpers.RarityColor[ item.rare ];
-			}
-
-			tooltips.Add( tip1 );
-			tooltips.Add( tip2 );
 		}
 	}
 }

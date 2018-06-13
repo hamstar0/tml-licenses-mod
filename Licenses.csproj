@@ -60,7 +60,7 @@
     <Compile Include="API_Call.cs" />
     <Compile Include="Commands\ListLicensesCommand.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Items\LotteryLicenseItem.cs" />
+    <Compile Include="Items\WildcardLicenseItem.cs" />
     <Compile Include="Items\LicenseItem.cs" />
     <Compile Include="LicensesPlayer.cs" />
     <Compile Include="LicensesMod.cs" />
@@ -71,7 +71,7 @@
     <Content Include="description.txt" />
     <Content Include="icon.png" />
     <Content Include="Items\LicenseItem.png" />
-    <Content Include="Items\LotteryLicenseItem.png" />
+    <Content Include="Items\WildcardLicenseItem.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE" />

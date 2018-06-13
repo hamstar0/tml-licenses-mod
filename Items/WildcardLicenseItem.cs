@@ -36,10 +36,8 @@ namespace Licenses.Items {
 
 			if( mymod.Config.LicenseCostArmorMultiplier != 1f ) {
 				if( ItemAttributeHelpers.IsArmor( item ) ) {
-Main.NewText("is armor?");
 					cost = (float)cost * mymod.Config.LicenseCostArmorMultiplier;
 				}
-else {Main.NewText("is not armor?");}
 			}
 
 			if( mymod.Config.LicenseCostAccessoryMultiplier != 1f ) {
@@ -111,17 +109,21 @@ else {Main.NewText("is not armor?");}
 
 			if( rand_item_name == null ) {
 				Main.NewText( "No items of the given tier left to license.", Color.Red );
-			} else {
-				PlayerMessages.AddPlayerLabel( player, rand_item_name + " is now licensed.", Color.Lime, 2 * 60, true );
-
-				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "Licenses - WildcardLicenseItem.UseItem - " + rand_item_name + " unlocked" );
-				}
-
-				return true;
+				return false;
 			}
 
-			return false;
+			int target_rarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
+			string msg = rand_item_name + " licensed";
+			Color color = ItemAttributeHelpers.RarityColor[target_rarity];
+
+			PlayerMessages.AddPlayerLabel( player, msg, color, 2 * 60, true );
+			Main.NewText( msg, color );
+
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "Licenses - WildcardLicenseItem.UseItem - " + rand_item_name + " unlocked" );
+			}
+
+			return true;
 		}
 
 
@@ -130,14 +132,14 @@ else {Main.NewText("is not armor?");}
 		public string AttemptToLicenseRandomItem( Player player ) {
 			var myplayer = player.GetModPlayer<LicensesPlayer>();
 			
-			int cost = WildcardLicenseItem.ComputeCost( this.item );
 			int target_rarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
 
 			string grp_name = "Any " + ItemAttributeHelpers.RarityColorText[target_rarity] + " Tier";
 			ISet<int> tier_items = EntityGroups.ItemGroups[ grp_name ];
 			ISet<int> equipments = EntityGroups.ItemGroups[ "Any Equipment" ];
 			IList<int> tier_equips = new List<int>( tier_items.Intersect( equipments ) );
-			
+
+			int rand_item_type;
 			string rand_item_name;
 
 			IDictionary<int, string> ids_to_names = ItemIdentityHelpers.NamesToIds
@@ -148,11 +150,16 @@ else {Main.NewText("is not armor?");}
 				int count = tier_equips.Count();
 				if( count == 0 ) { return null; }
 
-				int rand_item_type = tier_equips[ Main.rand.Next( count ) ];
+				rand_item_type = tier_equips[ Main.rand.Next( count ) ];
 				rand_item_name = ids_to_names[ rand_item_type ];
 
 				tier_equips.Remove( rand_item_type );
 			} while( myplayer.LicensedItems.Contains( rand_item_name ) );
+
+			var dummy_item = new Item();
+			dummy_item.SetDefaults( rand_item_type, true );
+
+			int cost = WildcardLicenseItem.ComputeCost( dummy_item );
 
 			myplayer.SetItemNameLicense( rand_item_name, true );
 

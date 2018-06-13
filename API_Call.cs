@@ -23,6 +23,10 @@ namespace Licenses {
 
 				LicensesAPI.LicenseItemForCurrentPlayer( item, play_sound );
 				return null;
+
+			case "ClearLicencesForCurrentPlayer":
+				LicensesAPI.ClearLicencesForCurrentPlayer();
+				return null;
 			}
 
 			throw new Exception( "No such api call " + call_type );

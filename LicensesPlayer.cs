@@ -76,7 +76,7 @@ namespace Licenses {
 		public override void OnEnterWorld( Player player ) {
 			if( player.whoAmI != this.player.whoAmI || player.whoAmI != Main.myPlayer ) { return; }
 
-			TmlLoadHelpers.AddCustomPromise( "NihilismOnEnterWorld", () => {
+			TmlLoadHelpers.AddCustomPromise( "LicensesPreEnterWorld", () => {
 				var mymod = (LicensesMod)this.mod;
 				
 				foreach( string item_name in this.PendingLoadLicenses ) {
@@ -84,9 +84,9 @@ namespace Licenses {
 				}
 				this.PendingLoadLicenses.Clear();
 
-				TmlLoadHelpers.TriggerCustomPromise( "LicensesOnEnterWorld" );
+				TmlLoadHelpers.TriggerCustomPromise( "LicensesPostEnterWorld" );
 				TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
-					TmlLoadHelpers.ClearCustomPromise( "LicensesOnEnterWorld" );
+					TmlLoadHelpers.ClearCustomPromise( "LicensesPostEnterWorld" );
 				} );
 
 				return false;

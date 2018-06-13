@@ -1,5 +1,4 @@
 ﻿using HamstarHelpers.ItemHelpers;
-using Licenses.Items;
 using Terraria;
 
 
@@ -21,6 +20,12 @@ namespace Licenses {
 			var myplayer = Main.LocalPlayer.GetModPlayer<LicensesPlayer>();
 
 			myplayer.SetItemNameLicense( item_name, play_sound );
+		}
+
+		public static void ClearLicencesForCurrentPlayer() {
+			var myplayer = Main.LocalPlayer.GetModPlayer<LicensesPlayer>();
+
+			myplayer.LicensedItems.Clear();
 		}
 	}
 }

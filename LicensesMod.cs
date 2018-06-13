@@ -102,7 +102,7 @@ namespace Licenses {
 
 		public void LoadGameMode() {
 			NihilismAPI.SuppressAutoSavingOn();
-			//RewardsAPI.SuppressAutoSavingOn();
+			RewardsAPI.SuppressAutoSavingOn();
 			
 			NihilismAPI.SetItemFilter( true, true );
 
@@ -164,6 +164,11 @@ namespace Licenses {
 			if( this.Config.WildcardLicensesPerPack > 0 ) {
 				RewardsAPI.ShopAddPack( def2);
 			}
+
+			TmlLoadHelpers.TriggerCustomPromise( "LicensesPreEnterWorld" );
+			TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
+				TmlLoadHelpers.ClearCustomPromise( "LicensesPreEnterWorld" );
+			} );
 		}
 	}
 }

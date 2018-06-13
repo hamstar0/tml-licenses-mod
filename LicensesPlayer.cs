@@ -112,7 +112,7 @@ namespace Licenses {
 							if( LicenseItem.AttemptToLicenseItem( this.player, item ) ) {
 								Main.NewText( item.Name + " is now usable.", Color.Lime );
 							} else {
-								int needed = LicenseItem.ComputeNeededLicenses( item );
+								int needed = LicenseItem.ComputeCost( item );
 								Main.NewText( "Not enough licenses for " + item.Name + ": " + needed + " needed", Color.Red );
 							}
 						} else {

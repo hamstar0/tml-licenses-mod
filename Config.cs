@@ -71,7 +71,7 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Any Copper Or Tin Equipment" );
 
 			this.FreeStarterItems.Add( "License" );
-			this.FreeStarterItems.Add( "Lottery License" );
+			this.FreeStarterItems.Add( "Wildcard License" );
 			this.FreeStarterItems.Add( "Wayfarer's Pack" );
 
 			this.FreeStarterItems.Add( "Copper Coin" );

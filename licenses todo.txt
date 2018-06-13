@@ -1,11 +1,10 @@
 v2.0.0
 -	Set Rewards autosave to allow player PP saving
+
 -	Add Lottery Licence
-	-	Implement license effect
-	-	Implement item locks
+	-	Implement licensing
 	-	Add to shop
 	-	Define license
-
 	-	@Plan
 		-	Name?
 			-	Gamble License

@@ -8,12 +8,13 @@ using Terraria.ModLoader;
 
 namespace Licenses.Items {
 	class LicenseItem : ModItem {
-		public static int ComputeNeededLicenses( Item item ) {
+		public static int ComputeCost( Item item ) {
 			var mymod = LicensesMod.Instance;
 			Item default_of_item = new Item();
 			default_of_item.SetDefaults( item.type, true );
 
-			float cost = (float)mymod.Config.LicenseCostBase + ((float)default_of_item.rare * mymod.Config.LicenseCostRarityMultiplier);
+			float cost = (float)mymod.Config.LicenseCostBase;
+			cost += (float)default_of_item.rare * mymod.Config.LicenseCostRarityMultiplier;
 			
 			if( mymod.Config.LicenseCostArmorMultiplier != 1f ) {
 				if( ItemAttributeHelpers.IsArmor( default_of_item ) ) {
@@ -33,7 +34,7 @@ namespace Licenses.Items {
 		public static bool AttemptToLicenseItem( Player player, Item item ) {
 			int license_type = LicensesMod.Instance.ItemType<LicenseItem>();
 			int total_licenses = ItemFinderHelpers.CountTotalOfEach( player.inventory, new HashSet<int> { license_type } );
-			int needed = LicenseItem.ComputeNeededLicenses( item );
+			int needed = LicenseItem.ComputeCost( item );
 			
 			if( total_licenses < needed ) {
 				return false;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Licenses {
 	public class LicensesConfigData : ConfigurationDataBase {
-		public readonly static Version ConfigVersion = new Version( 1, 2, 0 );
+		public readonly static Version ConfigVersion = new Version( 2, 0, 0 );
 		public readonly static string ConfigFileName = "Licenses Config.json";
 
 
@@ -17,17 +17,17 @@ namespace Licenses {
 		//public bool DebugModeCheat = false;
 
 		public bool ResetWayfarerShop = true;
-		public bool FullNihilismBlacklistReset = true;
 		
 		public ISet<string> FreeStarterItems = new HashSet<string>();
 
 		public int LicensesPerPack = 5;
 		public int LicenseCostInPP = 3;
 
-		public int ItemLicenseCostBase = 1;
-		public bool ItemLicenseCostIncreasesWithRarity = true;
+		public int LicenseCostBase = 1;
+		public float LicenseCostRarityMultiplier = 3;
 		public float ArmorLicenseCostMultiplier = 1f / 3f;
 		public float AccessoryLicenseCostMultiplier = 1f;
+
 		public bool FreeMaterials = true;
 		public bool FreePlaceables = true;
 		public bool FreeRecipes = true;
@@ -35,6 +35,16 @@ namespace Licenses {
 		public int NewPlayerStarterLicenses = 8;
 
 		public bool ForceSpawnWayfarer = true;
+
+
+
+		public string _OLD_SETTINGS_BELOW_ = "";
+
+		public string ItemBlacklistPattern = "(.*?)";
+		public int ItemLicenseCostBase = 1;
+		public bool ItemLicenseCostIncreasesWithRarity = true;
+		//public bool LicenseCostIncreasesWithRarity = true;
+		public bool FullNihilismBlacklistReset = true;
 
 
 
@@ -141,7 +151,7 @@ namespace Licenses {
 					this.LicensesPerPack = new_config.LicensesPerPack;
 				}
 			}
-			if( vers_since < new Version( 1, 2, 0 ) ) {
+			if( vers_since < new Version( 2, 0, 0 ) ) {
 				new_config.SetDefaults();
 			}
 

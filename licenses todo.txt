@@ -1,9 +1,22 @@
 v1.2.0
--	Add Contract License
-	-	@Plan
-		-	Unlocks an item, permalocks another (same tier)
-		-	Cheaper, but still scales by tier
+-	Add Lottery Licence
+	-	Implement license effect
+	-	Implement item locks
+	-	Add to shop
+	-	Define license
 
+	-	@Plan
+		-	Name?
+			-	Gamble License
+			-	Obtuse Contract
+			-	Devil's License
+			-	Lottery License
+			-	Lunatic License
+			-	Binding License
+			-	Covenant License
+		-	Sold as a large pack, 50% cost of regular Licenses
+		-	Use to unlock a random item matching the current stack size
+		-	Sold in stacks too large for tier unlocks; must be resized accordingly
 -	Add setting for free recipes
 -	Add setting for free 'materials'
 -	Add setting for free 'placeables'

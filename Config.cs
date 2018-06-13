@@ -22,12 +22,13 @@ namespace Licenses {
 
 		public ISet<string> FreeStarterItems = new HashSet<string>();
 
-		public int LicensePackCostInPP = 15;
-		public int LicensesPerPack = 7;
-		public int WildcardLicensesPerPack = 15;
+		public int LicensePackCostInPP = 10;
+		public int LicensesPerPack = 6;
+		public int WildcardLicensePackCostInPP = 20;
+		public int WildcardLicensesPerPack = 24;
 
 		public int LicenseCostBase = 1;
-		public float LicenseCostRarityMultiplier = 3;
+		public float LicenseCostRarityMultiplier = 1;
 		public float LicenseCostArmorMultiplier = 1f / 3f;
 		public float LicenseCostAccessoryMultiplier = 1f;
 

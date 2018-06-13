@@ -1,6 +1,8 @@
 v2.0.0
--	Set Rewards autosave to allow player PP saving
+-	Set Rewards autosave to allow player PP saving (but not shop)
 
+-	Normalize normal license prices
+-	Split Wildcard Licenses into a new expensive pack
 -	Add Lottery Licence
 	-	Implement licensing
 	-	Add to shop

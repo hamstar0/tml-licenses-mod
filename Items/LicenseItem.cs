@@ -27,7 +27,7 @@ namespace Licenses.Items {
 				}
 			}
 
-			return (int)Math.Max( cost, 1f );
+			return (int)Math.Max( cost, mymod.Config.LicenseCostBase );
 		}
 
 

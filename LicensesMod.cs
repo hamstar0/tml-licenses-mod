@@ -102,7 +102,7 @@ namespace Licenses {
 
 		public void LoadGameMode() {
 			NihilismAPI.SuppressAutoSavingOn();
-			RewardsAPI.SuppressAutoSavingOn();
+			//RewardsAPI.SuppressAutoSavingOn();
 			
 			NihilismAPI.SetItemFilter( true, true );
 
@@ -121,33 +121,49 @@ namespace Licenses {
 			}
 			NihilismAPI.NihilateCurrentWorld();
 
-			var lic_def = new ShopPackItemDefinition {
-				Name = "License",
-				Stack = this.Config.LicensesPerPack,
-				CrimsonWorldOnly = null
-			};
-			var lot_lic_def = new ShopPackItemDefinition {
-				Name = "Lottery License",
-				Stack = this.Config.WildcardLicensesPerPack,
-				CrimsonWorldOnly = null
-			};
-			var def = new ShopPackDefinition {
-				Name = "Item License Pack",
-				Price = this.Config.LicensePackCostInPP,
-				Items = new ShopPackItemDefinition[] { lic_def, lot_lic_def }
-			};
-
-			if( this.Config.ResetWayfarerShop ) {
-				RewardsAPI.ShopClear();
-			}
-
-			RewardsAPI.ShopAddPack( def );
+			this.CreateLicensePacks();
 
 			if( this.Config.ForceSpawnWayfarer ) {
 				RewardsAPI.SpawnWayfarer( false );
 			}
 
 			InboxMessages.ReadMessage( "nihilism_init" );
+		}
+
+
+		private void CreateLicensePacks() {
+			var lic_def = new ShopPackItemDefinition {
+				Name = "License",
+				Stack = this.Config.LicensesPerPack,
+				CrimsonWorldOnly = null
+			};
+			var wild_lic_def = new ShopPackItemDefinition {
+				Name = "Wildcard License",
+				Stack = this.Config.WildcardLicensesPerPack,
+				CrimsonWorldOnly = null
+			};
+
+			var def1 = new ShopPackDefinition {
+				Name = "Standard License Pack",
+				Price = this.Config.LicensePackCostInPP,
+				Items = new ShopPackItemDefinition[] { lic_def }
+			};
+			var def2 = new ShopPackDefinition {
+				Name = "Wildcard License Pack",
+				Price = this.Config.WildcardLicensePackCostInPP,
+				Items = new ShopPackItemDefinition[] { wild_lic_def }
+			};
+			
+			if( this.Config.ResetWayfarerShop ) {
+				RewardsAPI.ShopClear();
+			}
+
+			if( this.Config.LicensesPerPack > 0 ) {
+				RewardsAPI.ShopAddPack( def1 );
+			}
+			if( this.Config.WildcardLicensesPerPack > 0 ) {
+				RewardsAPI.ShopAddPack( def2);
+			}
 		}
 	}
 }

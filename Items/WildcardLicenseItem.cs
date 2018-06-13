@@ -20,11 +20,13 @@ namespace Licenses.Items {
 			return max_rarity_cost;
 		}
 
+
 		public static int ComputeTargetRarityOfLicenseStackSize( int stack ) {
 			var mymod = LicensesMod.Instance;
 
 			return (stack - mymod.Config.WildcardLicenseCostBase) / mymod.Config.WildcardLicenseCostRarityMultiplier;
 		}
+
 
 		public static int ComputeCost( Item item ) {
 			var mymod = LicensesMod.Instance;
@@ -34,8 +36,10 @@ namespace Licenses.Items {
 
 			if( mymod.Config.LicenseCostArmorMultiplier != 1f ) {
 				if( ItemAttributeHelpers.IsArmor( item ) ) {
+Main.NewText("is armor?");
 					cost = (float)cost * mymod.Config.LicenseCostArmorMultiplier;
 				}
+else {Main.NewText("is not armor?");}
 			}
 
 			if( mymod.Config.LicenseCostAccessoryMultiplier != 1f ) {
@@ -44,7 +48,7 @@ namespace Licenses.Items {
 				}
 			}
 
-			return (int)Math.Max( cost, 1f );
+			return (int)Math.Max( cost, mymod.Config.WildcardLicenseCostBase );
 		}
 
 

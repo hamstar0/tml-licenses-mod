@@ -102,7 +102,7 @@ namespace Licenses {
 
 		public void LoadGameMode() {
 			NihilismAPI.SuppressAutoSavingOn();
-			RewardsAPI.SuppressAutoSavingOn();
+			RewardsAPI.SuppressConfigAutoSavingOn();
 			
 			NihilismAPI.SetItemFilter( true, true );
 
@@ -119,15 +119,29 @@ namespace Licenses {
 			foreach( string name in this.Config.FreeStarterItems ) {
 				NihilismAPI.SetItemWhitelistEntry( name, true );
 			}
-			NihilismAPI.NihilateCurrentWorld();
 
 			this.CreateLicensePacks();
 
+			if( this.Config.RemoveRewardsGrinding ) {
+				RewardsAPI.GetModSettings().GrindKillMultiplier = 0f;
+			}
 			if( this.Config.ForceSpawnWayfarer ) {
 				RewardsAPI.SpawnWayfarer( false );
 			}
 
-			InboxMessages.ReadMessage( "nihilism_init" );
+			// Finish loading Nihilism
+			TmlLoadHelpers.AddCustomPromise( "LicensesOnEnterWorld", () => {
+				NihilismAPI.NihilateCurrentWorld();
+
+				InboxMessages.ReadMessage( "nihilism_init" );
+
+				return false;
+			} );
+
+			TmlLoadHelpers.TriggerCustomPromise( "LicensesOnGameModeLoad" );
+			TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
+				TmlLoadHelpers.ClearCustomPromise( "LicensesOnGameModeLoad" );
+			} );
 		}
 
 
@@ -164,11 +178,6 @@ namespace Licenses {
 			if( this.Config.WildcardLicensesPerPack > 0 ) {
 				RewardsAPI.ShopAddPack( def2);
 			}
-
-			TmlLoadHelpers.TriggerCustomPromise( "LicensesPreEnterWorld" );
-			TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
-				TmlLoadHelpers.ClearCustomPromise( "LicensesPreEnterWorld" );
-			} );
 		}
 	}
 }

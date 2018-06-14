@@ -13,8 +13,6 @@ using Terraria.ModLoader.IO;
 
 namespace Licenses {
 	class LicensesPlayer : ModPlayer {
-		public override bool CloneNewInstances { get { return false; } }
-
 		private readonly ISet<string> PendingLoadLicenses = new HashSet<string>();
 		public ISet<string> LicensedItems { get; private set; }
 
@@ -22,6 +20,8 @@ namespace Licenses {
 
 
 		////////////////
+
+		public override bool CloneNewInstances { get { return false; } }
 
 		public override void Initialize() {
 			this.LicensedItems = new HashSet<string>();
@@ -61,6 +61,67 @@ namespace Licenses {
 
 		////////////////
 		
+		public override void SyncPlayer( int to_who, int from_who, bool new_player ) {
+			if( Main.netMode == 2 ) {
+				if( to_who == -1 && from_who == this.player.whoAmI ) {
+					this.OnEnterWorldForServer();
+				}
+			}
+		}
+
+		public override void OnEnterWorld( Player player ) {
+			if( player.whoAmI != this.player.whoAmI ) { return; }
+
+			if( Main.netMode == 0 ) {
+				this.OnEnterWorldForSingle();
+			} else if( Main.netMode == 1 ) {
+				this.OnEnterWorldForClient();
+			}
+		}
+		
+		////////////////
+
+		private void OnEnterWorldLocal() {
+			var mymod = (LicensesMod)this.mod;
+
+			foreach( string item_name in this.PendingLoadLicenses ) {
+				this.SetItemNameLicense( item_name, false );
+			}
+			this.PendingLoadLicenses.Clear();
+
+			TmlLoadHelpers.TriggerCustomPromise( "LicensesOnEnterWorld" );
+			TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
+				TmlLoadHelpers.ClearCustomPromise( "LicensesOnEnterWorld" );
+			} );
+		}
+
+		public void OnEnterWorldForSingle() {
+			TmlLoadHelpers.AddCustomPromise( "LicensesOnGameModeLoad", () => {
+				this.OnEnterWorldLocal();
+				return false;
+			} );
+		}
+
+		public void OnEnterWorldForClient() {
+			TmlLoadHelpers.AddCustomPromise( "LicensesOnGameModeLoad", () => {
+				this.OnEnterWorldLocal();
+				return false;
+			} );
+		}
+
+		public void OnEnterWorldForServer() {
+			TmlLoadHelpers.AddCustomPromise( "LicensesOnGameModeLoad", () => {
+				TmlLoadHelpers.TriggerCustomPromise( "LicensesOnEnterWorld" );
+				TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
+					TmlLoadHelpers.ClearCustomPromise( "LicensesOnEnterWorld" );
+				} );
+				return false;
+			} );
+		}
+
+
+		////////////////
+
 		public override void SetupStartInventory( IList<Item> items ) {
 			var mymod = (LicensesMod)this.mod;
 			if( mymod.Config.NewPlayerStarterLicenses == 0 ) { return; }
@@ -68,29 +129,8 @@ namespace Licenses {
 			Item licenses = new Item();
 			licenses.SetDefaults( mymod.ItemType<LicenseItem>(), true );
 			licenses.stack = mymod.Config.NewPlayerStarterLicenses;
-			
+
 			items.Add( licenses );
-		}
-
-
-		public override void OnEnterWorld( Player player ) {
-			if( player.whoAmI != this.player.whoAmI || player.whoAmI != Main.myPlayer ) { return; }
-
-			TmlLoadHelpers.AddCustomPromise( "LicensesPreEnterWorld", () => {
-				var mymod = (LicensesMod)this.mod;
-				
-				foreach( string item_name in this.PendingLoadLicenses ) {
-					this.SetItemNameLicense( item_name, false );
-				}
-				this.PendingLoadLicenses.Clear();
-
-				TmlLoadHelpers.TriggerCustomPromise( "LicensesPostEnterWorld" );
-				TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
-					TmlLoadHelpers.ClearCustomPromise( "LicensesPostEnterWorld" );
-				} );
-
-				return false;
-			} );
 		}
 
 

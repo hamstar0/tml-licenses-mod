@@ -25,7 +25,7 @@ namespace Licenses {
 		public int LicensePackCostInPP = 10;
 		public int LicensesPerPack = 6;
 		public int WildcardLicensePackCostInPP = 20;
-		public int WildcardLicensesPerPack = 24;
+		public int WildcardLicensesPerPack = 20;
 
 		public int LicenseCostBase = 1;
 		public float LicenseCostRarityMultiplier = 1;
@@ -42,6 +42,7 @@ namespace Licenses {
 		public int NewPlayerStarterLicenses = 8;
 
 		public bool ForceSpawnWayfarer = true;
+		public bool RemoveRewardsGrinding = true;
 
 
 

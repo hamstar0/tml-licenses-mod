@@ -50,16 +50,20 @@ namespace Licenses {
 				this.SetItemNameLicense( item_name, false );
 			}
 			this.PendingLoadLicenses.Clear();
+		}
 
+		private void OnEnterWorldFinish() {
 			TmlLoadHelpers.TriggerCustomPromise( "LicensesOnEnterWorld" );
 			TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
 				TmlLoadHelpers.ClearCustomPromise( "LicensesOnEnterWorld" );
 			} );
 		}
 
+
 		public void OnEnterWorldForSingle() {
 			TmlLoadHelpers.AddCustomPromise( "LicensesOnGameModeLoad", () => {
 				this.OnEnterWorldLocal();
+				this.OnEnterWorldFinish();
 				return false;
 			} );
 		}
@@ -67,16 +71,14 @@ namespace Licenses {
 		public void OnEnterWorldForClient() {
 			TmlLoadHelpers.AddCustomPromise( "LicensesOnGameModeLoad", () => {
 				this.OnEnterWorldLocal();
+				this.OnEnterWorldFinish();
 				return false;
 			} );
 		}
 
 		public void OnEnterWorldForServer() {
 			TmlLoadHelpers.AddCustomPromise( "LicensesOnGameModeLoad", () => {
-				TmlLoadHelpers.TriggerCustomPromise( "LicensesOnEnterWorld" );
-				TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
-					TmlLoadHelpers.ClearCustomPromise( "LicensesOnEnterWorld" );
-				} );
+				this.OnEnterWorldFinish();
 				return false;
 			} );
 		}

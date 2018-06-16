@@ -1,7 +1,7 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.ItemHelpers;
-using HamstarHelpers.Utilities.EntityGroups;
-using HamstarHelpers.Utilities.Messages;
+using HamstarHelpers.Services.EntityGroups;
+using HamstarHelpers.Services.Messages;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;

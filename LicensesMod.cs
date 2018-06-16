@@ -1,8 +1,8 @@
-﻿using HamstarHelpers.DebugHelpers;
+﻿using HamstarHelpers.Components.Config;
+using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.Services.EntityGroups;
+using HamstarHelpers.Services.Messages;
 using HamstarHelpers.TmlHelpers;
-using HamstarHelpers.Utilities.Config;
-using HamstarHelpers.Utilities.EntityGroups;
-using HamstarHelpers.Utilities.Messages;
 using Nihilism;
 using Rewards;
 using Rewards.Items;
@@ -104,16 +104,17 @@ namespace Licenses {
 			NihilismAPI.SuppressAutoSavingOn();
 			RewardsAPI.SuppressConfigAutoSavingOn();
 			
-			NihilismAPI.SetItemFilter( true, true );
+			NihilismAPI.SetItemBlacklistEntry( "All Items", true );
 
 			if( this.Config.OverrideNihilismDefaultFilters ) {
-				NihilismAPI.SetRecipesFilter( !this.Config.FreeRecipes, true );
-				NihilismAPI.SetNpcFilter( false, true );
-				NihilismAPI.SetNpcLootFilter( false, true );
-				NihilismAPI.ClearItemWhitelist( true );
-				NihilismAPI.ClearRecipeWhitelist( true );
-				NihilismAPI.ClearNpcWhitelist( true );
-				NihilismAPI.ClearNpcLootWhitelist( true );
+				if( this.Config.FreeRecipes ) {
+					NihilismAPI.ClearRecipeBlacklist( true );
+				} else {
+					NihilismAPI.SetRecipeBlacklistEntry( "Any Item", true );
+				}
+				NihilismAPI.ClearItemBlacklist( true );
+				NihilismAPI.ClearNpcBlacklist( true );
+				NihilismAPI.ClearNpcLootBlacklist( true );
 			}
 
 			foreach( string name in this.Config.FreeStarterItems ) {

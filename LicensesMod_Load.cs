@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Licenses {
     public partial class LicensesMod : Mod {
-		public void LoadGameMode() {
+		public void LoadGameModeOnWorldLoad() {
 			NihilismAPI.SuppressAutoSavingOn();
 			RewardsAPI.SuppressConfigAutoSavingOn();
 			
@@ -31,7 +31,7 @@ namespace Licenses {
 
 				return false;
 			} );
-
+			
 			TmlLoadHelpers.TriggerCustomPromise( "LicensesOnGameModeLoad" );
 			TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
 				TmlLoadHelpers.ClearCustomPromise( "LicensesOnGameModeLoad" );
@@ -41,17 +41,24 @@ namespace Licenses {
 
 		private void LoadNihilismFilters() {
 			if( this.Config.OverrideNihilismDefaultFilters ) {
-				if( this.Config.FreeRecipes ) {
-					NihilismAPI.ClearRecipeBlacklist( true );
-				} else {
-					NihilismAPI.SetRecipeBlacklistEntry( "Any Item", true );
-				}
+				NihilismAPI.ClearRecipeBlacklist( true );
 				NihilismAPI.ClearItemBlacklist( true );
 				NihilismAPI.ClearNpcBlacklist( true );
 				NihilismAPI.ClearNpcLootBlacklist( true );
 			}
+			
+			NihilismAPI.SetItemBlacklistEntry( "Any Item", true );
 
-			NihilismAPI.SetItemBlacklistEntry( "All Items", true );
+			if( !this.Config.FreeRecipes ) {
+				NihilismAPI.SetRecipeBlacklistEntry( "Any Item", true );
+			}
+
+			if( this.Config.FreeMaterials ) {
+				NihilismAPI.SetItemWhitelistEntry( "Any Plain Material", true );
+			}
+			if( this.Config.FreePlaceables ) {
+				NihilismAPI.SetItemWhitelistEntry( "Any Placeable", true );
+			}
 
 			foreach( string name in this.Config.FreeStarterItems ) {
 				NihilismAPI.SetItemWhitelistEntry( name, true );

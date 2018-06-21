@@ -55,7 +55,7 @@ namespace Licenses {
 
 			EntityGroups.Enable();
 
-			TmlLoadHelpers.AddWorldLoadEachPromise( this.LoadGameMode );
+			TmlLoadHelpers.AddWorldLoadEachPromise( this.LoadGameModeOnWorldLoad );
 		}
 
 		private void LoadConfig() {
@@ -69,8 +69,6 @@ namespace Licenses {
 				ErrorLogger.Log( "Licenses updated to " + LicensesConfigData.ConfigVersion.ToString() );
 				this.ConfigJson.SaveFile();
 			}
-
-			this.Config.UpdateForSettings();
 		}
 
 		public override void Unload() {

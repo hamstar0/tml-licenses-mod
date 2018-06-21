@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Licenses {
 	public class LicensesConfigData : ConfigurationDataBase {
-		public readonly static Version ConfigVersion = new Version( 2, 0, 0 );
+		public readonly static Version ConfigVersion = new Version( 2, 0, 1 );
 		public readonly static string ConfigFileName = "Licenses Config.json";
 
 
@@ -157,9 +157,9 @@ namespace Licenses {
 				new_config.SetDefaults();
 			}
 			if( vers_since < new Version(1, 0, 1) ) {
-				if( this.LicenseCostInPP == 5 ) {
-					this.LicenseCostInPP = new_config.LicenseCostInPP;
-				}
+				//if( this.LicenseCostInPP == 5 ) {
+				//	this.LicenseCostInPP = new_config.LicenseCostInPP;
+				//}
 				if( this.NewPlayerStarterLicenses == 3 ) {
 					this.NewPlayerStarterLicenses = new_config.NewPlayerStarterLicenses;
 				}
@@ -173,25 +173,20 @@ namespace Licenses {
 			if( vers_since < new Version( 2, 0, 0 ) ) {
 				new_config.SetDefaults();
 			}
+			if( vers_since < new Version( 2, 0, 1 ) ) {
+				if( vers_since == new Version( 2, 0, 0 ) ) {
+					if( this.FreeMaterials ) {
+						this.FreeStarterItems.Remove( "Any Plain Material" );
+					}
+					if( this.FreePlaceables ) {
+						this.FreeStarterItems.Remove( "Any Placeable" );
+					}
+				}
+			}
 
 			this.VersionSinceUpdate = LicensesConfigData.ConfigVersion.ToString();
 
 			return true;
-		}
-
-
-		public void UpdateForSettings() {
-			if( this.FreeMaterials ) {
-				this.FreeStarterItems.Add( "Any Plain Material" );
-			} else {
-				this.FreeStarterItems.Remove( "Any Plain Material" );
-			}
-
-			if( this.FreePlaceables ) {
-				this.FreeStarterItems.Add( "Any Placeable" );
-			} else {
-				this.FreeStarterItems.Remove( "Any Placeable" );
-			}
 		}
 	}
 }

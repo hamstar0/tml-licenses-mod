@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.ItemHelpers;
-using HamstarHelpers.PlayerHelpers;
+﻿using HamstarHelpers.Helpers.ItemHelpers;
+using HamstarHelpers.Helpers.PlayerHelpers;
 using System;
 using System.Collections.Generic;
 using Terraria;

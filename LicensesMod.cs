@@ -1,6 +1,6 @@
 ﻿using HamstarHelpers.Components.Config;
 using HamstarHelpers.Services.EntityGroups;
-using HamstarHelpers.TmlHelpers;
+using HamstarHelpers.Services.Promises;
 using System;
 using System.IO;
 using Terraria;
@@ -26,11 +26,25 @@ namespace Licenses {
 			}
 		}
 
+		public static void ResetConfigFromDefaults() {
+			if( Main.netMode != 0 ) {
+				throw new Exception( "Cannot reset to default configs outside of single player." );
+			}
+
+			var config_data = new LicensesConfigData();
+			//config_data.SetDefaults();
+
+			LicensesMod.Instance.ConfigJson.SetData( config_data );
+			LicensesMod.Instance.ConfigJson.SaveFile();
+		}
+
+
 
 		////////////////
 
 		public JsonConfig<LicensesConfigData> ConfigJson { get; private set; }
 		public LicensesConfigData Config { get { return this.ConfigJson.Data; } }
+
 
 
 		////////////////
@@ -55,7 +69,7 @@ namespace Licenses {
 
 			EntityGroups.Enable();
 
-			TmlLoadHelpers.AddWorldLoadEachPromise( this.LoadGameModeOnWorldLoad );
+			Promises.AddWorldLoadEachPromise( this.LoadGameModeOnWorldLoad );
 		}
 
 		private void LoadConfig() {

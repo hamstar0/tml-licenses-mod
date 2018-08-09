@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.TmlHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Services.Promises;
 using Licenses.Items;
 using System.Collections.Generic;
 using Terraria;
@@ -9,6 +9,20 @@ using Terraria.ModLoader.IO;
 
 namespace Licenses {
 	partial class LicensesPlayer : ModPlayer {
+		internal readonly static object MyValidatorKey;
+		public readonly static PromiseValidator EnterWorldValidator;
+
+
+		////////////////
+
+		static LicensesPlayer() {
+			LicensesPlayer.MyValidatorKey = new object();
+			LicensesPlayer.EnterWorldValidator = new PromiseValidator( LicensesMod.MyValidatorKey );
+		}
+
+
+		////////////////
+
 		public override void Load( TagCompound tag ) {
 			var self = this;
 			var mymod = (LicensesMod)this.mod;
@@ -53,15 +67,17 @@ namespace Licenses {
 		}
 
 		private void OnEnterWorldFinish() {
-			TmlLoadHelpers.TriggerCustomPromise( "LicensesOnEnterWorld" );
-			TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
-				TmlLoadHelpers.ClearCustomPromise( "LicensesOnEnterWorld" );
+			Promises.TriggerValidatedPromise( LicensesPlayer.EnterWorldValidator, LicensesPlayer.MyValidatorKey );
+
+			Promises.AddWorldUnloadOncePromise( () => {
+				Promises.ClearValidatedPromise( LicensesPlayer.EnterWorldValidator, LicensesPlayer.MyValidatorKey );
 			} );
 		}
 
+		////////////////
 
 		public void OnEnterWorldForSingle() {
-			TmlLoadHelpers.AddCustomPromise( "LicensesOnGameModeLoad", () => {
+			Promises.AddValidatedPromise( LicensesMod.GameModeLoadValidator, () => {
 				this.OnEnterWorldLocal();
 				this.OnEnterWorldFinish();
 				return false;
@@ -69,7 +85,7 @@ namespace Licenses {
 		}
 
 		public void OnEnterWorldForClient() {
-			TmlLoadHelpers.AddCustomPromise( "LicensesOnGameModeLoad", () => {
+			Promises.AddValidatedPromise( LicensesMod.GameModeLoadValidator, () => {
 				this.OnEnterWorldLocal();
 				this.OnEnterWorldFinish();
 				return false;
@@ -77,7 +93,7 @@ namespace Licenses {
 		}
 
 		public void OnEnterWorldForServer() {
-			TmlLoadHelpers.AddCustomPromise( "LicensesOnGameModeLoad", () => {
+			Promises.AddValidatedPromise( LicensesMod.GameModeLoadValidator, () => {
 				this.OnEnterWorldFinish();
 				return false;
 			} );
@@ -86,7 +102,7 @@ namespace Licenses {
 
 		////////////////
 
-		public override void SetupStartInventory( IList<Item> items ) {
+		public override void SetupStartInventory( IList<Item> items, bool mediumcore_death ) {
 			var mymod = (LicensesMod)this.mod;
 			if( mymod.Config.NewPlayerStarterLicenses == 0 ) { return; }
 

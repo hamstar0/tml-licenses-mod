@@ -1,8 +1,7 @@
 author = hamstar
-version = 2.0.1
+version = 2.0.2
 displayName = Licenses
-modReferences = HamstarHelpers@1.6.1, Nihilism@2.1.1, Rewards@1.4.16
-buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
-includePDB = true
+modReferences = HamstarHelpers@2.0.2, Nihilism@2.1.4, Rewards@1.5.3
+buildIgnore = *.csproj, *.user, *.bat, obj\*, bin\*, .vs\*, .git\*
 languageVersion = 6
 homepage = https://forums.terraria.org/index.php?threads/licenses-unlock-items-as-you-progress.69438/

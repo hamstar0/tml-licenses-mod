@@ -1,6 +1,6 @@
-﻿using HamstarHelpers.DebugHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Services.Messages;
-using HamstarHelpers.TmlHelpers;
+using HamstarHelpers.Services.Promises;
 using Nihilism;
 using Rewards;
 using Rewards.Items;
@@ -9,6 +9,20 @@ using Terraria.ModLoader;
 
 namespace Licenses {
     public partial class LicensesMod : Mod {
+		internal readonly static object MyValidatorKey;
+		public readonly static PromiseValidator GameModeLoadValidator;
+
+
+		////////////////
+
+		static LicensesMod() {
+			LicensesMod.MyValidatorKey = new object();
+			LicensesMod.GameModeLoadValidator = new PromiseValidator( LicensesMod.MyValidatorKey );
+		}
+
+
+		////////////////
+
 		public void LoadGameModeOnWorldLoad() {
 			NihilismAPI.SuppressAutoSavingOn();
 			RewardsAPI.SuppressConfigAutoSavingOn();
@@ -24,17 +38,18 @@ namespace Licenses {
 			}
 
 			// Finish loading Nihilism
-			TmlLoadHelpers.AddCustomPromise( "LicensesOnEnterWorld", () => {
+			Promises.AddValidatedPromise( LicensesPlayer.EnterWorldValidator, () => {
 				NihilismAPI.NihilateCurrentWorld();
 
 				InboxMessages.ReadMessage( "nihilism_init" );
 
 				return false;
 			} );
-			
-			TmlLoadHelpers.TriggerCustomPromise( "LicensesOnGameModeLoad" );
-			TmlLoadHelpers.AddWorldUnloadOncePromise( () => {
-				TmlLoadHelpers.ClearCustomPromise( "LicensesOnGameModeLoad" );
+
+			Promises.TriggerValidatedPromise( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );
+
+			Promises.AddWorldUnloadOncePromise( () => {
+				Promises.ClearValidatedPromise( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );
 			} );
 		}
 

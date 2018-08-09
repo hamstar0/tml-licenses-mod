@@ -1,13 +1,12 @@
-﻿using HamstarHelpers.Utilities.Errors;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 
 
 namespace Licenses.Commands {
 	class ListLicensesCommand : ModCommand {
 		public override CommandType Type { get { return CommandType.Chat; } }
-		public override string Command { get { return "licenseslist"; } }
-		public override string Usage { get { return "/licenseslist"; } }
+		public override string Command { get { return "licenses-list"; } }
+		public override string Usage { get { return "/"+this.Command; } }
 		public override string Description { get { return "Lists all acquired licenses."; } }
 
 

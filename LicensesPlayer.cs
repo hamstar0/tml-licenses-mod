@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.ItemHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.ItemHelpers;
 using Licenses.Items;
 using Microsoft.Xna.Framework;
 using Nihilism;

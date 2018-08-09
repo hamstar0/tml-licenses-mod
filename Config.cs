@@ -46,26 +46,6 @@ namespace Licenses {
 
 
 
-		public string _OLD_SETTINGS_BELOW_ = "";
-
-		[Obsolete( "Not implemented" )]
-		public string ItemBlacklistPattern = "(.*?)";
-		[Obsolete( "use LicenseCostBase" )]
-		public int ItemLicenseCostBase = 1;
-		[Obsolete( "Not implemented" )]
-		public bool ItemLicenseCostIncreasesWithRarity = true;
-		//public bool LicenseCostIncreasesWithRarity = true;
-		[Obsolete( "Not implemented" )]
-		public bool FullNihilismBlacklistReset = true;
-		[Obsolete( "use LicensePackCostInPP" )]
-		public int LicenseCostInPP = 3;
-		[Obsolete( "use LicenseCostArmorMultiplier" )]
-		public float ArmorLicenseCostMultiplier = 1f / 3f;
-		[Obsolete( "use LicenseCostAccessoryMultiplier" )]
-		public float AccessoryLicenseCostMultiplier = 1f;
-
-
-
 		////////////////
 
 		public void SetDefaults() {
@@ -152,36 +132,9 @@ namespace Licenses {
 			if( vers_since >= LicensesConfigData.ConfigVersion ) {
 				return false;
 			}
-			
-			if( vers_since < new Version( 1, 0, 0 ) ) {
-				new_config.SetDefaults();
-			}
-			if( vers_since < new Version(1, 0, 1) ) {
-				//if( this.LicenseCostInPP == 5 ) {
-				//	this.LicenseCostInPP = new_config.LicenseCostInPP;
-				//}
-				if( this.NewPlayerStarterLicenses == 3 ) {
-					this.NewPlayerStarterLicenses = new_config.NewPlayerStarterLicenses;
-				}
-			}
-			if( vers_since < new Version( 1, 0, 3 ) ) {
-				this.FreeStarterItems = new_config.FreeStarterItems;	// Sorry!
-				if( this.LicensesPerPack == 3 ) {
-					this.LicensesPerPack = new_config.LicensesPerPack;
-				}
-			}
-			if( vers_since < new Version( 2, 0, 0 ) ) {
-				new_config.SetDefaults();
-			}
-			if( vers_since < new Version( 2, 0, 1 ) ) {
-				if( vers_since == new Version( 2, 0, 0 ) ) {
-					if( this.FreeMaterials ) {
-						this.FreeStarterItems.Remove( "Any Plain Material" );
-					}
-					if( this.FreePlaceables ) {
-						this.FreeStarterItems.Remove( "Any Placeable" );
-					}
-				}
+
+			if( this.VersionSinceUpdate == "" ) {
+				this.SetDefaults();
 			}
 
 			this.VersionSinceUpdate = LicensesConfigData.ConfigVersion.ToString();

@@ -34,6 +34,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Helpers\HamstarHelpers\bin\Release\HamstarHelpers.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\Reference\tModLoader Patcher\references\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Nihilism">
       <HintPath>..\..\Game Changer\Nihilism\bin\Release\Nihilism.dll</HintPath>
     </Reference>

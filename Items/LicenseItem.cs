@@ -43,7 +43,7 @@ namespace Licenses.Items {
 			string real_item_name = ItemIdentityHelpers.GetQualifiedName( item );
 
 			var myplayer = player.GetModPlayer<LicensesPlayer>();
-			myplayer.SetItemNameLicense( real_item_name, true );
+			myplayer.LicenseItemByName( real_item_name, true );
 
 			PlayerItemHelpers.RemoveInventoryItemQuantity( player, license_type, needed );
 

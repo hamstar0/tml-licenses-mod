@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Licenses {
 	public class LicensesConfigData : ConfigurationDataBase {
-		public readonly static Version ConfigVersion = new Version( 2, 0, 1 );
+		public readonly static Version ConfigVersion = new Version( 2, 0, 3 );
 		public readonly static string ConfigFileName = "Licenses Config.json";
 
 
@@ -43,6 +43,8 @@ namespace Licenses {
 
 		public bool ForceSpawnWayfarer = true;
 		public bool RemoveRewardsGrinding = true;
+
+		public int TrialLicenseDurationInTicks = 2 * 60 * 60;	// 2 minutes
 
 
 

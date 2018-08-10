@@ -61,7 +61,7 @@ namespace Licenses {
 			var mymod = (LicensesMod)this.mod;
 
 			foreach( string item_name in this.PendingLoadLicenses ) {
-				this.SetItemNameLicense( item_name, false );
+				this.LicenseItemByName( item_name, false );
 			}
 			this.PendingLoadLicenses.Clear();
 		}

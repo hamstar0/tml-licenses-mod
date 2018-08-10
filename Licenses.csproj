@@ -63,6 +63,7 @@
     <Compile Include="API_Call.cs" />
     <Compile Include="Commands\ListLicensesCommand.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Items\TrialLicenseItem.cs" />
     <Compile Include="Items\WildcardLicenseItem.cs" />
     <Compile Include="Items\LicenseItem.cs" />
     <Compile Include="LicensesMod_Load.cs" />
@@ -75,6 +76,7 @@
     <Content Include="build.txt" />
     <Content Include="description.txt" />
     <Content Include="icon.png" />
+    <Content Include="Items\TrialLicenseItem.png" />
     <Content Include="Items\LicenseItem.png" />
     <Content Include="Items\WildcardLicenseItem.png" />
   </ItemGroup>

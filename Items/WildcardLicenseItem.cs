@@ -161,7 +161,7 @@ namespace Licenses.Items {
 
 			int cost = WildcardLicenseItem.ComputeCost( dummy_item );
 
-			myplayer.SetItemNameLicense( rand_item_name, true );
+			myplayer.LicenseItemByName( rand_item_name, true );
 
 			ItemHelpers.ReduceStack( this.item, cost );
 			

@@ -9,7 +9,7 @@ using Terraria.ModLoader.IO;
 
 namespace Licenses {
 	partial class LicensesPlayer : ModPlayer {
-		internal readonly static object MyValidatorKey;
+		private readonly static object MyValidatorKey;
 		public readonly static PromiseValidator EnterWorldValidator;
 
 
@@ -17,7 +17,7 @@ namespace Licenses {
 
 		static LicensesPlayer() {
 			LicensesPlayer.MyValidatorKey = new object();
-			LicensesPlayer.EnterWorldValidator = new PromiseValidator( LicensesMod.MyValidatorKey );
+			LicensesPlayer.EnterWorldValidator = new PromiseValidator( LicensesPlayer.MyValidatorKey );
 		}
 
 

@@ -24,8 +24,6 @@ namespace Licenses.Items {
 
 			PlayerItemHelpers.RemoveInventoryItemQuantity( player, trial_license_type, needed );
 
-			Main.NewText( real_item_name+" is now licensed for "+(LicensesMod.Instance.Config.TrialLicenseDurationInTicks/60)+" seconds.", Color.LimeGreen );
-
 			return true;
 		}
 

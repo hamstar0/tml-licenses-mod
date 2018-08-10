@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Licenses {
     public partial class LicensesMod : Mod {
-		internal readonly static object MyValidatorKey;
+		private readonly static object MyValidatorKey;
 		public readonly static PromiseValidator GameModeLoadValidator;
 
 

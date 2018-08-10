@@ -102,7 +102,7 @@ namespace Licenses {
 				
 				if( !this.LicensedItems.Contains( real_item_name ) ) {
 					if( TrialLicenseItem.AttemptToTemporaryLicenseItem( this.player, item ) ) {
-						Main.NewText( item.Name + " is now usable for 2 minutes.", Color.Lime );
+						Main.NewText( real_item_name + " is now licensed for " + ( LicensesMod.Instance.Config.TrialLicenseDurationInTicks / 60 ) + " seconds.", Color.LimeGreen );
 					} else {
 						int needed = LicenseItem.ComputeCost( item );
 						Main.NewText( "Not enough trial licenses for " + real_item_name + ": " + needed + " needed", Color.Red );

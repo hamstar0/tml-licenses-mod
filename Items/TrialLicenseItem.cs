@@ -31,16 +31,21 @@ namespace Licenses.Items {
 		////////////////
 
 		public override void SetStaticDefaults() {
+			var mymod = (LicensesMod)this.mod;
+
 			this.DisplayName.SetDefault( "Trail License" );
 			this.Tooltip.SetDefault( "Select an item with this to temporarily license it"
-				+'\n'+"Trial licenses only last 2 minutes" );
+				+'\n'+"Trial licenses only last "+(mymod.Config.TrialLicenseDurationInTicks/60)+" seconds"
+				+'\n'+"Only 1 item may be trialed at a time" );
 		}
 
 		public override void SetDefaults() {
+			var mymod = (LicensesMod)this.mod;
+
 			this.item.maxStack = 999;
 			this.item.width = 16;
 			this.item.height = 16;
-			this.item.value = Item.buyPrice( 0, 1, 0, 0 );
+			this.item.value = mymod.Config.TrialLicenseCost;
 			this.item.rare = 1;
 		}
 	}

@@ -15,6 +15,7 @@ namespace Licenses {
 		private readonly ISet<string> PendingLoadLicenses = new HashSet<string>();
 
 		public ISet<string> LicensedItems { get; private set; }
+		public string TrialLicensedItem { get; private set; }
 
 		public int LicenseMode = 0;
 
@@ -26,6 +27,7 @@ namespace Licenses {
 
 		public override void Initialize() {
 			this.LicensedItems = new HashSet<string>();
+			this.TrialLicensedItem = "";
 		}
 
 
@@ -121,11 +123,24 @@ namespace Licenses {
 		internal void TrialLicenseItemByName( string item_name, bool play_sound ) {
 			var mymod = (LicensesMod)this.mod;
 
+			if( !string.IsNullOrEmpty(this.TrialLicensedItem) ) {
+				Main.NewText( this.TrialLicensedItem + " trial cancelled.", Color.Yellow );
+				NihilismAPI.UnsetItemWhitelistEntry( this.TrialLicensedItem, true );
+			}
+
+			this.TrialLicensedItem = item_name;
+
 			NihilismAPI.SetItemWhitelistEntry( item_name, true );
 
+			Timers.UnsetTimer( "LicensesTrialPeriod" );
 			Timers.SetTimer( "LicensesTrialPeriod", mymod.Config.TrialLicenseDurationInTicks, () => {
-				if( !this.LicensedItems.Contains( item_name ) ) {
+				var myplayer = Main.LocalPlayer.GetModPlayer<LicensesPlayer>();
+
+				if( !myplayer.LicensedItems.Contains( item_name ) ) {
+					Main.NewText( item_name+" trial has expired.", Color.Yellow );
 					NihilismAPI.UnsetItemWhitelistEntry( item_name, true );
+
+					myplayer.TrialLicensedItem = "";
 				}
 				return false;
 			} );

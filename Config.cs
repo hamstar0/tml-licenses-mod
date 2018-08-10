@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Licenses {
 	public class LicensesConfigData : ConfigurationDataBase {
-		public readonly static Version ConfigVersion = new Version( 2, 0, 3 );
+		public readonly static Version ConfigVersion = new Version( 2, 0, 4, 1 );
 		public readonly static string ConfigFileName = "Licenses Config.json";
 
 
@@ -44,7 +44,8 @@ namespace Licenses {
 		public bool ForceSpawnWayfarer = true;
 		public bool RemoveRewardsGrinding = true;
 
-		public int TrialLicenseDurationInTicks = 2 * 60 * 60;	// 2 minutes
+		public int TrialLicenseDurationInTicks = 2 * 60 * 60;   // 2 minutes
+		public int TrialLicenseCost = 100 * 100 * 2;	// 2 gold
 
 
 
@@ -56,6 +57,7 @@ namespace Licenses {
 
 			this.FreeStarterItems.Add( "License" );
 			this.FreeStarterItems.Add( "Wildcard License" );
+			this.FreeStarterItems.Add( "Trail License" );
 			this.FreeStarterItems.Add( "Wayfarer's Pack" );
 
 			this.FreeStarterItems.Add( "Copper Coin" );
@@ -137,6 +139,10 @@ namespace Licenses {
 
 			if( this.VersionSinceUpdate == "" ) {
 				this.SetDefaults();
+			}
+
+			if( vers_since < new Version( 2, 0, 4, 1 ) ) {
+				this.FreeStarterItems.Add( "Trial License" );
 			}
 
 			this.VersionSinceUpdate = LicensesConfigData.ConfigVersion.ToString();

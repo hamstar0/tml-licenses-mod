@@ -67,6 +67,7 @@
     <Compile Include="Items\WildcardLicenseItem.cs" />
     <Compile Include="Items\LicenseItem.cs" />
     <Compile Include="LicensesMod_Load.cs" />
+    <Compile Include="LicensesNPC.cs" />
     <Compile Include="LicensesPlayer_Load.cs" />
     <Compile Include="LicensesPlayer.cs" />
     <Compile Include="LicensesMod.cs" />

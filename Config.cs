@@ -5,13 +5,12 @@ using System.Collections.Generic;
 
 namespace Licenses {
 	public class LicensesConfigData : ConfigurationDataBase {
-		public readonly static Version ConfigVersion = new Version( 2, 0, 4, 1 );
 		public readonly static string ConfigFileName = "Licenses Config.json";
 
 
 		////////////////
 
-		public string VersionSinceUpdate = LicensesConfigData.ConfigVersion.ToString();
+		public string VersionSinceUpdate = "";
 
 		public bool DebugModeInfo = false;
 		//public bool DebugModeCheat = false;
@@ -133,7 +132,7 @@ namespace Licenses {
 				new Version( this.VersionSinceUpdate ) :
 				new Version();
 
-			if( vers_since >= LicensesConfigData.ConfigVersion ) {
+			if( vers_since >= LicensesMod.Instance.Version ) {
 				return false;
 			}
 
@@ -145,7 +144,7 @@ namespace Licenses {
 				this.FreeStarterItems.Add( "Trial License" );
 			}
 
-			this.VersionSinceUpdate = LicensesConfigData.ConfigVersion.ToString();
+			this.VersionSinceUpdate = LicensesMod.Instance.Version.ToString();
 
 			return true;
 		}

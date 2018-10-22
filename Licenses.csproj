@@ -37,8 +37,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\Reference\tModLoader Patcher\references\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Nihilism">
-      <HintPath>..\..\Game Changer\Nihilism\bin\Release\Nihilism.dll</HintPath>
+    <Reference Include="Nihilism, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Game Changers\Nihilism\bin\Release\Nihilism.dll</HintPath>
     </Reference>
     <Reference Include="Rewards">
       <HintPath>..\..\Reset Mode\Rewards\bin\Release\Rewards.dll</HintPath>
@@ -72,7 +73,6 @@
     <Compile Include="LicensesPlayer_Load.cs" />
     <Compile Include="LicensesPlayer.cs" />
     <Compile Include="LicensesMod.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="build.txt" />
@@ -85,6 +85,9 @@
   <ItemGroup>
     <None Include="LICENSE" />
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

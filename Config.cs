@@ -51,6 +51,8 @@ namespace Licenses {
 		////////////////
 
 		public void SetDefaults() {
+			this.FreeStarterItems.Clear();
+
 			this.FreeStarterItems.Add( "Any Wood Equipment" );
 			this.FreeStarterItems.Add( "Any Copper Or Tin Equipment" );
 

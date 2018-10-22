@@ -70,6 +70,7 @@
     <Compile Include="LicensesMod_Meta.cs" />
     <Compile Include="LicensesMod_Load.cs" />
     <Compile Include="LicensesNPC.cs" />
+    <Compile Include="LicensesPlayer_Licenses.cs" />
     <Compile Include="LicensesPlayer_Load.cs" />
     <Compile Include="LicensesPlayer.cs" />
     <Compile Include="LicensesMod.cs" />

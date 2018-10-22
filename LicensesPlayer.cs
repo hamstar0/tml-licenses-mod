@@ -69,8 +69,8 @@ namespace Licenses {
 				this.LicenseMode = 0;
 				return;
 			}
-
-			// If the item is License, we engage the mode:
+			
+			// If the item is a type of License, we engage the respective mode:
 			if( item.type == this.mod.ItemType<LicenseItem>() ) {
 				this.LicenseMode = 1;
 				return;
@@ -80,14 +80,19 @@ namespace Licenses {
 				return;
 			}
 
+			var mymod = (LicensesMod)this.mod;
 			string real_item_name = ItemIdentityHelpers.GetQualifiedName( item );
+
+			bool is_licensed = this.LicensedItems.Contains( real_item_name )
+				|| mymod.Config.FreeStarterItems.Contains( real_item_name );
 
 			// When the item is NOT licenses, we apply the licensing effect to the item, if we can:
 			switch( this.LicenseMode ) {
 			case 1:
 				this.LicenseMode = 0;
 
-				if( !this.LicensedItems.Contains( real_item_name ) ) {
+
+				if( !is_licensed ) {
 					if( LicenseItem.AttemptToLicenseItem( this.player, item ) ) {
 						Main.NewText( item.Name + " is now usable.", Color.Lime );
 					} else {
@@ -102,7 +107,7 @@ namespace Licenses {
 			case 2:
 				this.LicenseMode = 0;
 				
-				if( !this.LicensedItems.Contains( real_item_name ) ) {
+				if( !is_licensed ) {
 					if( TrialLicenseItem.AttemptToTemporaryLicenseItem( this.player, item ) ) {
 						Main.NewText( real_item_name + " is now licensed for " + ( LicensesMod.Instance.Config.TrialLicenseDurationInTicks / 60 ) + " seconds.", Color.LimeGreen );
 					} else {

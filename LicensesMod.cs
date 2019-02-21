@@ -1,4 +1,6 @@
 ﻿using HamstarHelpers.Components.Config;
+using HamstarHelpers.Components.Errors;
+using HamstarHelpers.Helpers.TmlHelpers;
 using HamstarHelpers.Helpers.TmlHelpers.ModHelpers;
 using HamstarHelpers.Services.EntityGroups;
 using HamstarHelpers.Services.Promises;
@@ -22,6 +24,8 @@ namespace Licenses {
 		////////////////
 
 		public LicensesMod() {
+			LicensesMod.Instance = this;
+
 			this.ConfigJson = new JsonConfig<LicensesConfigData>(
 				LicensesConfigData.ConfigFileName,
 				ConfigurationDataBase.RelativePath,
@@ -32,8 +36,9 @@ namespace Licenses {
 		////////////////
 
 		public override void Load() {
-			LicensesMod.Instance = this;
-
+			string depErr = TmlHelpers.ReportBadDependencyMods( this );
+			if( depErr != null ) { throw new HamstarException( depErr ); }
+			
 			this.LoadConfig();
 
 			EntityGroups.Enable();

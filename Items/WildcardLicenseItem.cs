@@ -1,5 +1,6 @@
 ﻿using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.ItemHelpers;
+using HamstarHelpers.Helpers.PlayerHelpers;
 using HamstarHelpers.Services.EntityGroups;
 using HamstarHelpers.Services.Messages;
 using Microsoft.Xna.Framework;
@@ -28,24 +29,30 @@ namespace Licenses.Items {
 		}
 
 
-		public static int ComputeCost( Item item ) {
+		public static int ComputeCost( Item item, out int savings ) {
 			var mymod = LicensesMod.Instance;
 
+			float totalSavings = 0;
 			float cost = (float)mymod.Config.WildcardLicenseCostBase;
 			cost += (float)item.stack * (float)mymod.Config.WildcardLicenseCostRarityMultiplier;
 
 			if( mymod.Config.LicenseCostArmorMultiplier != 1f ) {
 				if( ItemAttributeHelpers.IsArmor( item ) ) {
-					cost = (float)cost * mymod.Config.LicenseCostArmorMultiplier;
+					float armorCost = (float)cost * mymod.Config.LicenseCostArmorMultiplier;
+					cost = armorCost;
+					totalSavings += cost - armorCost;
 				}
 			}
 
 			if( mymod.Config.LicenseCostAccessoryMultiplier != 1f ) {
 				if( item.accessory ) {
-					cost = (float)cost * mymod.Config.LicenseCostAccessoryMultiplier;
+					float accCost = (float)cost * mymod.Config.LicenseCostAccessoryMultiplier;
+					cost = accCost;
+					totalSavings += cost - accCost;
 				}
 			}
 
+			savings = (int)totalSavings;
 			return (int)Math.Max( cost, mymod.Config.WildcardLicenseCostBase );
 		}
 
@@ -105,16 +112,21 @@ namespace Licenses.Items {
 		
 		public override bool UseItem( Player player ) {
 			var mymod = (LicensesMod)this.mod;
-			string randItemName = this.AttemptToLicenseRandomItem( player );
+			int savings, oldStack = this.item.stack;
+			string randItemName = this.AttemptToLicenseRandomItem( player, out savings );
 
 			if( randItemName == null ) {
 				Main.NewText( "No items of the given tier left to license.", Color.Red );
 				return false;
 			}
 
-			int targetRarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
+			int targetRarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( oldStack );
+			Color color = ItemAttributeHelpers.RarityColor[ targetRarity ];
 			string msg = randItemName + " licensed";
-			Color color = ItemAttributeHelpers.RarityColor[targetRarity];
+
+			if( savings > 0 ) {
+				msg += " - "+savings+" discounted";
+			}
 
 			PlayerMessages.AddPlayerLabel( player, msg, color, 2 * 60, true );
 			Main.NewText( msg, color );
@@ -129,7 +141,7 @@ namespace Licenses.Items {
 
 		////////////////
 
-		public string AttemptToLicenseRandomItem( Player player ) {
+		public string AttemptToLicenseRandomItem( Player player, out int savings ) {
 			var myplayer = player.GetModPlayer<LicensesPlayer>();
 			
 			int targetRarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
@@ -148,7 +160,10 @@ namespace Licenses.Items {
 			
 			do {
 				int count = tierEquips.Count();
-				if( count == 0 ) { return null; }
+				if( count == 0 ) {
+					savings = 0;
+					return null;
+				}
 
 				randItemType = tierEquips[ Main.rand.Next( count ) ];
 				randItemName = idsToNames[ randItemType ];
@@ -159,11 +174,23 @@ namespace Licenses.Items {
 			var dummyItem = new Item();
 			dummyItem.SetDefaults( randItemType, true );
 
-			int cost = WildcardLicenseItem.ComputeCost( dummyItem );
-
+			int cost = WildcardLicenseItem.ComputeCost( dummyItem, out savings );
+			Item selectedItem = player.inventory[ PlayerItemHelpers.VanillaInventorySelectedSlot ];
+			int selectedItemStack = selectedItem?.stack ?? 0;
+			
 			myplayer.LicenseItemByName( randItemName, true );
-
+			
 			ItemHelpers.ReduceStack( this.item, cost );
+			
+			if( selectedItem.type == this.item.type ) {
+				int newStackSize = ( selectedItemStack >= cost ) ? ( selectedItemStack - cost ) : 0;
+
+				selectedItem.stack = newStackSize;
+				Main.mouseItem.stack = newStackSize;
+
+				if( selectedItem.stack == 0 ) { selectedItem.active = false; }
+				if( Main.mouseItem.stack == 0 ) { Main.mouseItem.active = false; }
+			}
 			
 			return randItemName;
 		}

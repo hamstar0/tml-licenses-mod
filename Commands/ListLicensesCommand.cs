@@ -4,10 +4,10 @@ using Terraria.ModLoader;
 
 namespace Licenses.Commands {
 	class ListLicensesCommand : ModCommand {
-		public override CommandType Type { get { return CommandType.Chat; } }
-		public override string Command { get { return "lic-list"; } }
-		public override string Usage { get { return "/"+this.Command; } }
-		public override string Description { get { return "Lists all acquired licenses."; } }
+		public override CommandType Type => CommandType.Chat;
+		public override string Command => "lic-list";
+		public override string Usage => "/"+this.Command;
+		public override string Description => "Lists all acquired licenses.";
 
 
 		////////////////

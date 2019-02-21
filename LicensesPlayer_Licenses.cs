@@ -28,10 +28,10 @@ namespace Licenses {
 			}
 
 			var mymod = (LicensesMod)this.mod;
-			string real_item_name = ItemIdentityHelpers.GetQualifiedName( item );
+			string realItemName = ItemIdentityHelpers.GetQualifiedName( item );
 
-			bool is_licensed = this.LicensedItems.Contains( real_item_name )
-				|| mymod.Config.FreeStarterItems.Contains( real_item_name );
+			bool isLicensed = this.LicensedItems.Contains( realItemName )
+				|| mymod.Config.FreeStarterItems.Contains( realItemName );
 
 			// When the item is NOT licenses, we apply the licensing effect to the item, if we can:
 			switch( this.LicenseMode ) {
@@ -39,12 +39,12 @@ namespace Licenses {
 				this.LicenseMode = 0;
 
 
-				if( !is_licensed ) {
+				if( !isLicensed ) {
 					if( LicenseItem.AttemptToLicenseItem( this.player, item ) ) {
 						Main.NewText( item.Name + " is now usable.", Color.Lime );
 					} else {
 						int needed = LicenseItem.ComputeCost( item );
-						Main.NewText( "Not enough licenses for " + real_item_name + ": " + needed + " needed", Color.Red );
+						Main.NewText( "Not enough licenses for " + realItemName + ": " + needed + " needed", Color.Red );
 					}
 				} else {
 					Main.NewText( item.Name + " is already licensed.", Color.Yellow );
@@ -54,12 +54,12 @@ namespace Licenses {
 			case 2:
 				this.LicenseMode = 0;
 				
-				if( !is_licensed ) {
+				if( !isLicensed ) {
 					if( TrialLicenseItem.AttemptToTemporaryLicenseItem( this.player, item ) ) {
-						Main.NewText( real_item_name + " is now licensed for " + ( LicensesMod.Instance.Config.TrialLicenseDurationInTicks / 60 ) + " seconds.", Color.LimeGreen );
+						Main.NewText( realItemName + " is now licensed for " + ( LicensesMod.Instance.Config.TrialLicenseDurationInTicks / 60 ) + " seconds.", Color.LimeGreen );
 					} else {
 						int needed = LicenseItem.ComputeCost( item );
-						Main.NewText( "Not enough trial licenses for " + real_item_name + ": " + needed + " needed", Color.Red );
+						Main.NewText( "Not enough trial licenses for " + realItemName + ": " + needed + " needed", Color.Red );
 					}
 				} else {
 					Main.NewText( item.Name + " is already licensed.", Color.Yellow );
@@ -72,7 +72,7 @@ namespace Licenses {
 
 		////////////////
 
-		internal void TrialLicenseItemByName( string item_name, bool play_sound ) {
+		internal void TrialLicenseItemByName( string itemName, bool playSound ) {
 			var mymod = (LicensesMod)this.mod;
 
 			if( !string.IsNullOrEmpty(this.TrialLicensedItem) ) {
@@ -80,40 +80,40 @@ namespace Licenses {
 				NihilismAPI.UnsetItemWhitelistEntry( this.TrialLicensedItem, true );
 			}
 
-			this.TrialLicensedItem = item_name;
+			this.TrialLicensedItem = itemName;
 
-			NihilismAPI.SetItemWhitelistEntry( item_name, true );
+			NihilismAPI.SetItemWhitelistEntry( itemName, true );
 
 			Timers.UnsetTimer( "LicensesTrialPeriod" );
 			Timers.SetTimer( "LicensesTrialPeriod", mymod.Config.TrialLicenseDurationInTicks, () => {
 				var myplayer = Main.LocalPlayer.GetModPlayer<LicensesPlayer>();
 
-				if( !myplayer.LicensedItems.Contains( item_name ) ) {
-					Main.NewText( item_name+" trial has expired.", Color.Yellow );
-					NihilismAPI.UnsetItemWhitelistEntry( item_name, true );
+				if( !myplayer.LicensedItems.Contains( itemName ) ) {
+					Main.NewText( itemName+" trial has expired.", Color.Yellow );
+					NihilismAPI.UnsetItemWhitelistEntry( itemName, true );
 
 					myplayer.TrialLicensedItem = "";
 				}
 				return false;
 			} );
 
-			if( play_sound ) {
+			if( playSound ) {
 				Main.PlaySound( SoundID.Unlock, player.position );
 			}
 		}
 
-		internal void LicenseItemByName( string item_name, bool play_sound ) {
+		internal void LicenseItemByName( string itemName, bool playSound ) {
 			var mymod = (LicensesMod)this.mod;
 
-			this.LicensedItems.Add( item_name );
+			this.LicensedItems.Add( itemName );
 			
-			NihilismAPI.SetItemWhitelistEntry( item_name, true );
+			NihilismAPI.SetItemWhitelistEntry( itemName, true );
 
 			if( !mymod.Config.FreeRecipes ) {
-				NihilismAPI.SetRecipeWhitelistEntry( item_name, true );
+				NihilismAPI.SetRecipeWhitelistEntry( itemName, true );
 			}
 
-			if( play_sound ) {
+			if( playSound ) {
 				Main.PlaySound( SoundID.Unlock, player.position );
 			}
 		}

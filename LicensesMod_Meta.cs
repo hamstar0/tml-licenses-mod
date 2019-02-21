@@ -9,10 +9,8 @@ using Terraria.ModLoader;
 
 namespace Licenses {
 	public partial class LicensesMod : Mod {
-		public static LicensesMod Instance { get; private set; }
-
-		public static string GithubUserName { get { return "hamstar0"; } }
-		public static string GithubProjectName { get { return "tml-licenses-mod"; } }
+		public static string GithubUserName => "hamstar0";
+		public static string GithubProjectName => "tml-licenses-mod";
 
 		public static string ConfigFileRelativePath {
 			get { return ConfigurationDataBase.RelativePath + Path.DirectorySeparatorChar + LicensesConfigData.ConfigFileName; }
@@ -31,10 +29,10 @@ namespace Licenses {
 				throw new Exception( "Cannot reset to default configs outside of single player." );
 			}
 
-			var config_data = new LicensesConfigData();
-			//config_data.SetDefaults();
+			var configData = new LicensesConfigData();
+			configData.SetDefaults();
 
-			LicensesMod.Instance.ConfigJson.SetData( config_data );
+			LicensesMod.Instance.ConfigJson.SetData( configData );
 			LicensesMod.Instance.ConfigJson.SaveFile();
 		}
 	}

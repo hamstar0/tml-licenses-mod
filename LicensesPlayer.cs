@@ -17,7 +17,7 @@ namespace Licenses {
 
 		////////////////
 
-		public override bool CloneNewInstances { get { return false; } }
+		public override bool CloneNewInstances => false;
 
 		public override void Initialize() {
 			this.LicensedItems = new HashSet<string>();
@@ -27,9 +27,9 @@ namespace Licenses {
 
 		////////////////
 		
-		public override void SyncPlayer( int to_who, int from_who, bool new_player ) {
+		public override void SyncPlayer( int toWho, int fromWho, bool newPlayer ) {
 			if( Main.netMode == 2 ) {
-				if( to_who == -1 && from_who == this.player.whoAmI ) {
+				if( toWho == -1 && fromWho == this.player.whoAmI ) {
 					this.OnEnterWorldForServer();
 				}
 			}

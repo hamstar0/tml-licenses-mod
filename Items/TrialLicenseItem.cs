@@ -1,6 +1,5 @@
 ﻿using HamstarHelpers.Helpers.ItemHelpers;
 using HamstarHelpers.Helpers.PlayerHelpers;
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
@@ -9,20 +8,20 @@ using Terraria.ModLoader;
 namespace Licenses.Items {
 	class TrialLicenseItem : ModItem {
 		public static bool AttemptToTemporaryLicenseItem( Player player, Item item ) {
-			int trial_license_type = LicensesMod.Instance.ItemType<TrialLicenseItem>();
-			int total_licenses = ItemFinderHelpers.CountTotalOfEach( player.inventory, new HashSet<int> { trial_license_type } );
+			int trialLicenseType = LicensesMod.Instance.ItemType<TrialLicenseItem>();
+			int totalLicenses = ItemFinderHelpers.CountTotalOfEach( player.inventory, new HashSet<int> { trialLicenseType } );
 			int needed = LicenseItem.ComputeCost( item );
 			
-			if( total_licenses < needed ) {
+			if( totalLicenses < needed ) {
 				return false;
 			}
 
-			string real_item_name = ItemIdentityHelpers.GetQualifiedName( item );
+			string realTtemName = ItemIdentityHelpers.GetQualifiedName( item );
 
 			var myplayer = player.GetModPlayer<LicensesPlayer>();
-			myplayer.TrialLicenseItemByName( real_item_name, true );
+			myplayer.TrialLicenseItemByName( realTtemName, true );
 
-			PlayerItemHelpers.RemoveInventoryItemQuantity( player, trial_license_type, needed );
+			PlayerItemHelpers.RemoveInventoryItemQuantity( player, trialLicenseType, needed );
 
 			return true;
 		}

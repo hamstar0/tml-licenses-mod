@@ -34,9 +34,9 @@ namespace Licenses {
 				string[] licenses = new string[count];
 
 				for( int i=0; i<count; i++ ) {
-					string item_name = tag.GetString( "license_" + i );
+					string itemName = tag.GetString( "license_" + i );
 
-					this.PendingLoadLicenses.Add( item_name );
+					this.PendingLoadLicenses.Add( itemName );
 				}
 			}
 		}
@@ -60,8 +60,8 @@ namespace Licenses {
 		private void OnEnterWorldLocal() {
 			var mymod = (LicensesMod)this.mod;
 
-			foreach( string item_name in this.PendingLoadLicenses ) {
-				this.LicenseItemByName( item_name, false );
+			foreach( string itemName in this.PendingLoadLicenses ) {
+				this.LicenseItemByName( itemName, false );
 			}
 			this.PendingLoadLicenses.Clear();
 		}
@@ -102,7 +102,7 @@ namespace Licenses {
 
 		////////////////
 
-		public override void SetupStartInventory( IList<Item> items, bool mediumcore_death ) {
+		public override void SetupStartInventory( IList<Item> items, bool mediumcoreDeath ) {
 			var mymod = (LicensesMod)this.mod;
 			if( mymod.Config.NewPlayerStarterLicenses == 0 ) { return; }
 

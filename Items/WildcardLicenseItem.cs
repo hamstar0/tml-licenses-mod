@@ -15,9 +15,9 @@ namespace Licenses.Items {
 		public static int ComputeMaxCost() {
 			var mymod = LicensesMod.Instance;
 			
-			int max_rarity_cost = mymod.Config.WildcardLicenseCostBase;
-			max_rarity_cost += ItemAttributeHelpers.HighestVanillaRarity * mymod.Config.WildcardLicenseCostRarityMultiplier;
-			return max_rarity_cost;
+			int maxRarityCost = mymod.Config.WildcardLicenseCostBase;
+			maxRarityCost += ItemAttributeHelpers.HighestVanillaRarity * mymod.Config.WildcardLicenseCostRarityMultiplier;
+			return maxRarityCost;
 		}
 
 
@@ -73,19 +73,19 @@ namespace Licenses.Items {
 
 		public override void ModifyTooltips( List<TooltipLine> tooltips ) {
 			var mymod = (LicensesMod)this.mod;
-			int target_rarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
+			int targetRarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
 			TooltipLine tip;
 
-			if( target_rarity > ItemAttributeHelpers.HighestVanillaRarity ) {
+			if( targetRarity > ItemAttributeHelpers.HighestVanillaRarity ) {
 				tip = new TooltipLine( mymod, "WildcardLicense:Tier", "Stack size exceeds highest item tier." ) {
 					overrideColor = ItemAttributeHelpers.RarityColor[ ItemAttributeHelpers.JunkRarity ]
 				};
 			} else {
-				string rare_str = ItemAttributeHelpers.RarityLabel[ target_rarity ];
-				string rare_clr_str = ItemAttributeHelpers.RarityColorText[ target_rarity ];
+				string rareStr = ItemAttributeHelpers.RarityLabel[ targetRarity ];
+				string rareClrStr = ItemAttributeHelpers.RarityColorText[ targetRarity ];
 
-				tip = new TooltipLine( mymod, "WildcardLicense:Tier", "Current item tier: "+rare_str+" ("+rare_clr_str+")" ) {
-					overrideColor = ItemAttributeHelpers.RarityColor[ target_rarity ]
+				tip = new TooltipLine( mymod, "WildcardLicense:Tier", "Current item tier: "+rareStr+" ("+rareClrStr+")" ) {
+					overrideColor = ItemAttributeHelpers.RarityColor[ targetRarity ]
 				};
 			}
 			
@@ -97,30 +97,30 @@ namespace Licenses.Items {
 		
 		public override bool CanUseItem( Player player ) {
 			var mymod = (LicensesMod)this.mod;
-			int max_rarity_cost = WildcardLicenseItem.ComputeMaxCost();
+			int maxRarityCost = WildcardLicenseItem.ComputeMaxCost();
 			
-			return this.item.stack <= max_rarity_cost;
+			return this.item.stack <= maxRarityCost;
 		}
 
 		
 		public override bool UseItem( Player player ) {
 			var mymod = (LicensesMod)this.mod;
-			string rand_item_name = this.AttemptToLicenseRandomItem( player );
+			string randItemName = this.AttemptToLicenseRandomItem( player );
 
-			if( rand_item_name == null ) {
+			if( randItemName == null ) {
 				Main.NewText( "No items of the given tier left to license.", Color.Red );
 				return false;
 			}
 
-			int target_rarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
-			string msg = rand_item_name + " licensed";
-			Color color = ItemAttributeHelpers.RarityColor[target_rarity];
+			int targetRarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
+			string msg = randItemName + " licensed";
+			Color color = ItemAttributeHelpers.RarityColor[targetRarity];
 
 			PlayerMessages.AddPlayerLabel( player, msg, color, 2 * 60, true );
 			Main.NewText( msg, color );
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "Licenses - WildcardLicenseItem.UseItem - " + rand_item_name + " unlocked" );
+				LogHelpers.Alert( randItemName + " unlocked" );
 			}
 
 			return true;
@@ -132,40 +132,40 @@ namespace Licenses.Items {
 		public string AttemptToLicenseRandomItem( Player player ) {
 			var myplayer = player.GetModPlayer<LicensesPlayer>();
 			
-			int target_rarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
+			int targetRarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
 
-			string grp_name = "Any " + ItemAttributeHelpers.RarityColorText[target_rarity] + " Tier";
-			ISet<int> tier_items = EntityGroups.ItemGroups[ grp_name ];
+			string grpName = "Any " + ItemAttributeHelpers.RarityColorText[targetRarity] + " Tier";
+			ISet<int> tierItems = EntityGroups.ItemGroups[ grpName ];
 			ISet<int> equipments = EntityGroups.ItemGroups[ "Any Equipment" ];
-			IList<int> tier_equips = new List<int>( tier_items.Intersect( equipments ) );
+			IList<int> tierEquips = new List<int>( tierItems.Intersect( equipments ) );
 
-			int rand_item_type;
-			string rand_item_name;
+			int randItemType;
+			string randItemName;
 
-			IDictionary<int, string> ids_to_names = ItemIdentityHelpers.NamesToIds
+			IDictionary<int, string> idsToNames = ItemIdentityHelpers.NamesToIds
 				.ToLookup( kp => kp.Value )
 				.ToDictionary( g => g.Key, g => g.First().Key );
 			
 			do {
-				int count = tier_equips.Count();
+				int count = tierEquips.Count();
 				if( count == 0 ) { return null; }
 
-				rand_item_type = tier_equips[ Main.rand.Next( count ) ];
-				rand_item_name = ids_to_names[ rand_item_type ];
+				randItemType = tierEquips[ Main.rand.Next( count ) ];
+				randItemName = idsToNames[ randItemType ];
 
-				tier_equips.Remove( rand_item_type );
-			} while( myplayer.LicensedItems.Contains( rand_item_name ) );
+				tierEquips.Remove( randItemType );
+			} while( myplayer.LicensedItems.Contains( randItemName ) );
 
-			var dummy_item = new Item();
-			dummy_item.SetDefaults( rand_item_type, true );
+			var dummyItem = new Item();
+			dummyItem.SetDefaults( randItemType, true );
 
-			int cost = WildcardLicenseItem.ComputeCost( dummy_item );
+			int cost = WildcardLicenseItem.ComputeCost( dummyItem );
 
-			myplayer.LicenseItemByName( rand_item_name, true );
+			myplayer.LicenseItemByName( randItemName, true );
 
 			ItemHelpers.ReduceStack( this.item, cost );
 			
-			return rand_item_name;
+			return randItemName;
 		}
 	}
 }

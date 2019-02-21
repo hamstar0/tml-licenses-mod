@@ -124,31 +124,37 @@ namespace Licenses {
 			
 			this.FreeStarterItems.Add( "Sunglasses" );
 		}
-		
-		
+
+
 		////////////////
 
-		public bool UpdateToLatestVersion() {
-			var new_config = new LicensesConfigData();
-			var vers_since = this.VersionSinceUpdate != "" ?
+		public bool CanUpdateVersion() {
+			if( this.VersionSinceUpdate == "" ) {
+				return true;
+			}
+
+			var versSince = new Version( this.VersionSinceUpdate );
+			bool canUpdate = versSince < LicensesMod.Instance.Version;
+			
+			return canUpdate;
+		}
+
+		public void UpdateToLatestVersion() {
+			var mymod = LicensesMod.Instance;
+
+			var versSince = this.VersionSinceUpdate != "" ?
 				new Version( this.VersionSinceUpdate ) :
 				new Version();
-
-			if( vers_since >= LicensesMod.Instance.Version ) {
-				return false;
-			}
 
 			if( this.VersionSinceUpdate == "" ) {
 				this.SetDefaults();
 			}
 
-			if( vers_since < new Version( 2, 0, 4, 1 ) ) {
+			if( versSince < new Version( 2, 0, 4, 1 ) ) {
 				this.FreeStarterItems.Add( "Trial License" );
 			}
 
-			this.VersionSinceUpdate = LicensesMod.Instance.Version.ToString();
-
-			return true;
+			this.VersionSinceUpdate = mymod.Version.ToString();
 		}
 	}
 }

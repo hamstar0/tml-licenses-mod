@@ -82,12 +82,12 @@ namespace Licenses {
 
 
 		private void LoadLicensePacks() {
-			var lic_def = new ShopPackItemDefinition {
+			var licDef = new ShopPackItemDefinition {
 				Name = "License",
 				Stack = this.Config.LicensesPerPack,
 				CrimsonWorldOnly = null
 			};
-			var wild_lic_def = new ShopPackItemDefinition {
+			var wildLicDef = new ShopPackItemDefinition {
 				Name = "Wildcard License",
 				Stack = this.Config.WildcardLicensesPerPack,
 				CrimsonWorldOnly = null
@@ -96,12 +96,12 @@ namespace Licenses {
 			var def1 = new ShopPackDefinition {
 				Name = "Standard License Pack",
 				Price = this.Config.LicensePackCostInPP,
-				Items = new ShopPackItemDefinition[] { lic_def }
+				Items = new ShopPackItemDefinition[] { licDef }
 			};
 			var def2 = new ShopPackDefinition {
 				Name = "Wildcard License Pack",
 				Price = this.Config.WildcardLicensePackCostInPP,
-				Items = new ShopPackItemDefinition[] { wild_lic_def }
+				Items = new ShopPackItemDefinition[] { wildLicDef }
 			};
 			
 			if( this.Config.ResetWayfarerShop ) {

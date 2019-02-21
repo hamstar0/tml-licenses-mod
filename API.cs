@@ -15,11 +15,11 @@ namespace Licenses {
 
 		////////////////
 
-		public static void LicenseItemForCurrentPlayer( Item item, bool play_sound ) {
-			string item_name = ItemIdentityHelpers.GetQualifiedName( item );
+		public static void LicenseItemForCurrentPlayer( Item item, bool playSound ) {
+			string itemName = ItemIdentityHelpers.GetQualifiedName( item );
 			var myplayer = Main.LocalPlayer.GetModPlayer<LicensesPlayer>();
 
-			myplayer.LicenseItemByName( item_name, play_sound );
+			myplayer.LicenseItemByName( itemName, playSound );
 		}
 
 		public static void ClearLicencesForCurrentPlayer() {
@@ -28,11 +28,11 @@ namespace Licenses {
 			myplayer.LicensedItems.Clear();
 		}
 
-		public static void TrialLicenseItemForCurrentPlayer( Item item, bool play_sound ) {
-			string item_name = ItemIdentityHelpers.GetQualifiedName( item );
+		public static void TrialLicenseItemForCurrentPlayer( Item item, bool playSound ) {
+			string itemName = ItemIdentityHelpers.GetQualifiedName( item );
 			var myplayer = Main.LocalPlayer.GetModPlayer<LicensesPlayer>();
 
-			myplayer.TrialLicenseItemByName( item_name, play_sound );
+			myplayer.TrialLicenseItemByName( itemName, playSound );
 		}
 	}
 }

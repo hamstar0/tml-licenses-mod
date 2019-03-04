@@ -27,28 +27,43 @@ namespace Licenses {
 			var self = this;
 			var mymod = (LicensesMod)this.mod;
 
+			this.TrialLicensedItems.Clear();
 			this.LicensedItems.Clear();
+
+			if( tag.ContainsKey( "trial_license_count" ) ) {
+				int count = tag.GetInt( "trial_license_count" );
+				for( int i = 0; i < count; i++ ) {
+					string itemName = tag.GetString( "trial_license_" + i );
+					this.PendingLoadTrialLicenses.Add( itemName );
+				}
+			}
 
 			if( tag.ContainsKey("license_count") ) {
 				int count = tag.GetInt( "license_count" );
-				string[] licenses = new string[count];
-
 				for( int i=0; i<count; i++ ) {
 					string itemName = tag.GetString( "license_" + i );
-
 					this.PendingLoadLicenses.Add( itemName );
 				}
 			}
 		}
 
 		public override TagCompound Save() {
+			int i;
 			var tags = new TagCompound {
+				{ "trial_license_count", this.TrialLicensedItems.Count },
 				{ "license_count", this.LicensedItems.Count }
 			};
 
-			int i = 0;
+			i = 0;
+			foreach( string name in this.TrialLicensedItems ) {
+				tags["trial_license_" + i] = name;
+				i++;
+			}
+
+			i = 0;
 			foreach( string name in this.LicensedItems ) {
-				tags["license_" +i++] = name;
+				tags["license_" + i] = name;
+				i++;
 			}
 
 			return tags;
@@ -60,9 +75,14 @@ namespace Licenses {
 		private void OnEnterWorldLocal() {
 			var mymod = (LicensesMod)this.mod;
 
+			foreach( string itemName in this.PendingLoadTrialLicenses ) {
+				this.TrialLicenseItemByName( itemName, false );
+			}
 			foreach( string itemName in this.PendingLoadLicenses ) {
 				this.LicenseItemByName( itemName, false );
 			}
+
+			this.PendingLoadTrialLicenses.Clear();
 			this.PendingLoadLicenses.Clear();
 		}
 

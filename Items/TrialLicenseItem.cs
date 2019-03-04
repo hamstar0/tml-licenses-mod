@@ -35,7 +35,8 @@ namespace Licenses.Items {
 			this.DisplayName.SetDefault( "Trail License" );
 			this.Tooltip.SetDefault( "Select an item with this to temporarily license it"
 				+'\n'+"Trial licenses only last "+(mymod.Config.TrialLicenseDurationInTicks/60)+" seconds"
-				+'\n'+"Only 1 item may be trialed at a time" );
+				+'\n'+"Only 1 item may be trialed at a time"
+				+'\n'+"Items cannot be trialed more than once" );
 		}
 
 		public override void SetDefaults() {

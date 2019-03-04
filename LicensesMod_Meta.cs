@@ -1,6 +1,5 @@
 ﻿using HamstarHelpers.Components.Config;
-using HamstarHelpers.Services.EntityGroups;
-using HamstarHelpers.Services.Promises;
+using HamstarHelpers.Components.Errors;
 using System;
 using System.IO;
 using Terraria;
@@ -17,7 +16,7 @@ namespace Licenses {
 		}
 		public static void ReloadConfigFromFile() {
 			if( Main.netMode != 0 ) {
-				throw new Exception( "Cannot reload configs outside of single player." );
+				throw new HamstarException( "Cannot reload configs outside of single player." );
 			}
 			if( !LicensesMod.Instance.ConfigJson.LoadFile() ) {
 				LicensesMod.Instance.ConfigJson.SaveFile();
@@ -26,7 +25,7 @@ namespace Licenses {
 
 		public static void ResetConfigFromDefaults() {
 			if( Main.netMode != 0 ) {
-				throw new Exception( "Cannot reset to default configs outside of single player." );
+				throw new HamstarException( "Cannot reset to default configs outside of single player." );
 			}
 
 			var configData = new LicensesConfigData();

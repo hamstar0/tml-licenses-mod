@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.Helpers.DebugHelpers;
+using Nihilism;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
@@ -6,22 +7,44 @@ using Terraria.ModLoader;
 
 namespace Licenses {
 	partial class LicensesPlayer : ModPlayer {
+		private readonly ISet<string> PendingLoadTrialLicenses = new HashSet<string>();
 		private readonly ISet<string> PendingLoadLicenses = new HashSet<string>();
 
+		public int LicenseMode = 0;
+
+		////////////////
+
+		public ISet<string> TrialLicensedItems { get; private set; }
 		public ISet<string> LicensedItems { get; private set; }
 		public string TrialLicensedItem { get; private set; }
 
-		public int LicenseMode = 0;
+		////
+
+		public override bool CloneNewInstances => false;
 
 
 
 		////////////////
 
-		public override bool CloneNewInstances => false;
-
 		public override void Initialize() {
-			this.LicensedItems = new HashSet<string>();
 			this.TrialLicensedItem = "";
+			this.TrialLicensedItems = new HashSet<string>();
+			this.LicensedItems = new HashSet<string>();
+		}
+
+		////
+
+		internal void ResetLicenses() {
+			foreach( string itemName in this.LicensedItems ) {
+				NihilismAPI.UnsetItemWhitelistEntry( itemName, true );
+			}
+			if( string.IsNullOrEmpty(this.TrialLicensedItem) ) {
+				NihilismAPI.UnsetItemWhitelistEntry( this.TrialLicensedItem, true );
+			}
+
+			this.TrialLicensedItem = "";
+			this.TrialLicensedItems = new HashSet<string>();
+			this.LicensedItems = new HashSet<string>();
 		}
 
 

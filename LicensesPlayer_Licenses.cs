@@ -30,6 +30,7 @@ namespace Licenses {
 			var mymod = (LicensesMod)this.mod;
 			string realItemName = ItemIdentityHelpers.GetQualifiedName( item );
 
+			bool isTrialed = this.TrialLicensedItems.Contains( realItemName );
 			bool isLicensed = this.LicensedItems.Contains( realItemName )
 				|| mymod.Config.FreeStarterItems.Contains( realItemName );
 
@@ -54,7 +55,7 @@ namespace Licenses {
 			case 2:
 				this.LicenseMode = 0;
 				
-				if( !isLicensed ) {
+				if( !isLicensed && !isTrialed ) {
 					if( TrialLicenseItem.AttemptToTemporaryLicenseItem( this.player, item ) ) {
 						Main.NewText( realItemName + " is now licensed for " + ( LicensesMod.Instance.Config.TrialLicenseDurationInTicks / 60 ) + " seconds.", Color.LimeGreen );
 					} else {
@@ -62,7 +63,11 @@ namespace Licenses {
 						Main.NewText( "Not enough trial licenses for " + realItemName + ": " + needed + " needed", Color.Red );
 					}
 				} else {
-					Main.NewText( item.Name + " is already licensed.", Color.Yellow );
+					if( isLicensed ) {
+						Main.NewText( item.Name + " is already licensed.", Color.Yellow );
+					} else if( isTrialed ) {
+						Main.NewText( item.Name + " has already been trialed.", Color.Yellow );
+					}
 				}
 
 				break;
@@ -80,6 +85,7 @@ namespace Licenses {
 				NihilismAPI.UnsetItemWhitelistEntry( this.TrialLicensedItem, true );
 			}
 
+			this.TrialLicensedItems.Add( itemName );
 			this.TrialLicensedItem = itemName;
 
 			NihilismAPI.SetItemWhitelistEntry( itemName, true );

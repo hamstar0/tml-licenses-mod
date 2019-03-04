@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API_Compat.cs" />
     <Compile Include="API.cs" />
     <Compile Include="Commands\ListLicensesCommand.cs" />
     <Compile Include="Config.cs" />

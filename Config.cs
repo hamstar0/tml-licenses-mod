@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Licenses {
 	public class LicensesConfigData : ConfigurationDataBase {
-		public readonly static string ConfigFileName = "Licenses Config.json";
+		public static string ConfigFileName => "Licenses Config.json";
 
 
 		////////////////
@@ -22,9 +22,9 @@ namespace Licenses {
 		public ISet<string> FreeStarterItems = new HashSet<string>();
 
 		public int LicensePackCostInPP = 10;
-		public int LicensesPerPack = 6;
-		public int WildcardLicensePackCostInPP = 20;
-		public int WildcardLicensesPerPack = 20;
+		public int LicensesPerPack = 3;
+		public int WildcardLicensePackCostInPP = 10;
+		public int WildcardLicensesPerPack = 10;
 
 		public int LicenseCostBase = 1;
 		public float LicenseCostRarityMultiplier = 1;
@@ -44,7 +44,17 @@ namespace Licenses {
 		public bool RemoveRewardsGrinding = true;
 
 		public int TrialLicenseDurationInTicks = 2 * 60 * 60;   // 2 minutes
-		public int TrialLicenseCost = 100 * 100 * 2;	// 2 gold
+		public int TrialLicenseCost = 100 * 100;    // 1 gold
+
+
+
+		////////////////
+
+		public static int _2_0_6_LicensePackCostInPP = 10;
+		public static int _2_0_6_LicensesPerPack => 6;
+		public static int _2_0_6_WildcardLicensePackCostInPP = 20;
+		public static int _2_0_6_WildcardLicensesPerPack => 20;
+		public static int _2_0_6_TrialLicenseCost = 100 * 100 * 2;
 
 
 
@@ -139,12 +149,14 @@ namespace Licenses {
 			return canUpdate;
 		}
 
+
 		public void UpdateToLatestVersion() {
 			var mymod = LicensesMod.Instance;
-
 			var versSince = this.VersionSinceUpdate != "" ?
 				new Version( this.VersionSinceUpdate ) :
 				new Version();
+			var newConfig = new LicensesConfigData();
+			newConfig.SetDefaults();
 
 			if( this.VersionSinceUpdate == "" ) {
 				this.SetDefaults();
@@ -152,6 +164,20 @@ namespace Licenses {
 
 			if( versSince < new Version( 2, 0, 4, 1 ) ) {
 				this.FreeStarterItems.Add( "Trial License" );
+			}
+			if( versSince < new Version( 2, 0, 7 ) ) {
+				if( this.LicensePackCostInPP == LicensesConfigData._2_0_6_LicensePackCostInPP
+						&& this.LicensesPerPack == LicensesConfigData._2_0_6_LicensesPerPack 
+						&& this.WildcardLicensePackCostInPP == LicensesConfigData._2_0_6_WildcardLicensePackCostInPP 
+						&& this.WildcardLicensesPerPack == LicensesConfigData._2_0_6_WildcardLicensesPerPack ) {
+					this.LicensePackCostInPP = newConfig.LicensePackCostInPP;
+					this.LicensesPerPack = newConfig.LicensesPerPack;
+					this.WildcardLicensePackCostInPP = newConfig.WildcardLicensePackCostInPP;
+					this.WildcardLicensesPerPack = newConfig.WildcardLicensesPerPack;
+				}
+				if( this.TrialLicenseCost == LicensesConfigData._2_0_6_TrialLicenseCost ) {
+					this.TrialLicenseCost = newConfig.TrialLicenseCost;
+				}
 			}
 
 			this.VersionSinceUpdate = mymod.Version.ToString();

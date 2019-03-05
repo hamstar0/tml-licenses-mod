@@ -24,6 +24,10 @@ namespace Licenses {
 		////////////////
 
 		public void LoadGameModeOnWorldLoad() {
+			if( this.Config.DebugModeInfo ) {
+				LogHelpers.Alert( "Loading game mode..." );
+			}
+			
 			NihilismAPI.SuppressAutoSavingOn();
 			RewardsAPI.SuppressConfigAutoSavingOn();
 			
@@ -39,6 +43,10 @@ namespace Licenses {
 
 			// Finish loading Nihilism
 			Promises.AddValidatedPromise( LicensesPlayer.EnterWorldValidator, () => {
+				if( this.Config.DebugModeInfo ) {
+					LogHelpers.Alert( "Loading Nihilism for game mode..." );
+				}
+
 				NihilismAPI.NihilateCurrentWorld();
 
 				InboxMessages.ReadMessage( "nihilism_init" );
@@ -50,7 +58,14 @@ namespace Licenses {
 
 			Promises.AddWorldUnloadOncePromise( () => {
 				Promises.ClearValidatedPromise( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );
+				Promises.AddWorldLoadOncePromise( () => {
+					Promises.TriggerValidatedPromise( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );	// Whee!
+				} );
 			} );
+
+			if( this.Config.DebugModeInfo ) {
+				LogHelpers.Alert( "Finished loading game mode" );
+			}
 		}
 
 

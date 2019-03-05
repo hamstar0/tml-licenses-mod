@@ -82,7 +82,10 @@ namespace Licenses {
 
 			if( !string.IsNullOrEmpty(this.TrialLicensedItem) ) {
 				Main.NewText( this.TrialLicensedItem + " trial cancelled.", Color.Yellow );
-				NihilismAPI.UnsetItemWhitelistEntry( this.TrialLicensedItem, true );
+
+				if( !this.LicensedItems.Contains( itemName ) ) {
+					NihilismAPI.UnsetItemWhitelistEntry( this.TrialLicensedItem, true );
+				}
 			}
 
 			this.TrialLicensedItems.Add( itemName );

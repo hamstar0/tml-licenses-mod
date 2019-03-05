@@ -36,6 +36,9 @@ namespace Licenses {
 					string itemName = tag.GetString( "trial_license_" + i );
 					this.PendingLoadTrialLicenses.Add( itemName );
 				}
+				if( mymod.Config.DebugModeInfo ) {
+					LogHelpers.Alert( "  Loaded for player "+this.player.name+" ("+this.player.whoAmI+") "+count+" trial licensed items..." );
+				}
 			}
 
 			if( tag.ContainsKey("license_count") ) {
@@ -43,6 +46,9 @@ namespace Licenses {
 				for( int i=0; i<count; i++ ) {
 					string itemName = tag.GetString( "license_" + i );
 					this.PendingLoadLicenses.Add( itemName );
+				}
+				if( mymod.Config.DebugModeInfo ) {
+					LogHelpers.Alert( "  Loaded for player "+this.player.name+" ("+this.player.whoAmI+") "+count+" licensed items..." );
 				}
 			}
 		}
@@ -76,7 +82,8 @@ namespace Licenses {
 			var mymod = (LicensesMod)this.mod;
 
 			foreach( string itemName in this.PendingLoadTrialLicenses ) {
-				this.TrialLicenseItemByName( itemName, false );
+				//this.TrialLicenseItemByName( itemName, false );	<- Not the same as Licensing
+				this.TrialLicensedItems.Add( itemName );
 			}
 			foreach( string itemName in this.PendingLoadLicenses ) {
 				this.LicenseItemByName( itemName, false );
@@ -86,7 +93,7 @@ namespace Licenses {
 			this.PendingLoadLicenses.Clear();
 		}
 
-		private void OnEnterWorldFinish() {
+		private void PostOnEnterWorld() {
 			Promises.TriggerValidatedPromise( LicensesPlayer.EnterWorldValidator, LicensesPlayer.MyValidatorKey );
 
 			Promises.AddWorldUnloadOncePromise( () => {
@@ -98,23 +105,38 @@ namespace Licenses {
 
 		public void OnEnterWorldForSingle() {
 			Promises.AddValidatedPromise( LicensesMod.GameModeLoadValidator, () => {
+				var mymod = (LicensesMod)this.mod;
+				if( mymod.Config.DebugModeInfo ) {
+					LogHelpers.Alert( "Loading player for game mode..." );
+				}
+
 				this.OnEnterWorldLocal();
-				this.OnEnterWorldFinish();
+				this.PostOnEnterWorld();
 				return false;
 			} );
 		}
 
 		public void OnEnterWorldForClient() {
 			Promises.AddValidatedPromise( LicensesMod.GameModeLoadValidator, () => {
+				var mymod = (LicensesMod)this.mod;
+				if( mymod.Config.DebugModeInfo ) {
+					LogHelpers.Alert( "Loading player for game mode..." );
+				}
+
 				this.OnEnterWorldLocal();
-				this.OnEnterWorldFinish();
+				this.PostOnEnterWorld();
 				return false;
 			} );
 		}
 
 		public void OnEnterWorldForServer() {
 			Promises.AddValidatedPromise( LicensesMod.GameModeLoadValidator, () => {
-				this.OnEnterWorldFinish();
+				var mymod = (LicensesMod)this.mod;
+				if( mymod.Config.DebugModeInfo ) {
+					LogHelpers.Alert( "Loading player for game mode..." );
+				}
+
+				this.PostOnEnterWorld();
 				return false;
 			} );
 		}

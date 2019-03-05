@@ -10,12 +10,13 @@ namespace Licenses {
 		private readonly ISet<string> PendingLoadTrialLicenses = new HashSet<string>();
 		private readonly ISet<string> PendingLoadLicenses = new HashSet<string>();
 
+		public readonly ISet<string> TrialLicensedItems = new HashSet<string>();
+		public readonly ISet<string> LicensedItems = new HashSet<string>();
+
 		public int LicenseMode = 0;
 
 		////////////////
-
-		public ISet<string> TrialLicensedItems { get; private set; }
-		public ISet<string> LicensedItems { get; private set; }
+		
 		public string TrialLicensedItem { get; private set; }
 
 		////
@@ -28,8 +29,6 @@ namespace Licenses {
 
 		public override void Initialize() {
 			this.TrialLicensedItem = "";
-			this.TrialLicensedItems = new HashSet<string>();
-			this.LicensedItems = new HashSet<string>();
 		}
 
 		////
@@ -43,8 +42,10 @@ namespace Licenses {
 			}
 
 			this.TrialLicensedItem = "";
-			this.TrialLicensedItems = new HashSet<string>();
-			this.LicensedItems = new HashSet<string>();
+			this.TrialLicensedItems.Clear();
+			this.LicensedItems.Clear();
+			this.PendingLoadTrialLicenses.Clear();
+			this.PendingLoadLicenses.Clear();
 		}
 
 

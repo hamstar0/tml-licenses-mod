@@ -64,6 +64,8 @@
     <Compile Include="Commands\ListLicensesCommand.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Items\TrialLicenseItem.cs" />
+    <Compile Include="Items\WildcardLicenseItem_Apply.cs" />
+    <Compile Include="Items\WildcardLicenseItem_Compute.cs" />
     <Compile Include="Items\WildcardLicenseItem.cs" />
     <Compile Include="Items\LicenseItem.cs" />
     <Compile Include="LicensesMod_Meta.cs" />

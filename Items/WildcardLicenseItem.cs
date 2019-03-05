@@ -1,7 +1,5 @@
 ﻿using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.ItemHelpers;
-using HamstarHelpers.Helpers.PlayerHelpers;
-using HamstarHelpers.Services.EntityGroups;
 using HamstarHelpers.Services.Messages;
 using Microsoft.Xna.Framework;
 using System;
@@ -12,56 +10,7 @@ using Terraria.ModLoader;
 
 
 namespace Licenses.Items {
-	class WildcardLicenseItem : ModItem {
-		public static int ComputeMaxCost() {
-			var mymod = LicensesMod.Instance;
-			
-			int maxRarityCost = mymod.Config.WildcardLicenseCostBase;
-			maxRarityCost += ItemAttributeHelpers.HighestVanillaRarity * mymod.Config.WildcardLicenseCostRarityMultiplier;
-			return maxRarityCost;
-		}
-
-
-		public static int ComputeTargetRarityOfLicenseStackSize( int stack ) {
-			var mymod = LicensesMod.Instance;
-			int rarity = (stack - mymod.Config.WildcardLicenseCostBase) / mymod.Config.WildcardLicenseCostRarityMultiplier;
-
-			return Math.Max( -1, rarity );
-		}
-
-
-		public static int ComputeCost( Item item, out int savings ) {
-			var mymod = LicensesMod.Instance;
-
-			float totalSavings = 0;
-			float cost = (float)mymod.Config.WildcardLicenseCostBase;
-			cost += (float)item.stack * (float)Math.Max(0, item.rare) * (float)mymod.Config.WildcardLicenseCostRarityMultiplier;
-
-			if( mymod.Config.LicenseCostArmorMultiplier != 1f ) {
-				if( ItemAttributeHelpers.IsArmor( item ) ) {
-					float armorCost = (float)cost * mymod.Config.LicenseCostArmorMultiplier;
-
-					totalSavings += cost - armorCost;
-					cost = armorCost;
-				}
-			}
-
-			if( mymod.Config.LicenseCostAccessoryMultiplier != 1f ) {
-				if( item.accessory ) {
-					float accCost = (float)cost * mymod.Config.LicenseCostAccessoryMultiplier;
-
-					totalSavings += cost - accCost;
-					cost = accCost;
-				}
-			}
-
-			savings = (int)totalSavings;
-			return (int)Math.Max( cost, mymod.Config.WildcardLicenseCostBase );
-		}
-
-
-		////////////////
-		
+	partial class WildcardLicenseItem : ModItem {
 		public override void SetStaticDefaults() {
 			this.DisplayName.SetDefault( "Wildcard License" );
 			this.Tooltip.SetDefault( "Use to license a random item of the given tier" + '\n' +
@@ -114,6 +63,10 @@ namespace Licenses.Items {
 		public override bool CanUseItem( Player player ) {
 			var mymod = (LicensesMod)this.mod;
 			int maxRarityCost = WildcardLicenseItem.ComputeMaxCost();
+
+			if( this.item.stack > maxRarityCost ) {
+				Main.NewText( "Invalid stack size. Stack size must correspond to a valid item ranking value (rarity).", Color.Yellow );
+			}
 			
 			return this.item.stack <= maxRarityCost;
 		}
@@ -147,64 +100,6 @@ namespace Licenses.Items {
 			}
 
 			return true;
-		}
-
-
-		////////////////
-
-		public string AttemptToLicenseRandomItem( Player player, out int savings ) {
-			var myplayer = player.GetModPlayer<LicensesPlayer>();
-			
-			int targetRarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
-
-			string grpName = "Any " + ItemAttributeHelpers.RarityColorText[targetRarity] + " Tier";
-			ISet<int> tierItems = EntityGroups.ItemGroups[ grpName ];
-			ISet<int> equipments = EntityGroups.ItemGroups[ "Any Equipment" ];
-			IList<int> tierEquips = new List<int>( tierItems.Intersect( equipments ) );
-
-			int randItemType;
-			string randItemName;
-
-			IDictionary<int, string> idsToNames = ItemIdentityHelpers.NamesToIds
-				.ToLookup( kv => kv.Value )
-				.ToDictionary( g => g.Key, g => g.First().Key );
-			
-			do {
-				int count = tierEquips.Count();
-				if( count == 0 ) {
-					savings = 0;
-					return null;
-				}
-
-				randItemType = tierEquips[ Main.rand.Next( count ) ];
-				randItemName = idsToNames[ randItemType ];
-
-				tierEquips.Remove( randItemType );
-			} while( myplayer.LicensedItems.Contains( randItemName ) );
-
-			var dummyItem = new Item();
-			dummyItem.SetDefaults( randItemType, true );
-
-			int cost = WildcardLicenseItem.ComputeCost( dummyItem, out savings );
-			Item selectedItem = player.inventory[ PlayerItemHelpers.VanillaInventorySelectedSlot ];
-			int selectedItemStack = selectedItem?.stack ?? 0;
-			
-			myplayer.LicenseItemByName( randItemName, true );
-			
-			ItemHelpers.ReduceStack( this.item, cost );
-			
-			// Failsafes:
-			if( selectedItem.type == this.item.type ) {
-				int newStackSize = ( selectedItemStack >= cost ) ? ( selectedItemStack - cost ) : 0;
-
-				selectedItem.stack = newStackSize;
-				Main.mouseItem.stack = newStackSize;
-
-				if( selectedItem.stack == 0 ) { selectedItem.active = false; }
-				if( Main.mouseItem.stack == 0 ) { Main.mouseItem.active = false; }
-			}
-			
-			return randItemName;
 		}
 	}
 }

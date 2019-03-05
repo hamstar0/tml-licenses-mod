@@ -76,7 +76,7 @@ namespace Licenses {
 		public override void PostUpdate() {
 			if( this.player.whoAmI != Main.myPlayer ) { return; }
 			
-			this.RunLicenseModeForItem( Main.mouseItem );
+			this.RunLicenseCheckForItem( Main.mouseItem );
 		}
 	}
 }

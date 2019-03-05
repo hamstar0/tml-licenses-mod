@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Licenses {
 	partial class LicensesPlayer : ModPlayer {
-		private void RunLicenseModeForItem( Item item ) {
+		private void RunLicenseCheckForItem( Item item ) {
 			if( item == null || item.IsAir ) {
 				this.LicenseMode = 0;
 				return;

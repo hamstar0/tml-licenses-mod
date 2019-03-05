@@ -24,8 +24,9 @@ namespace Licenses.Items {
 
 		public static int ComputeTargetRarityOfLicenseStackSize( int stack ) {
 			var mymod = LicensesMod.Instance;
+			int rarity = (stack - mymod.Config.WildcardLicenseCostBase) / mymod.Config.WildcardLicenseCostRarityMultiplier;
 
-			return (stack - mymod.Config.WildcardLicenseCostBase) / mymod.Config.WildcardLicenseCostRarityMultiplier;
+			return Math.Max( -1, rarity );
 		}
 
 
@@ -34,21 +35,23 @@ namespace Licenses.Items {
 
 			float totalSavings = 0;
 			float cost = (float)mymod.Config.WildcardLicenseCostBase;
-			cost += (float)item.stack * (float)mymod.Config.WildcardLicenseCostRarityMultiplier;
+			cost += (float)item.stack * (float)Math.Max(0, item.rare) * (float)mymod.Config.WildcardLicenseCostRarityMultiplier;
 
 			if( mymod.Config.LicenseCostArmorMultiplier != 1f ) {
 				if( ItemAttributeHelpers.IsArmor( item ) ) {
 					float armorCost = (float)cost * mymod.Config.LicenseCostArmorMultiplier;
-					cost = armorCost;
+
 					totalSavings += cost - armorCost;
+					cost = armorCost;
 				}
 			}
 
 			if( mymod.Config.LicenseCostAccessoryMultiplier != 1f ) {
 				if( item.accessory ) {
 					float accCost = (float)cost * mymod.Config.LicenseCostAccessoryMultiplier;
-					cost = accCost;
+
 					totalSavings += cost - accCost;
+					cost = accCost;
 				}
 			}
 
@@ -83,16 +86,22 @@ namespace Licenses.Items {
 			int targetRarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
 			TooltipLine tip;
 
-			if( targetRarity > ItemAttributeHelpers.HighestVanillaRarity ) {
-				tip = new TooltipLine( mymod, "WildcardLicense:Tier", "Stack size exceeds highest item tier." ) {
-					overrideColor = ItemAttributeHelpers.RarityColor[ ItemAttributeHelpers.JunkRarity ]
-				};
-			} else {
-				string rareStr = ItemAttributeHelpers.RarityLabel[ targetRarity ];
-				string rareClrStr = ItemAttributeHelpers.RarityColorText[ targetRarity ];
+			if( targetRarity >= 0 ) {
+				if( targetRarity > ItemAttributeHelpers.HighestVanillaRarity ) {
+					tip = new TooltipLine( mymod, "WildcardLicense:Tier", "Stack size exceeds highest item tier." ) {
+						overrideColor = ItemAttributeHelpers.RarityColor[ItemAttributeHelpers.JunkRarity]
+					};
+				} else {
+					string rareStr = ItemAttributeHelpers.RarityLabel[targetRarity];
+					string rareClrStr = ItemAttributeHelpers.RarityColorText[targetRarity];
 
-				tip = new TooltipLine( mymod, "WildcardLicense:Tier", "Current item tier: "+rareStr+" ("+rareClrStr+")" ) {
-					overrideColor = ItemAttributeHelpers.RarityColor[ targetRarity ]
+					tip = new TooltipLine( mymod, "WildcardLicense:Tier", "Current item tier: " + rareStr + " (" + rareClrStr + ")" ) {
+						overrideColor = ItemAttributeHelpers.RarityColor[targetRarity]
+					};
+				}
+			} else {
+				tip = new TooltipLine( mymod, "WildcardLicense:Tier", "No applicable item tier." ) {
+					overrideColor = ItemAttributeHelpers.RarityColor[ItemAttributeHelpers.JunkRarity]
 				};
 			}
 			
@@ -112,7 +121,8 @@ namespace Licenses.Items {
 		
 		public override bool UseItem( Player player ) {
 			var mymod = (LicensesMod)this.mod;
-			int savings, oldStack = this.item.stack;
+			int savings;
+			int oldStack = this.item.stack;
 			string randItemName = this.AttemptToLicenseRandomItem( player, out savings );
 
 			if( randItemName == null ) {
@@ -122,6 +132,7 @@ namespace Licenses.Items {
 
 			int targetRarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( oldStack );
 			Color color = ItemAttributeHelpers.RarityColor[ targetRarity ];
+
 			string msg = randItemName + " licensed";
 
 			if( savings > 0 ) {
@@ -155,7 +166,7 @@ namespace Licenses.Items {
 			string randItemName;
 
 			IDictionary<int, string> idsToNames = ItemIdentityHelpers.NamesToIds
-				.ToLookup( kp => kp.Value )
+				.ToLookup( kv => kv.Value )
 				.ToDictionary( g => g.Key, g => g.First().Key );
 			
 			do {
@@ -182,6 +193,7 @@ namespace Licenses.Items {
 			
 			ItemHelpers.ReduceStack( this.item, cost );
 			
+			// Failsafes:
 			if( selectedItem.type == this.item.type ) {
 				int newStackSize = ( selectedItemStack >= cost ) ? ( selectedItemStack - cost ) : 0;
 

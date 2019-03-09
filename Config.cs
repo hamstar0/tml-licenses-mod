@@ -22,9 +22,9 @@ namespace Licenses {
 		public ISet<string> FreeStarterItems = new HashSet<string>();
 
 		public int LicensePackCostInPP = 10;
-		public int LicensesPerPack = 3;
+		public int LicensesPerPack = 5;
 		public int WildcardLicensePackCostInPP = 10;
-		public int WildcardLicensesPerPack = 10;
+		public int WildcardLicensesPerPack = 15;
 
 		public int LicenseCostBase = 1;
 		public float LicenseCostRarityMultiplier = 1;
@@ -55,6 +55,8 @@ namespace Licenses {
 		public static int _2_0_6_WildcardLicensePackCostInPP = 20;
 		public static int _2_0_6_WildcardLicensesPerPack => 20;
 		public static int _2_0_6_TrialLicenseCost = 100 * 100 * 2;
+		public static int _2_1_0_LicensesPerPack = 3;
+		public static int _2_1_0_WildcardLicensesPerPack = 10;
 
 
 
@@ -65,10 +67,11 @@ namespace Licenses {
 
 			this.FreeStarterItems.Add( "Any Wood Equipment" );
 			this.FreeStarterItems.Add( "Any Copper Or Tin Equipment" );
+			this.FreeStarterItems.Add( "Any Vanilla Alchemy Ingredient" );
 
 			this.FreeStarterItems.Add( "License" );
 			this.FreeStarterItems.Add( "Wildcard License" );
-			this.FreeStarterItems.Add( "Trail License" );
+			this.FreeStarterItems.Add( "Trial License" );
 			this.FreeStarterItems.Add( "Wayfarer's Pack" );
 
 			this.FreeStarterItems.Add( "Copper Coin" );
@@ -76,6 +79,7 @@ namespace Licenses {
 			this.FreeStarterItems.Add( "Gold Coin" );
 			this.FreeStarterItems.Add( "Platinum Coin" );
 
+			this.FreeStarterItems.Add( "Snowball" );
 			this.FreeStarterItems.Add( "Blowpipe" );
 			this.FreeStarterItems.Add( "Seed" );
 			this.FreeStarterItems.Add( "Rope" );
@@ -177,6 +181,20 @@ namespace Licenses {
 				}
 				if( this.TrialLicenseCost == LicensesConfigData._2_0_6_TrialLicenseCost ) {
 					this.TrialLicenseCost = newConfig.TrialLicenseCost;
+				}
+			}
+			if( versSince < new Version( 2, 1, 0 ) ) {
+				if( this.FreeStarterItems.Contains("Trail License") ) {
+					this.FreeStarterItems.Remove( "Trail License" );
+					this.FreeStarterItems.Add( "Trial License" );
+				}
+				if( this.FreeStarterItems.Count == (newConfig.FreeStarterItems.Count - 2) ) {
+					this.FreeStarterItems = newConfig.FreeStarterItems;
+				}
+				if( this.LicensesPerPack == LicensesConfigData._2_1_0_LicensesPerPack 
+						&& this.WildcardLicensesPerPack == LicensesConfigData._2_1_0_WildcardLicensesPerPack ) {
+					this.LicensesPerPack = newConfig.LicensesPerPack;
+					this.WildcardLicensesPerPack = newConfig.WildcardLicensesPerPack;
 				}
 			}
 

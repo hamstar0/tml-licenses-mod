@@ -38,7 +38,7 @@ namespace Licenses {
 		public bool FreePlaceables = true;
 		public bool FreeRecipes = true;
 
-		public int NewPlayerStarterLicenses = 8;
+		public int NewPlayerStarterLicenses = 10;
 
 		public bool ForceSpawnWayfarer = true;
 		public bool RemoveRewardsGrinding = true;
@@ -57,6 +57,7 @@ namespace Licenses {
 		public static int _2_0_6_TrialLicenseCost = 100 * 100 * 2;
 		public static int _2_1_0_LicensesPerPack = 3;
 		public static int _2_1_0_WildcardLicensesPerPack = 10;
+		public static int _2_1_0_NewPlayerStarterLicenses = 8;
 
 
 
@@ -195,6 +196,9 @@ namespace Licenses {
 						&& this.WildcardLicensesPerPack == LicensesConfigData._2_1_0_WildcardLicensesPerPack ) {
 					this.LicensesPerPack = newConfig.LicensesPerPack;
 					this.WildcardLicensesPerPack = newConfig.WildcardLicensesPerPack;
+				}
+				if( this.NewPlayerStarterLicenses == LicensesConfigData._2_1_0_NewPlayerStarterLicenses ) {
+					this.NewPlayerStarterLicenses = newConfig.NewPlayerStarterLicenses;
 				}
 			}
 

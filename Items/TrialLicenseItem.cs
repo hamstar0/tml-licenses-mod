@@ -27,6 +27,7 @@ namespace Licenses.Items {
 		}
 
 
+
 		////////////////
 
 		public override void SetStaticDefaults() {
@@ -47,6 +48,25 @@ namespace Licenses.Items {
 			this.item.height = 16;
 			this.item.value = mymod.Config.TrialLicenseCost;
 			this.item.rare = 1;
+		}
+
+
+		////////////////
+
+		public override void ModifyTooltips( List<TooltipLine> tooltips ) {
+			var mymod = LicensesMod.Instance;
+
+			for( int i = 0; i < ItemAttributeHelpers.HighestVanillaRarity; i++ ) {
+				float cost = (float)mymod.Config.LicenseCostBase;
+				cost += (float)i * mymod.Config.LicenseCostRarityMultiplier;
+
+				string str = cost + " trial licenses needed for " + ItemAttributeHelpers.RarityColorText[i] + " items";
+
+				var tip = new TooltipLine( this.mod, "TrailLicense:RarityTip_" + i, str );
+				tip.overrideColor = ItemAttributeHelpers.RarityColor[i];
+
+				tooltips.Add( tip );
+			}
 		}
 	}
 }

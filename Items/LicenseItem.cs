@@ -15,7 +15,7 @@ namespace Licenses.Items {
 
 			float cost = (float)mymod.Config.LicenseCostBase;
 			cost += (float)defaultOfItem.rare * mymod.Config.LicenseCostRarityMultiplier;
-			
+
 			if( mymod.Config.LicenseCostArmorMultiplier != 1f ) {
 				if( ItemAttributeHelpers.IsArmor( defaultOfItem ) ) {
 					cost = (float)cost * mymod.Config.LicenseCostArmorMultiplier;
@@ -35,7 +35,7 @@ namespace Licenses.Items {
 			int licenseType = LicensesMod.Instance.ItemType<LicenseItem>();
 			int totalLicenses = ItemFinderHelpers.CountTotalOfEach( player.inventory, new HashSet<int> { licenseType } );
 			int needed = LicenseItem.ComputeCost( item );
-			
+
 			if( totalLicenses < needed ) {
 				return false;
 			}
@@ -51,6 +51,7 @@ namespace Licenses.Items {
 		}
 
 
+
 		////////////////
 
 		public override void SetStaticDefaults() {
@@ -64,6 +65,25 @@ namespace Licenses.Items {
 			this.item.height = 16;
 			this.item.value = 0;
 			this.item.rare = 1;
+		}
+
+
+		////////////////
+
+		public override void ModifyTooltips( List<TooltipLine> tooltips ) {
+			var mymod = LicensesMod.Instance;
+
+			for( int i=0; i<ItemAttributeHelpers.HighestVanillaRarity; i++ ) {
+				float cost = (float)mymod.Config.LicenseCostBase;
+				cost += (float)i * mymod.Config.LicenseCostRarityMultiplier;
+
+				string str = cost + " licenses needed for " + ItemAttributeHelpers.RarityColorText[i] + " items";
+
+				var tip = new TooltipLine( this.mod, "License:RarityTip_"+i, str );
+				tip.overrideColor = ItemAttributeHelpers.RarityColor[i];
+
+				tooltips.Add( tip );
+			}
 		}
 	}
 }

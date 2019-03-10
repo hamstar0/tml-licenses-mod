@@ -55,7 +55,7 @@ namespace Licenses {
 			case 2:
 				this.LicenseMode = 0;
 				
-				if( !isLicensed && !isTrialed ) {
+				if( !isLicensed && (!isTrialed || !mymod.Config.TrialLicenseOncePerItem) ) {
 					if( TrialLicenseItem.AttemptToTemporaryLicenseItem( this.player, item ) ) {
 						Main.NewText( realItemName + " is now licensed for " + ( LicensesMod.Instance.Config.TrialLicenseDurationInTicks / 60 ) + " seconds.", Color.LimeGreen );
 					} else {

@@ -26,10 +26,11 @@ namespace Licenses.Items {
 
 		public static int ComputeCost( Item item, out int savings ) {
 			var mymod = LicensesMod.Instance;
+			int rarity = Math.Max( 0, item.rare );
 
 			float totalSavings = 0;
 			float cost = (float)mymod.Config.WildcardLicenseCostBase;
-			cost += (float)item.stack * (float)Math.Max(0, item.rare) * (float)mymod.Config.WildcardLicenseCostRarityMultiplier;
+			cost += (float)item.stack * (float)rarity * (float)mymod.Config.WildcardLicenseCostRarityMultiplier;
 
 			if( mymod.Config.LicenseCostArmorMultiplier != 1f ) {
 				if( ItemAttributeHelpers.IsArmor( item ) ) {

@@ -22,12 +22,12 @@ namespace Licenses {
 		public ISet<string> FreeStarterItems = new HashSet<string>();
 
 		public int LicensePackCostInPP = 10;
-		public int LicensesPerPack = 5;
+		public int LicensesPerPack = 6;
 		public int WildcardLicensePackCostInPP = 10;
-		public int WildcardLicensesPerPack = 15;
+		public int WildcardLicensesPerPack = 18;
 
 		public int LicenseCostBase = 1;
-		public float LicenseCostRarityMultiplier = 1;
+		public float LicenseCostRarityMultiplier = 1f / 2f;
 		public float LicenseCostArmorMultiplier = 1f / 3f;
 		public float LicenseCostAccessoryMultiplier = 1f;
 
@@ -43,8 +43,9 @@ namespace Licenses {
 		public bool ForceSpawnWayfarer = true;
 		public bool RemoveRewardsGrinding = true;
 
-		public int TrialLicenseDurationInTicks = 2 * 60 * 60;   // 2 minutes
+		public int TrialLicenseDurationInTicks = 5 * 60 * 60;   // 5 minutes
 		public int TrialLicenseCost = 100 * 100;    // 1 gold
+		public bool TrialLicenseOncePerItem = true;
 
 
 
@@ -55,9 +56,13 @@ namespace Licenses {
 		public static int _2_0_6_WildcardLicensePackCostInPP = 20;
 		public static int _2_0_6_WildcardLicensesPerPack => 20;
 		public static int _2_0_6_TrialLicenseCost = 100 * 100 * 2;
+
 		public static int _2_1_0_LicensesPerPack = 3;
 		public static int _2_1_0_WildcardLicensesPerPack = 10;
 		public static int _2_1_0_NewPlayerStarterLicenses = 8;
+
+		public static float _2_1_0_LicenseCostRarityMultiplier = 1f;
+		public static int _2_1_0_TrialLicenseDurationInTicks = 2 * 60 * 60;   // 2 minutes
 
 
 
@@ -67,8 +72,12 @@ namespace Licenses {
 			this.FreeStarterItems.Clear();
 
 			this.FreeStarterItems.Add( "Any Wood Equipment" );
+			this.FreeStarterItems.Add( "Any Cactus Equipment" );
 			this.FreeStarterItems.Add( "Any Copper Or Tin Equipment" );
 			this.FreeStarterItems.Add( "Any Vanilla Alchemy Ingredient" );
+
+			this.FreeStarterItems.Add( "Any Vanity" );
+			this.FreeStarterItems.Add( "Any Dye" );
 
 			this.FreeStarterItems.Add( "License" );
 			this.FreeStarterItems.Add( "Wildcard License" );
@@ -199,6 +208,12 @@ namespace Licenses {
 				}
 				if( this.NewPlayerStarterLicenses == LicensesConfigData._2_1_0_NewPlayerStarterLicenses ) {
 					this.NewPlayerStarterLicenses = newConfig.NewPlayerStarterLicenses;
+				}
+				if( this.LicenseCostRarityMultiplier == LicensesConfigData._2_1_0_LicenseCostRarityMultiplier ) {
+					this.LicenseCostRarityMultiplier = newConfig.LicenseCostRarityMultiplier;
+				}
+				if( this.TrialLicenseDurationInTicks == LicensesConfigData._2_1_0_TrialLicenseDurationInTicks ) {
+					this.TrialLicenseDurationInTicks = newConfig.TrialLicenseDurationInTicks;
 				}
 			}
 

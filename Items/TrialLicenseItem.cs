@@ -32,12 +32,15 @@ namespace Licenses.Items {
 
 		public override void SetStaticDefaults() {
 			var mymod = (LicensesMod)this.mod;
+			string oneTimeMsg = mymod.Config.TrialLicenseOncePerItem ?
+				+'\n' + "Items cannot be trialed more than once"
+				: "";
 
 			this.DisplayName.SetDefault( "Trail License" );
 			this.Tooltip.SetDefault( "Select an item with this to temporarily license it"
 				+'\n'+"Trial licenses only last "+(mymod.Config.TrialLicenseDurationInTicks/60)+" seconds"
 				+'\n'+"Only 1 item may be trialed at a time"
-				+'\n'+"Items cannot be trialed more than once" );
+				+oneTimeMsg );
 		}
 
 		public override void SetDefaults() {
@@ -62,7 +65,7 @@ namespace Licenses.Items {
 
 				string str = cost + " trial licenses needed for " + ItemAttributeHelpers.RarityColorText[i] + " items";
 
-				var tip = new TooltipLine( this.mod, "TrailLicense:RarityTip_" + i, str );
+				var tip = new TooltipLine( this.mod, "TrialLicense:RarityTip_" + i, str );
 				tip.overrideColor = ItemAttributeHelpers.RarityColor[i];
 
 				tooltips.Add( tip );

@@ -13,8 +13,10 @@ namespace Licenses.Items {
 			Item defaultOfItem = new Item();
 			defaultOfItem.SetDefaults( item.type, true );
 
+			int rarity = Math.Max( 0, defaultOfItem.rare );
+
 			float cost = (float)mymod.Config.LicenseCostBase;
-			cost += (float)defaultOfItem.rare * mymod.Config.LicenseCostRarityMultiplier;
+			cost += (float)rarity * mymod.Config.LicenseCostRarityMultiplier;
 
 			if( mymod.Config.LicenseCostArmorMultiplier != 1f ) {
 				if( ItemAttributeHelpers.IsArmor( defaultOfItem ) ) {

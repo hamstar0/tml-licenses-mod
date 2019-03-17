@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.Helpers.ItemHelpers;
+using HamstarHelpers.Helpers.TmlHelpers;
 using System;
 using Terraria;
 
@@ -18,14 +19,14 @@ namespace Licenses {
 
 		public static void TrialLicenseItemForCurrentPlayer( Item item, bool playSound ) {
 			string itemName = ItemIdentityHelpers.GetQualifiedName( item );
-			var myplayer = Main.LocalPlayer.GetModPlayer<LicensesPlayer>();
+			var myplayer = (LicensesPlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, LicensesMod.Instance, "LicensesPlayer" );
 
 			myplayer.TrialLicenseItemByName( itemName, playSound );
 		}
 
 		public static void LicenseItemForCurrentPlayer( Item item, bool playSound ) {
 			string itemName = ItemIdentityHelpers.GetQualifiedName( item );
-			var myplayer = Main.LocalPlayer.GetModPlayer<LicensesPlayer>();
+			var myplayer = (LicensesPlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, LicensesMod.Instance, "LicensesPlayer" );
 
 			myplayer.LicenseItemByName( itemName, playSound );
 		}
@@ -35,7 +36,7 @@ namespace Licenses {
 
 		[Obsolete( "use `LicensesAPI.ResetPlayerModData( Main.LocalPlayer )`", true)]
 		public static void ClearLicencesForCurrentPlayer() {
-			var myplayer = Main.LocalPlayer.GetModPlayer<LicensesPlayer>();
+			var myplayer = (LicensesPlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, LicensesMod.Instance, "LicensesPlayer" );
 			myplayer.ResetLicenses();
 		}
 	}

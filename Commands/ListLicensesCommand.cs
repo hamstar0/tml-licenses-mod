@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using HamstarHelpers.Helpers.TmlHelpers;
+using Terraria;
 using Terraria.ModLoader;
 
 
@@ -18,7 +19,7 @@ namespace Licenses.Commands {
 			//	throw new UsageException( "Cheat mode not enabled." );
 			//}
 
-			var myplayer = Main.LocalPlayer.GetModPlayer<LicensesPlayer>();
+			var myplayer = (LicensesPlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, mymod, "LicensesPlayer" );
 			string list = string.Join( ", ", myplayer.LicensedItems );
 
 			Main.NewText( list );

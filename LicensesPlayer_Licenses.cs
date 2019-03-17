@@ -1,5 +1,6 @@
 ﻿using HamstarHelpers.Helpers.DebugHelpers;
 using HamstarHelpers.Helpers.ItemHelpers;
+using HamstarHelpers.Helpers.TmlHelpers;
 using HamstarHelpers.Services.Timers;
 using Licenses.Items;
 using Microsoft.Xna.Framework;
@@ -95,7 +96,7 @@ namespace Licenses {
 
 			Timers.UnsetTimer( "LicensesTrialPeriod" );
 			Timers.SetTimer( "LicensesTrialPeriod", mymod.Config.TrialLicenseDurationInTicks, () => {
-				var myplayer = Main.LocalPlayer.GetModPlayer<LicensesPlayer>();
+				var myplayer = (LicensesPlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, mymod, "LicensesPlayer" );
 
 				if( !myplayer.LicensedItems.Contains( itemName ) ) {
 					Main.NewText( itemName+" trial has expired.", Color.Yellow );

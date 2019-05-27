@@ -40,7 +40,6 @@ namespace Licenses {
 			case 1:
 				this.LicenseMode = 0;
 
-
 				if( !isLicensed ) {
 					if( LicenseItem.AttemptToLicenseItem( this.player, item ) ) {
 						Main.NewText( item.Name + " is now usable.", Color.Lime );

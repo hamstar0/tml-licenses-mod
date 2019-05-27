@@ -36,7 +36,7 @@ namespace Licenses {
 		////////////////
 
 		public override void Load() {
-			string depErr = TmlHelpers.ReportBadDependencyMods( this );
+			string depErr = ModIdentityHelpers.FormatBadDependencyModList( this );
 			if( depErr != null ) { throw new HamstarException( depErr ); }
 			
 			this.LoadConfig();

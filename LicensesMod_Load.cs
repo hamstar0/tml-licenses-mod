@@ -47,6 +47,7 @@ namespace Licenses {
 					LogHelpers.Alert( "Loading Nihilism for game mode..." );
 				}
 
+				this.LoadNihilismFilters();
 				NihilismAPI.NihilateCurrentWorld();
 
 				InboxMessages.ReadMessage( "nihilism_init" );
@@ -71,10 +72,7 @@ namespace Licenses {
 
 		private void LoadNihilismFilters() {
 			if( this.Config.OverrideNihilismDefaultFilters ) {
-				NihilismAPI.ClearRecipeBlacklist( true );
-				NihilismAPI.ClearItemBlacklist( true );
-				NihilismAPI.ClearNpcBlacklist( true );
-				NihilismAPI.ClearNpcLootBlacklist( true );
+				NihilismAPI.ClearFiltersForCurrentWorld();
 			}
 			
 			NihilismAPI.SetItemBlacklistEntry( "Any Item", true );

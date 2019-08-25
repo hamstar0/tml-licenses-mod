@@ -54,7 +54,7 @@ namespace Licenses.Items {
 			Item selectedItem = player.inventory[ PlayerItemHelpers.VanillaInventorySelectedSlot ];
 			int selectedItemStack = selectedItem?.stack ?? 0;
 			
-			myplayer.LicenseItemByName( randItemDef, true );
+			myplayer.LicenseItemByDefinition( randItemDef, true );
 			
 			ItemHelpers.ReduceStack( this.item, cost );
 			

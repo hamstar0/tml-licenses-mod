@@ -21,7 +21,7 @@ namespace Licenses.Items {
 			var realItemDef = new ItemDefinition( item.type );
 
 			var myplayer = player.GetModPlayer<LicensesPlayer>();
-			myplayer.TrialLicenseItemByName( realItemDef, true );
+			myplayer.TrialLicenseItemByDefinition( realItemDef, true );
 
 			PlayerItemHelpers.RemoveInventoryItemQuantity( player, trialLicenseType, needed );
 

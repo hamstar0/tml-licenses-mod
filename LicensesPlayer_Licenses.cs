@@ -79,7 +79,7 @@ namespace Licenses {
 
 		////////////////
 
-		internal void TrialLicenseItemByName( ItemDefinition itemDef, bool playSound ) {
+		internal void TrialLicenseItemByDefinition( ItemDefinition itemDef, bool playSound ) {
 			var mymod = (LicensesMod)this.mod;
 
 			if( this.TrialLicensedItem != null ) {
@@ -117,7 +117,7 @@ namespace Licenses {
 			}
 		}
 
-		internal void LicenseItemByName( ItemDefinition itemDef, bool playSound ) {
+		internal void LicenseItemByDefinition( ItemDefinition itemDef, bool playSound ) {
 			var mymod = (LicensesMod)this.mod;
 
 			this.LicensedItems.Add( itemDef );

@@ -87,7 +87,7 @@ namespace Licenses {
 				this.TrialLicensedItems.Add( itemDef );
 			}
 			foreach( ItemDefinition itemDef in this.PendingLoadLicenses ) {
-				this.LicenseItemByName( itemDef, false );
+				this.LicenseItemByDefinition( itemDef, false );
 			}
 
 			this.PendingLoadTrialLicenses.Clear();

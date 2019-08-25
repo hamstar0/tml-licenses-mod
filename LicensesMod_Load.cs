@@ -1,23 +1,25 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Services.Messages;
-using HamstarHelpers.Services.Promises;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Services.Hooks.LoadHooks;
+using HamstarHelpers.Services.Messages.Inbox;
+using Licenses.Items;
 using Nihilism;
 using Rewards;
+using Rewards.Configs;
 using Rewards.Items;
 using Terraria.ModLoader;
-
+using Terraria.ModLoader.Config;
 
 namespace Licenses {
     public partial class LicensesMod : Mod {
 		private readonly static object MyValidatorKey;
-		public readonly static PromiseValidator GameModeLoadValidator;
+		public readonly static CustomLoadHookValidator<object> GameModeLoadValidator;
 
 
 		////////////////
 
 		static LicensesMod() {
 			LicensesMod.MyValidatorKey = new object();
-			LicensesMod.GameModeLoadValidator = new PromiseValidator( LicensesMod.MyValidatorKey );
+			LicensesMod.GameModeLoadValidator = new CustomLoadHookValidator<object>( LicensesMod.MyValidatorKey );
 		}
 
 
@@ -27,22 +29,24 @@ namespace Licenses {
 			if( this.Config.DebugModeInfo ) {
 				LogHelpers.Alert( "Loading game mode..." );
 			}
-			
-			NihilismAPI.SuppressAutoSavingOn();
+
+			NihilismAPI.InstancedFiltersOn();	//.SuppressAutoSavingOn();
 			RewardsAPI.SuppressConfigAutoSavingOn();
 			
 			this.LoadNihilismFilters();
 			this.LoadLicensePacks();
 
 			if( this.Config.RemoveRewardsGrinding ) {
-				RewardsAPI.GetModSettings().GrindKillMultiplier = 0f;
+				Mod rewMod = ModLoader.GetMod( "Rewards" );
+				RewardsPointsConfig rewConfig = rewMod.GetConfig<RewardsPointsConfig>();
+				rewConfig.GrindKillMultiplier = 0f;
 			}
 			if( this.Config.ForceSpawnWayfarer ) {
 				RewardsAPI.SpawnWayfarer( false );
 			}
 
 			// Finish loading Nihilism
-			Promises.AddValidatedPromise( LicensesPlayer.EnterWorldValidator, () => {
+			CustomLoadHooks.AddHook( LicensesPlayer.EnterWorldValidator, ( _ ) => {
 				if( this.Config.DebugModeInfo ) {
 					LogHelpers.Alert( "Loading Nihilism for game mode..." );
 				}
@@ -50,17 +54,18 @@ namespace Licenses {
 				this.LoadNihilismFilters();
 				NihilismAPI.NihilateCurrentWorld();
 
-				InboxMessages.ReadMessage( "nihilism_init" );
+				string __;
+				InboxMessages.ReadMessage( "nihilism_init", out __ );
 
 				return false;
 			} );
 
-			Promises.TriggerValidatedPromise( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );
+			CustomLoadHooks.TriggerHook( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );
 
-			Promises.AddWorldUnloadOncePromise( () => {
-				Promises.ClearValidatedPromise( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );
-				Promises.AddWorldLoadOncePromise( () => {
-					Promises.TriggerValidatedPromise( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );	// Whee!
+			LoadHooks.AddWorldUnloadOnceHook( () => {
+				CustomLoadHooks.ClearHook( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );
+				LoadHooks.AddWorldLoadOnceHook( () => {
+					CustomLoadHooks.TriggerHook( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );	// Whee!
 				} );
 			} );
 
@@ -75,47 +80,49 @@ namespace Licenses {
 				NihilismAPI.ClearFiltersForCurrentWorld();
 			}
 			
-			NihilismAPI.SetItemBlacklistEntry( "Any Item", true );
+			NihilismAPI.SetItemBlacklistGroupEntry( "Any Item", true );
 
 			if( !this.Config.FreeRecipes ) {
-				NihilismAPI.SetRecipeBlacklistEntry( "Any Item", true );
+				NihilismAPI.SetRecipeBlacklistGroupEntry( "Any Item", true );
 			}
 
 			if( this.Config.FreeMaterials ) {
-				NihilismAPI.SetItemWhitelistEntry( "Any Plain Material", true );
+				NihilismAPI.SetItemWhitelistGroupEntry( "Any Plain Material", true );
 			}
 			if( this.Config.FreePlaceables ) {
-				NihilismAPI.SetItemWhitelistEntry( "Any Placeable", true );
+				NihilismAPI.SetItemWhitelistGroupEntry( "Any Placeable", true );
 			}
 
-			foreach( string name in this.Config.FreeStarterItems ) {
-				NihilismAPI.SetItemWhitelistEntry( name, true );
+			foreach( ItemDefinition itemDef in this.Config.FreeStarterItems ) {
+				NihilismAPI.SetItemWhitelistEntry( itemDef, true );
 			}
 		}
 
 
 		private void LoadLicensePacks() {
-			var licDef = new ShopPackItemDefinition {
-				Name = "License",
-				Stack = this.Config.LicensesPerPack,
-				CrimsonWorldOnly = null
-			};
-			var wildLicDef = new ShopPackItemDefinition {
-				Name = "Wildcard License",
-				Stack = this.Config.WildcardLicensesPerPack,
-				CrimsonWorldOnly = null
-			};
+			var licDef = new ShopPackItemDefinition(
+				new ItemDefinition( this.ItemType<LicenseItem>() ),
+				this.Config.LicensesPerPack,
+				null
+			);
+			var wildLicDef = new ShopPackItemDefinition(
+				new ItemDefinition( this.ItemType<WildcardLicenseItem>() ),
+				this.Config.WildcardLicensesPerPack,
+				null
+			);
 
-			var def1 = new ShopPackDefinition {
-				Name = "Standard License Pack",
-				Price = this.Config.LicensePackCostInPP,
-				Items = new ShopPackItemDefinition[] { licDef }
-			};
-			var def2 = new ShopPackDefinition {
-				Name = "Wildcard License Pack",
-				Price = this.Config.WildcardLicensePackCostInPP,
-				Items = new ShopPackItemDefinition[] { wildLicDef }
-			};
+			var def1 = new ShopPackDefinition(
+				null,
+				"Standard License Pack",
+				this.Config.LicensePackCostInPP,
+				new ShopPackItemDefinition[] { licDef }
+			);
+			var def2 = new ShopPackDefinition(
+				null,
+				"Wildcard License Pack",
+				this.Config.WildcardLicensePackCostInPP,
+				new ShopPackItemDefinition[] { wildLicDef }
+			);
 			
 			if( this.Config.ResetWayfarerShop ) {
 				RewardsAPI.ShopClear();

@@ -1,30 +1,36 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.ItemHelpers;
-using HamstarHelpers.Helpers.PlayerHelpers;
+﻿using HamstarHelpers.Classes.DataStructures;
+using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.Items;
+using HamstarHelpers.Helpers.Items.Attributes;
+using HamstarHelpers.Helpers.Players;
 using HamstarHelpers.Services.EntityGroups;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 
 
 namespace Licenses.Items {
 	partial class WildcardLicenseItem : ModItem {
-		public string AttemptToLicenseRandomItem( Player player, out int savings ) {
+		public ItemDefinition AttemptToLicenseRandomItem( Player player, out int savings ) {
 			var myplayer = player.GetModPlayer<LicensesPlayer>();
 			
 			int targetRarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( this.item.stack );
 
-			string grpName = "Any " + ItemAttributeHelpers.RarityColorText[targetRarity] + " Tier";
-			ISet<int> tierItems = EntityGroups.ItemGroups[ grpName ];
-			ISet<int> equipments = EntityGroups.ItemGroups[ "Any Equipment" ];
+			string grpName = "Any " + ItemRarityAttributeHelpers.RarityColorText[targetRarity] + " Tier";
+			IReadOnlySet<int> tierItems, equipments;
+
+			EntityGroups.TryGetItemGroup( grpName, out tierItems );
+			EntityGroups.TryGetItemGroup( "Any Equipment", out equipments );
+
 			IList<int> tierEquips = new List<int>( tierItems.Intersect( equipments ) );
 
 			int randItemType;
-			string randItemName;
+			ItemDefinition randItemDef;
 
-			IDictionary<int, string> idsToNames = ItemIdentityHelpers.NamesToIds
+			IDictionary<int, string> idsToNames = ItemAttributeHelpers.DisplayNamesToIds
 				.ToLookup( kv => kv.Value )
 				.ToDictionary( g => g.Key, g => g.First().Key );
 			
@@ -36,10 +42,10 @@ namespace Licenses.Items {
 				}
 
 				randItemType = tierEquips[ Main.rand.Next( count ) ];
-				randItemName = idsToNames[ randItemType ];
+				randItemDef = new ItemDefinition( randItemType );
 
 				tierEquips.Remove( randItemType );
-			} while( myplayer.LicensedItems.Contains( randItemName ) );
+			} while( myplayer.LicensedItems.Contains( randItemDef ) );
 
 			var dummyItem = new Item();
 			dummyItem.SetDefaults( randItemType, true );
@@ -48,7 +54,7 @@ namespace Licenses.Items {
 			Item selectedItem = player.inventory[ PlayerItemHelpers.VanillaInventorySelectedSlot ];
 			int selectedItemStack = selectedItem?.stack ?? 0;
 			
-			myplayer.LicenseItemByName( randItemName, true );
+			myplayer.LicenseItemByName( randItemDef, true );
 			
 			ItemHelpers.ReduceStack( this.item, cost );
 			
@@ -63,7 +69,7 @@ namespace Licenses.Items {
 				if( Main.mouseItem.stack == 0 ) { Main.mouseItem.active = false; }
 			}
 			
-			return randItemName;
+			return randItemDef;
 		}
 	}
 }

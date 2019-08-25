@@ -1,5 +1,5 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.ItemHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.Items.Attributes;
 using System;
 using Terraria;
 using Terraria.ModLoader;
@@ -11,7 +11,7 @@ namespace Licenses.Items {
 			var mymod = LicensesMod.Instance;
 			
 			int maxRarityCost = mymod.Config.WildcardLicenseCostBase;
-			maxRarityCost += ItemAttributeHelpers.HighestVanillaRarity * mymod.Config.WildcardLicenseCostRarityMultiplier;
+			maxRarityCost += ItemRarityAttributeHelpers.HighestVanillaRarity * mymod.Config.WildcardLicenseCostRarityMultiplier;
 			return maxRarityCost;
 		}
 

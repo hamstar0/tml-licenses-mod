@@ -1,43 +1,23 @@
-﻿using HamstarHelpers.Helpers.ItemHelpers;
-using HamstarHelpers.Helpers.TmlHelpers;
+﻿using HamstarHelpers.Helpers.TModLoader;
 using System;
 using Terraria;
+using Terraria.ModLoader.Config;
 
 
 namespace Licenses {
 	public static partial class LicensesAPI {
-		public static LicensesConfigData GetModSettings() {
-			return LicensesMod.Instance.Config;
-		}
-
-		public static void SaveModSettingsChanges() {
-			LicensesMod.Instance.ConfigJson.SaveFile();
-		}
-
-
-		////////////////
-
 		public static void TrialLicenseItemForCurrentPlayer( Item item, bool playSound ) {
-			string itemName = ItemIdentityHelpers.GetQualifiedName( item );
+			var itemDef = new ItemDefinition( item.type );
 			var myplayer = (LicensesPlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, LicensesMod.Instance, "LicensesPlayer" );
 
-			myplayer.TrialLicenseItemByName( itemName, playSound );
+			myplayer.TrialLicenseItemByName( itemDef, playSound );
 		}
 
 		public static void LicenseItemForCurrentPlayer( Item item, bool playSound ) {
-			string itemName = ItemIdentityHelpers.GetQualifiedName( item );
+			var itemDef = new ItemDefinition( item.type );
 			var myplayer = (LicensesPlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, LicensesMod.Instance, "LicensesPlayer" );
 
-			myplayer.LicenseItemByName( itemName, playSound );
-		}
-
-
-		////////////////
-
-		[Obsolete( "use `LicensesAPI.ResetPlayerModData( Main.LocalPlayer )`", true)]
-		public static void ClearLicencesForCurrentPlayer() {
-			var myplayer = (LicensesPlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, LicensesMod.Instance, "LicensesPlayer" );
-			myplayer.ResetLicenses();
+			myplayer.LicenseItemByName( itemDef, playSound );
 		}
 	}
 }

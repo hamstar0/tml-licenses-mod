@@ -1,11 +1,9 @@
-﻿using HamstarHelpers.Components.Config;
-using HamstarHelpers.Components.Errors;
-using HamstarHelpers.Helpers.TmlHelpers;
-using HamstarHelpers.Helpers.TmlHelpers.ModHelpers;
+﻿using HamstarHelpers.Classes.Errors;
 using HamstarHelpers.Services.EntityGroups;
-using HamstarHelpers.Services.Promises;
+using HamstarHelpers.Services.Hooks.LoadHooks;
 using System;
 using Terraria.ModLoader;
+using HamstarHelpers.Helpers.TModLoader.Mods;
 
 
 namespace Licenses {
@@ -16,8 +14,7 @@ namespace Licenses {
 
 		////////////////
 
-		public JsonConfig<LicensesConfigData> ConfigJson { get; private set; }
-		public LicensesConfigData Config => this.ConfigJson.Data;
+		public LicensesConfig Config => this.GetConfig<LicensesConfig>();
 
 
 
@@ -25,39 +22,14 @@ namespace Licenses {
 
 		public LicensesMod() {
 			LicensesMod.Instance = this;
-
-			this.ConfigJson = new JsonConfig<LicensesConfigData>(
-				LicensesConfigData.ConfigFileName,
-				ConfigurationDataBase.RelativePath,
-				new LicensesConfigData()
-			);
 		}
 
 		////////////////
 
 		public override void Load() {
-			string depErr = ModIdentityHelpers.FormatBadDependencyModList( this );
-			if( depErr != null ) { throw new HamstarException( depErr ); }
-			
-			this.LoadConfig();
-
 			EntityGroups.Enable();
 
-			Promises.AddWorldLoadEachPromise( this.LoadGameModeOnWorldLoad );
-		}
-
-		private void LoadConfig() {
-			if( !this.ConfigJson.LoadFile() ) {
-				this.Config.SetDefaults();
-				this.ConfigJson.SaveFile();
-				ErrorLogger.Log( "Licenses config " + this.Version.ToString() + " created." );
-			}
-
-			if( this.Config.CanUpdateVersion() ) {
-				this.Config.UpdateToLatestVersion();
-				ErrorLogger.Log( "Licenses updated to " + this.Version.ToString() );
-				this.ConfigJson.SaveFile();
-			}
+			LoadHooks.AddWorldLoadEachHook( this.LoadGameModeOnWorldLoad );
 		}
 
 		public override void Unload() {

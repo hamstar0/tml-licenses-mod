@@ -1,23 +1,24 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Services.Promises;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Services.Hooks.LoadHooks;
 using Licenses.Items;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 using Terraria.ModLoader.IO;
 
 
 namespace Licenses {
 	partial class LicensesPlayer : ModPlayer {
 		private readonly static object MyValidatorKey;
-		public readonly static PromiseValidator EnterWorldValidator;
+		public readonly static CustomLoadHookValidator<object> EnterWorldValidator;
 
 
 		////////////////
 
 		static LicensesPlayer() {
 			LicensesPlayer.MyValidatorKey = new object();
-			LicensesPlayer.EnterWorldValidator = new PromiseValidator( LicensesPlayer.MyValidatorKey );
+			LicensesPlayer.EnterWorldValidator = new CustomLoadHookValidator<object>( LicensesPlayer.MyValidatorKey );
 		}
 
 
@@ -30,22 +31,22 @@ namespace Licenses {
 			this.TrialLicensedItems.Clear();
 			this.LicensedItems.Clear();
 
-			if( tag.ContainsKey( "trial_license_count" ) ) {
-				int count = tag.GetInt( "trial_license_count" );
+			if( tag.ContainsKey( "trial_license_key_count" ) ) {
+				int count = tag.GetInt( "trial_license_key_count" );
 				for( int i = 0; i < count; i++ ) {
-					string itemName = tag.GetString( "trial_license_" + i );
-					this.PendingLoadTrialLicenses.Add( itemName );
+					string itemKey = tag.GetString( "trial_license_key_" + i );
+					this.PendingLoadTrialLicenses.Add( new ItemDefinition(itemKey) );
 				}
 				if( mymod.Config.DebugModeInfo ) {
 					LogHelpers.Alert( "  Loaded for player "+this.player.name+" ("+this.player.whoAmI+") "+count+" trial licensed items..." );
 				}
 			}
 
-			if( tag.ContainsKey("license_count") ) {
-				int count = tag.GetInt( "license_count" );
+			if( tag.ContainsKey("license_key_count") ) {
+				int count = tag.GetInt( "license_key_count" );
 				for( int i=0; i<count; i++ ) {
-					string itemName = tag.GetString( "license_" + i );
-					this.PendingLoadLicenses.Add( itemName );
+					string itemKey = tag.GetString( "license_key_" + i );
+					this.PendingLoadLicenses.Add( new ItemDefinition(itemKey) );
 				}
 				if( mymod.Config.DebugModeInfo ) {
 					LogHelpers.Alert( "  Loaded for player "+this.player.name+" ("+this.player.whoAmI+") "+count+" licensed items..." );
@@ -56,19 +57,19 @@ namespace Licenses {
 		public override TagCompound Save() {
 			int i;
 			var tags = new TagCompound {
-				{ "trial_license_count", this.TrialLicensedItems.Count },
-				{ "license_count", this.LicensedItems.Count }
+				{ "trial_license_key_count", this.TrialLicensedItems.Count },
+				{ "license_key_count", this.LicensedItems.Count }
 			};
 
 			i = 0;
-			foreach( string name in this.TrialLicensedItems ) {
-				tags["trial_license_" + i] = name;
+			foreach( ItemDefinition itemDef in this.TrialLicensedItems ) {
+				tags["trial_license_key_" + i] = itemDef.ToString();
 				i++;
 			}
 
 			i = 0;
-			foreach( string name in this.LicensedItems ) {
-				tags["license_" + i] = name;
+			foreach( ItemDefinition itemDef in this.LicensedItems ) {
+				tags["license_key_" + i] = itemDef.ToString();
 				i++;
 			}
 
@@ -81,12 +82,12 @@ namespace Licenses {
 		private void OnEnterWorldLocal() {
 			var mymod = (LicensesMod)this.mod;
 
-			foreach( string itemName in this.PendingLoadTrialLicenses ) {
+			foreach( ItemDefinition itemDef in this.PendingLoadTrialLicenses ) {
 				//this.TrialLicenseItemByName( itemName, false );	<- Not the same as Licensing
-				this.TrialLicensedItems.Add( itemName );
+				this.TrialLicensedItems.Add( itemDef );
 			}
-			foreach( string itemName in this.PendingLoadLicenses ) {
-				this.LicenseItemByName( itemName, false );
+			foreach( ItemDefinition itemDef in this.PendingLoadLicenses ) {
+				this.LicenseItemByName( itemDef, false );
 			}
 
 			this.PendingLoadTrialLicenses.Clear();
@@ -94,17 +95,17 @@ namespace Licenses {
 		}
 
 		private void PostOnEnterWorld() {
-			Promises.TriggerValidatedPromise( LicensesPlayer.EnterWorldValidator, LicensesPlayer.MyValidatorKey );
+			CustomLoadHooks.TriggerHook( LicensesPlayer.EnterWorldValidator, LicensesPlayer.MyValidatorKey );
 
-			Promises.AddWorldUnloadOncePromise( () => {
-				Promises.ClearValidatedPromise( LicensesPlayer.EnterWorldValidator, LicensesPlayer.MyValidatorKey );
+			LoadHooks.AddWorldUnloadOnceHook( () => {
+				CustomLoadHooks.ClearHook( LicensesPlayer.EnterWorldValidator, LicensesPlayer.MyValidatorKey );
 			} );
 		}
 
 		////////////////
 
 		public void OnEnterWorldForSingle() {
-			Promises.AddValidatedPromise( LicensesMod.GameModeLoadValidator, () => {
+			CustomLoadHooks.AddHook( LicensesMod.GameModeLoadValidator, (_) => {
 				var mymod = (LicensesMod)this.mod;
 				if( mymod.Config.DebugModeInfo ) {
 					LogHelpers.Alert( "Loading player for game mode..." );
@@ -117,7 +118,7 @@ namespace Licenses {
 		}
 
 		public void OnEnterWorldForClient() {
-			Promises.AddValidatedPromise( LicensesMod.GameModeLoadValidator, () => {
+			CustomLoadHooks.AddHook( LicensesMod.GameModeLoadValidator, (_) => {
 				var mymod = (LicensesMod)this.mod;
 				if( mymod.Config.DebugModeInfo ) {
 					LogHelpers.Alert( "Loading player for game mode..." );
@@ -130,7 +131,7 @@ namespace Licenses {
 		}
 
 		public void OnEnterWorldForServer() {
-			Promises.AddValidatedPromise( LicensesMod.GameModeLoadValidator, () => {
+			CustomLoadHooks.AddHook( LicensesMod.GameModeLoadValidator, (_) => {
 				var mymod = (LicensesMod)this.mod;
 				if( mymod.Config.DebugModeInfo ) {
 					LogHelpers.Alert( "Loading player for game mode..." );

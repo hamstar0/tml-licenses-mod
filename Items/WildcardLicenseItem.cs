@@ -1,12 +1,13 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.ItemHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.Items.Attributes;
 using HamstarHelpers.Services.Messages;
+using HamstarHelpers.Services.Messages.Player;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 
 
 namespace Licenses.Items {
@@ -36,21 +37,21 @@ namespace Licenses.Items {
 			TooltipLine tip;
 
 			if( targetRarity >= 0 ) {
-				if( targetRarity > ItemAttributeHelpers.HighestVanillaRarity ) {
+				if( targetRarity > ItemRarityAttributeHelpers.HighestVanillaRarity ) {
 					tip = new TooltipLine( mymod, "WildcardLicense:Tier", "Stack size exceeds highest item tier." ) {
-						overrideColor = ItemAttributeHelpers.RarityColor[ItemAttributeHelpers.JunkRarity]
+						overrideColor = ItemRarityAttributeHelpers.RarityColor[ItemRarityAttributeHelpers.JunkRarity]
 					};
 				} else {
-					string rareStr = ItemAttributeHelpers.RarityLabel[targetRarity];
-					string rareClrStr = ItemAttributeHelpers.RarityColorText[targetRarity];
+					string rareStr = ItemRarityAttributeHelpers.RarityLabel[targetRarity];
+					string rareClrStr = ItemRarityAttributeHelpers.RarityColorText[targetRarity];
 
 					tip = new TooltipLine( mymod, "WildcardLicense:Tier", "Current item tier: " + rareStr + " (" + rareClrStr + ")" ) {
-						overrideColor = ItemAttributeHelpers.RarityColor[targetRarity]
+						overrideColor = ItemRarityAttributeHelpers.RarityColor[targetRarity]
 					};
 				}
 			} else {
 				tip = new TooltipLine( mymod, "WildcardLicense:Tier", "No applicable item tier." ) {
-					overrideColor = ItemAttributeHelpers.RarityColor[ItemAttributeHelpers.JunkRarity]
+					overrideColor = ItemRarityAttributeHelpers.RarityColor[ItemRarityAttributeHelpers.JunkRarity]
 				};
 			}
 			
@@ -76,16 +77,17 @@ namespace Licenses.Items {
 			var mymod = (LicensesMod)this.mod;
 			int savings;
 			int oldStack = this.item.stack;
-			string randItemName = this.AttemptToLicenseRandomItem( player, out savings );
+			ItemDefinition randItemDef = this.AttemptToLicenseRandomItem( player, out savings );
 
-			if( randItemName == null ) {
+			if( randItemDef == null ) {
 				Main.NewText( "No items of the given tier left to license.", Color.Red );
 				return false;
 			}
 
 			int targetRarity = WildcardLicenseItem.ComputeTargetRarityOfLicenseStackSize( oldStack );
-			Color color = ItemAttributeHelpers.RarityColor[ targetRarity ];
+			Color color = ItemRarityAttributeHelpers.RarityColor[ targetRarity ];
 
+			string randItemName = ItemAttributeHelpers.GetQualifiedName( randItemDef.Type );
 			string msg = randItemName + " licensed";
 
 			if( savings > 0 ) {

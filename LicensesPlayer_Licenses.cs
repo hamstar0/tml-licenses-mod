@@ -1,6 +1,6 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.ItemHelpers;
-using HamstarHelpers.Helpers.TmlHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.Items.Attributes;
+using HamstarHelpers.Helpers.TModLoader;
 using HamstarHelpers.Services.Timers;
 using Licenses.Items;
 using Microsoft.Xna.Framework;
@@ -8,6 +8,7 @@ using Nihilism;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 
 
 namespace Licenses {
@@ -29,11 +30,12 @@ namespace Licenses {
 			}
 
 			var mymod = (LicensesMod)this.mod;
-			string realItemName = ItemIdentityHelpers.GetQualifiedName( item );
+			string realItemName = ItemAttributeHelpers.GetQualifiedName( item );
+			ItemDefinition itemDef = new ItemDefinition( item.type );
 
-			bool isTrialed = this.TrialLicensedItems.Contains( realItemName );
-			bool isLicensed = this.LicensedItems.Contains( realItemName )
-				|| mymod.Config.FreeStarterItems.Contains( realItemName );
+			bool isTrialed = this.TrialLicensedItems.Contains( itemDef );
+			bool isLicensed = this.LicensedItems.Contains( itemDef )
+				|| mymod.Config.FreeStarterItems.Contains( itemDef );
 
 			// When the item is NOT licenses, we apply the licensing effect to the item, if we can:
 			switch( this.LicenseMode ) {
@@ -77,31 +79,35 @@ namespace Licenses {
 
 		////////////////
 
-		internal void TrialLicenseItemByName( string itemName, bool playSound ) {
+		internal void TrialLicenseItemByName( ItemDefinition itemDef, bool playSound ) {
 			var mymod = (LicensesMod)this.mod;
 
-			if( !string.IsNullOrEmpty(this.TrialLicensedItem) ) {
-				Main.NewText( this.TrialLicensedItem + " trial cancelled.", Color.Yellow );
+			if( this.TrialLicensedItem != null ) {
+				string itemName = ItemAttributeHelpers.GetQualifiedName( this.TrialLicensedItem.Type );
 
-				if( !this.LicensedItems.Contains( itemName ) ) {
+				Main.NewText( itemName + " trial cancelled.", Color.Yellow );
+
+				if( !this.LicensedItems.Contains( itemDef ) ) {
 					NihilismAPI.UnsetItemWhitelistEntry( this.TrialLicensedItem, true );
 				}
 			}
 
-			this.TrialLicensedItems.Add( itemName );
-			this.TrialLicensedItem = itemName;
+			this.TrialLicensedItems.Add( itemDef );
+			this.TrialLicensedItem = itemDef;
 
-			NihilismAPI.SetItemWhitelistEntry( itemName, true );
+			NihilismAPI.SetItemWhitelistEntry( itemDef, true );
 
 			Timers.UnsetTimer( "LicensesTrialPeriod" );
 			Timers.SetTimer( "LicensesTrialPeriod", mymod.Config.TrialLicenseDurationInTicks, () => {
 				var myplayer = (LicensesPlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, mymod, "LicensesPlayer" );
 
-				if( !myplayer.LicensedItems.Contains( itemName ) ) {
-					Main.NewText( itemName+" trial has expired.", Color.Yellow );
-					NihilismAPI.UnsetItemWhitelistEntry( itemName, true );
+				if( !myplayer.LicensedItems.Contains( itemDef ) ) {
+					string itemName = ItemAttributeHelpers.GetQualifiedName( itemDef.Type );
 
-					myplayer.TrialLicensedItem = "";
+					Main.NewText( itemName + " trial has expired.", Color.Yellow );
+					NihilismAPI.UnsetItemWhitelistEntry( itemDef, true );
+
+					myplayer.TrialLicensedItem = null;
 				}
 				return false;
 			} );
@@ -111,15 +117,15 @@ namespace Licenses {
 			}
 		}
 
-		internal void LicenseItemByName( string itemName, bool playSound ) {
+		internal void LicenseItemByName( ItemDefinition itemDef, bool playSound ) {
 			var mymod = (LicensesMod)this.mod;
 
-			this.LicensedItems.Add( itemName );
+			this.LicensedItems.Add( itemDef );
 			
-			NihilismAPI.SetItemWhitelistEntry( itemName, true );
+			NihilismAPI.SetItemWhitelistEntry( itemDef, true );
 
 			if( !mymod.Config.FreeRecipes ) {
-				NihilismAPI.SetRecipeWhitelistEntry( itemName, true );
+				NihilismAPI.SetRecipeWhitelistEntry( itemDef, true );
 			}
 
 			if( playSound ) {

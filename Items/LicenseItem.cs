@@ -1,9 +1,11 @@
-﻿using HamstarHelpers.Helpers.ItemHelpers;
-using HamstarHelpers.Helpers.PlayerHelpers;
+﻿using HamstarHelpers.Helpers.Items;
+using HamstarHelpers.Helpers.Items.Attributes;
+using HamstarHelpers.Helpers.Players;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 
 
 namespace Licenses.Items {
@@ -42,10 +44,10 @@ namespace Licenses.Items {
 				return false;
 			}
 
-			string realItemName = ItemIdentityHelpers.GetQualifiedName( item );
+			var realItemDef = new ItemDefinition( item.type );
 
 			var myplayer = player.GetModPlayer<LicensesPlayer>();
-			myplayer.LicenseItemByName( realItemName, true );
+			myplayer.LicenseItemByName( realItemDef, true );
 
 			PlayerItemHelpers.RemoveInventoryItemQuantity( player, licenseType, needed );
 
@@ -75,14 +77,14 @@ namespace Licenses.Items {
 		public override void ModifyTooltips( List<TooltipLine> tooltips ) {
 			var mymod = LicensesMod.Instance;
 
-			for( int i=0; i<ItemAttributeHelpers.HighestVanillaRarity; i++ ) {
+			for( int i=0; i<ItemRarityAttributeHelpers.HighestVanillaRarity; i++ ) {
 				float cost = (float)mymod.Config.LicenseCostBase;
 				cost += (float)i * mymod.Config.LicenseCostRarityMultiplier;
 
-				string str = cost + " licenses needed for " + ItemAttributeHelpers.RarityColorText[i] + " items";
+				string str = cost + " licenses needed for " + ItemRarityAttributeHelpers.RarityColorText[i] + " items";
 
 				var tip = new TooltipLine( this.mod, "License:RarityTip_"+i, str );
-				tip.overrideColor = ItemAttributeHelpers.RarityColor[i];
+				tip.overrideColor = ItemRarityAttributeHelpers.RarityColor[i];
 
 				tooltips.Add( tip );
 			}

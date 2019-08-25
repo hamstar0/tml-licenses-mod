@@ -1,23 +1,24 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
 using Nihilism;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 
 
 namespace Licenses {
 	partial class LicensesPlayer : ModPlayer {
-		private readonly ISet<string> PendingLoadTrialLicenses = new HashSet<string>();
-		private readonly ISet<string> PendingLoadLicenses = new HashSet<string>();
+		private readonly ISet<ItemDefinition> PendingLoadTrialLicenses = new HashSet<ItemDefinition>();
+		private readonly ISet<ItemDefinition> PendingLoadLicenses = new HashSet<ItemDefinition>();
 
-		public readonly ISet<string> TrialLicensedItems = new HashSet<string>();
-		public readonly ISet<string> LicensedItems = new HashSet<string>();
+		public readonly ISet<ItemDefinition> TrialLicensedItems = new HashSet<ItemDefinition>();
+		public readonly ISet<ItemDefinition> LicensedItems = new HashSet<ItemDefinition>();
 
 		public int LicenseMode = 0;
 
 		////////////////
-		
-		public string TrialLicensedItem { get; private set; }
+
+		public ItemDefinition TrialLicensedItem { get; private set; } = null;
 
 		////
 
@@ -27,21 +28,12 @@ namespace Licenses {
 
 		////////////////
 
-		public override void Initialize() {
-			this.TrialLicensedItem = "";
-		}
-
-		////
-
 		internal void ResetLicenses() {
-			foreach( string itemName in this.LicensedItems ) {
-				NihilismAPI.UnsetItemWhitelistEntry( itemName, true );
-			}
-			if( string.IsNullOrEmpty(this.TrialLicensedItem) ) {
-				NihilismAPI.UnsetItemWhitelistEntry( this.TrialLicensedItem, true );
+			foreach( ItemDefinition itemDef in this.LicensedItems ) {
+				NihilismAPI.UnsetItemWhitelistEntry( itemDef, true );
 			}
 
-			this.TrialLicensedItem = "";
+			this.TrialLicensedItem = null;
 			this.TrialLicensedItems.Clear();
 			this.LicensedItems.Clear();
 			this.PendingLoadTrialLicenses.Clear();

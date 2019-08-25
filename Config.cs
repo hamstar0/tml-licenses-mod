@@ -1,223 +1,185 @@
-﻿using HamstarHelpers.Components.Config;
+﻿using Licenses.Items;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
+using Rewards.Items;
 
 
 namespace Licenses {
-	public class LicensesConfigData : ConfigurationDataBase {
-		public static string ConfigFileName => "Licenses Config.json";
+	public class LicensesConfig : ModConfig {
+		public override ConfigScope Mode => ConfigScope.ServerSide;
 
 
-		////////////////
+		////
 
-		public string VersionSinceUpdate = "";
-
+		[DefaultValue( false )]
 		public bool DebugModeInfo = false;
 		//public bool DebugModeCheat = false;
 
+
+		[DefaultValue( true )]
 		public bool ResetWayfarerShop = true;
 
+
+		[DefaultValue( true )]
 		public bool OverrideNihilismDefaultFilters = true;
 
-		public ISet<string> FreeStarterItems = new HashSet<string>();
 
+		public HashSet<string> FreeStarterItemGroups = new HashSet<string>();
+		public HashSet<ItemDefinition> FreeStarterItems = new HashSet<ItemDefinition>();
+
+
+		[DefaultValue( 10 )]
 		public int LicensePackCostInPP = 10;
+
+		[DefaultValue( 6 )]
 		public int LicensesPerPack = 6;
+
+		[DefaultValue( 10 )]
 		public int WildcardLicensePackCostInPP = 10;
+
+		[DefaultValue( 18 )]
 		public int WildcardLicensesPerPack = 18;
 
+
+		[DefaultValue( 1 )]
 		public int LicenseCostBase = 1;
+
+		[DefaultValue( 1f / 2f )]
 		public float LicenseCostRarityMultiplier = 1f / 2f;
+
+		[DefaultValue( 1f / 3f )]
 		public float LicenseCostArmorMultiplier = 1f / 3f;
+
+		[DefaultValue( 1f )]
 		public float LicenseCostAccessoryMultiplier = 1f;
 
+
+		[DefaultValue( 1 )]
 		public int WildcardLicenseCostBase = 1;
+
+		[DefaultValue( 1 )]
 		public int WildcardLicenseCostRarityMultiplier = 1;
 
+
+		[DefaultValue( true )]
 		public bool FreeMaterials = true;
+
+		[DefaultValue( true )]
 		public bool FreePlaceables = true;
+
+		[DefaultValue( true )]
 		public bool FreeRecipes = true;
 
+
+		[DefaultValue( 10 )]
 		public int NewPlayerStarterLicenses = 10;
 
+
+		[DefaultValue( true )]
 		public bool ForceSpawnWayfarer = true;
+
+		[DefaultValue( true )]
 		public bool RemoveRewardsGrinding = true;
 
+
+		[DefaultValue( 5 * 60 * 60 )]
 		public int TrialLicenseDurationInTicks = 5 * 60 * 60;   // 5 minutes
+
+		[DefaultValue( 100 * 100 )]
 		public int TrialLicenseCost = 100 * 100;    // 1 gold
+
+		[DefaultValue( true )]
 		public bool TrialLicenseOncePerItem = true;
 
 
 
 		////////////////
 
-		public static int _2_0_6_LicensePackCostInPP = 10;
-		public static int _2_0_6_LicensesPerPack => 6;
-		public static int _2_0_6_WildcardLicensePackCostInPP = 20;
-		public static int _2_0_6_WildcardLicensesPerPack => 20;
-		public static int _2_0_6_TrialLicenseCost = 100 * 100 * 2;
+		public LicensesConfig() {
+			this.FreeStarterItemGroups = new HashSet<string> {
+				"Any Wood Equipment",
+				"Any Cactus Equipment",
+				"Any Copper Or Tin Equipment",
+				"Any Vanilla Alchemy Ingredient",
 
-		public static int _2_1_0_LicensesPerPack = 3;
-		public static int _2_1_0_WildcardLicensesPerPack = 10;
-		public static int _2_1_0_NewPlayerStarterLicenses = 8;
+				"Any Vanity",
+				"Any Dye",
+			};
 
-		public static float _2_1_0_LicenseCostRarityMultiplier = 1f;
-		public static int _2_1_0_TrialLicenseDurationInTicks = 2 * 60 * 60;   // 2 minutes
+			this.FreeStarterItems = new HashSet<ItemDefinition> {
+				new ItemDefinition( LicensesMod.Instance.ItemType<LicenseItem>() ),
+				new ItemDefinition( LicensesMod.Instance.ItemType<WildcardLicenseItem>() ),
+				new ItemDefinition( LicensesMod.Instance.ItemType<TrialLicenseItem>() ),
+				new ItemDefinition( ModLoader.GetMod("Rewards").ItemType<ShopPackItem>() ),
 
+				new ItemDefinition( ItemID.CopperCoin ),
+				new ItemDefinition( ItemID.SilverCoin ),
+				new ItemDefinition( ItemID.GoldCoin ),
+				new ItemDefinition( ItemID.PlatinumCoin ),
 
+				new ItemDefinition( ItemID.Snowball ),
+				new ItemDefinition( ItemID.Blowpipe ),
+				new ItemDefinition( ItemID.Seed ),
+				new ItemDefinition( ItemID.Rope ),
+				new ItemDefinition( ItemID.RopeCoil ),
+				new ItemDefinition( ItemID.EmptyBucket ),
+				new ItemDefinition( ItemID.WaterBucket ),
+				new ItemDefinition( ItemID.LavaBucket ),
+				new ItemDefinition( ItemID.HoneyBucket ),
+				new ItemDefinition( ItemID.BugNet ),
+				new ItemDefinition( ItemID.Glowstick ),
+				new ItemDefinition( ItemID.StickyGlowstick ),
+				new ItemDefinition( ItemID.BouncyGlowstick ),
 
-		////////////////
+				new ItemDefinition( ItemID.LesserHealingPotion ),
+				new ItemDefinition( ItemID.LesserManaPotion ),
 
-		public void SetDefaults() {
-			this.FreeStarterItems.Clear();
+				new ItemDefinition( ItemID.Gel ),
+				new ItemDefinition( ItemID.Mushroom ),
+				new ItemDefinition( ItemID.FallenStar ),
+				new ItemDefinition( ItemID.Acorn ),
 
-			this.FreeStarterItems.Add( "Any Wood Equipment" );
-			this.FreeStarterItems.Add( "Any Cactus Equipment" );
-			this.FreeStarterItems.Add( "Any Copper Or Tin Equipment" );
-			this.FreeStarterItems.Add( "Any Vanilla Alchemy Ingredient" );
+				new ItemDefinition( ItemID.Wood ),
+				new ItemDefinition( ItemID.RichMahogany ),
+				new ItemDefinition( ItemID.BorealWood ),
+				new ItemDefinition( ItemID.PalmWood ),
 
-			this.FreeStarterItems.Add( "Any Vanity" );
-			this.FreeStarterItems.Add( "Any Dye" );
+				new ItemDefinition( ItemID.DirtBlock ),
+				new ItemDefinition( ItemID.StoneBlock ),
+				new ItemDefinition( ItemID.ClayBlock ),
+				new ItemDefinition( ItemID.MudBlock ),
+				new ItemDefinition( ItemID.SandBlock ),
+				new ItemDefinition( ItemID.SiltBlock ),
+				new ItemDefinition( ItemID.SnowBlock ),
+				new ItemDefinition( ItemID.IceBlock ),
 
-			this.FreeStarterItems.Add( "License" );
-			this.FreeStarterItems.Add( "Wildcard License" );
-			this.FreeStarterItems.Add( "Trial License" );
-			this.FreeStarterItems.Add( "Wayfarer's Pack" );
+				new ItemDefinition( ItemID.WoodPlatform ),
 
-			this.FreeStarterItems.Add( "Copper Coin" );
-			this.FreeStarterItems.Add( "Silver Coin" );
-			this.FreeStarterItems.Add( "Gold Coin" );
-			this.FreeStarterItems.Add( "Platinum Coin" );
+				new ItemDefinition( ItemID.WoodWall ),
+				new ItemDefinition( ItemID.DirtWall ),
+				new ItemDefinition( ItemID.StoneWall ),
 
-			this.FreeStarterItems.Add( "Snowball" );
-			this.FreeStarterItems.Add( "Blowpipe" );
-			this.FreeStarterItems.Add( "Seed" );
-			this.FreeStarterItems.Add( "Rope" );
-			this.FreeStarterItems.Add( "Rope Coil" );
-			this.FreeStarterItems.Add( "Empty Bucket" );
-			this.FreeStarterItems.Add( "Water Bucket" );
-			this.FreeStarterItems.Add( "Lava Bucket" );
-			this.FreeStarterItems.Add( "Honey Bucket" );
-			this.FreeStarterItems.Add( "Bug Net" );
-			this.FreeStarterItems.Add( "Glowstick" );
-			this.FreeStarterItems.Add( "Sticky Glowstick" );
-			this.FreeStarterItems.Add( "Bouncy Glowstick" );
+				new ItemDefinition( ItemID.Torch ),
+				new ItemDefinition( ItemID.Campfire ),
+				new ItemDefinition( ItemID.WorkBench ),
+				new ItemDefinition( ItemID.WoodenTable ),
+				new ItemDefinition( ItemID.WoodenChair ),
+				new ItemDefinition( ItemID.WoodenDoor ),
+				new ItemDefinition( ItemID.Furnace ),
+				new ItemDefinition( ItemID.IronAnvil ),
+				new ItemDefinition( ItemID.LeadAnvil ),
+				new ItemDefinition( ItemID.Bottle ),
+				new ItemDefinition( ItemID.Chest ),
+				new ItemDefinition( ItemID.Barrel ),
+				new ItemDefinition( ItemID.WoodenDoor ),
+				new ItemDefinition( ItemID.MinecartTrack ),
 
-			this.FreeStarterItems.Add( "Lesser Healing Potion" );
-			this.FreeStarterItems.Add( "Lesser Mana Potion" );
-
-			this.FreeStarterItems.Add( "Gel" );
-			this.FreeStarterItems.Add( "Mushroom" );
-			this.FreeStarterItems.Add( "Fallen Star" );
-			this.FreeStarterItems.Add( "Acorn" );
-
-			this.FreeStarterItems.Add( "Wood" );
-			this.FreeStarterItems.Add( "Rich Mahogany" );
-			this.FreeStarterItems.Add( "Boreal Wood" );
-			this.FreeStarterItems.Add( "Palm Wood" );
-
-			this.FreeStarterItems.Add( "Dirt Block" );
-			this.FreeStarterItems.Add( "Stone Block" );
-			this.FreeStarterItems.Add( "Clay Block" );
-			this.FreeStarterItems.Add( "Mud Block" );
-			this.FreeStarterItems.Add( "Sand Block" );
-			this.FreeStarterItems.Add( "Silt Block" );
-			this.FreeStarterItems.Add( "Snow Block" );
-			this.FreeStarterItems.Add( "Ice Block" );
-
-			this.FreeStarterItems.Add( "Wood Platform" );
-
-			this.FreeStarterItems.Add( "Wood Wall" );
-			this.FreeStarterItems.Add( "Dirt Wall" );
-			this.FreeStarterItems.Add( "Stone Wall" );
-
-			this.FreeStarterItems.Add( "Torch" );
-			this.FreeStarterItems.Add( "Campfire" );
-			this.FreeStarterItems.Add( "Work Bench" );
-			this.FreeStarterItems.Add( "Wooden Table" );
-			this.FreeStarterItems.Add( "Wooden Chair" );
-			this.FreeStarterItems.Add( "Wooden Door" );
-			this.FreeStarterItems.Add( "Furnace" );
-			this.FreeStarterItems.Add( "Iron Anvil" );
-			this.FreeStarterItems.Add( "Lead Anvil" );
-			this.FreeStarterItems.Add( "Bottle" );
-			this.FreeStarterItems.Add( "Chest" );
-			this.FreeStarterItems.Add( "Barrel" );
-			this.FreeStarterItems.Add( "Wooden Door" );
-			this.FreeStarterItems.Add( "Minecart Track" );
-			
-			this.FreeStarterItems.Add( "Sunglasses" );
-		}
-
-
-		////////////////
-
-		public bool CanUpdateVersion() {
-			if( this.VersionSinceUpdate == "" ) {
-				return true;
-			}
-
-			var versSince = new Version( this.VersionSinceUpdate );
-			bool canUpdate = versSince < LicensesMod.Instance.Version;
-			
-			return canUpdate;
-		}
-
-
-		public void UpdateToLatestVersion() {
-			var mymod = LicensesMod.Instance;
-			var versSince = this.VersionSinceUpdate != "" ?
-				new Version( this.VersionSinceUpdate ) :
-				new Version();
-			var newConfig = new LicensesConfigData();
-			newConfig.SetDefaults();
-
-			if( this.VersionSinceUpdate == "" ) {
-				this.SetDefaults();
-			}
-
-			if( versSince < new Version( 2, 0, 4, 1 ) ) {
-				this.FreeStarterItems.Add( "Trial License" );
-			}
-			if( versSince < new Version( 2, 0, 7 ) ) {
-				if( this.LicensePackCostInPP == LicensesConfigData._2_0_6_LicensePackCostInPP
-						&& this.LicensesPerPack == LicensesConfigData._2_0_6_LicensesPerPack 
-						&& this.WildcardLicensePackCostInPP == LicensesConfigData._2_0_6_WildcardLicensePackCostInPP 
-						&& this.WildcardLicensesPerPack == LicensesConfigData._2_0_6_WildcardLicensesPerPack ) {
-					this.LicensePackCostInPP = newConfig.LicensePackCostInPP;
-					this.LicensesPerPack = newConfig.LicensesPerPack;
-					this.WildcardLicensePackCostInPP = newConfig.WildcardLicensePackCostInPP;
-					this.WildcardLicensesPerPack = newConfig.WildcardLicensesPerPack;
-				}
-				if( this.TrialLicenseCost == LicensesConfigData._2_0_6_TrialLicenseCost ) {
-					this.TrialLicenseCost = newConfig.TrialLicenseCost;
-				}
-			}
-			if( versSince < new Version( 2, 1, 0 ) ) {
-				if( this.FreeStarterItems.Contains("Trail License") ) {
-					this.FreeStarterItems.Remove( "Trail License" );
-					this.FreeStarterItems.Add( "Trial License" );
-				}
-				if( this.FreeStarterItems.Count == (newConfig.FreeStarterItems.Count - 2) ) {
-					this.FreeStarterItems = newConfig.FreeStarterItems;
-				}
-				if( this.LicensesPerPack == LicensesConfigData._2_1_0_LicensesPerPack 
-						&& this.WildcardLicensesPerPack == LicensesConfigData._2_1_0_WildcardLicensesPerPack ) {
-					this.LicensesPerPack = newConfig.LicensesPerPack;
-					this.WildcardLicensesPerPack = newConfig.WildcardLicensesPerPack;
-				}
-				if( this.NewPlayerStarterLicenses == LicensesConfigData._2_1_0_NewPlayerStarterLicenses ) {
-					this.NewPlayerStarterLicenses = newConfig.NewPlayerStarterLicenses;
-				}
-				if( this.LicenseCostRarityMultiplier == LicensesConfigData._2_1_0_LicenseCostRarityMultiplier ) {
-					this.LicenseCostRarityMultiplier = newConfig.LicenseCostRarityMultiplier;
-				}
-				if( this.TrialLicenseDurationInTicks == LicensesConfigData._2_1_0_TrialLicenseDurationInTicks ) {
-					this.TrialLicenseDurationInTicks = newConfig.TrialLicenseDurationInTicks;
-				}
-			}
-
-			this.VersionSinceUpdate = mymod.Version.ToString();
+				new ItemDefinition( ItemID.Sunglasses ),
+			};
 		}
 	}
 }

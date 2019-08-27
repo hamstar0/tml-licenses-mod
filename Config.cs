@@ -6,7 +6,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Rewards.Items;
-
+using System.Linq;
 
 namespace Licenses {
 	public class LicensesConfig : ModConfig {
@@ -180,6 +180,15 @@ namespace Licenses {
 
 				new ItemDefinition( ItemID.Sunglasses ),
 			};
+		}
+
+		public override ModConfig Clone() {
+			var clone = (LicensesConfig)base.Clone();
+
+			clone.FreeStarterItemGroups = new HashSet<string>( this.FreeStarterItemGroups );
+			clone.FreeStarterItems = new HashSet<ItemDefinition>( this.FreeStarterItems );
+
+			return clone;
 		}
 	}
 }

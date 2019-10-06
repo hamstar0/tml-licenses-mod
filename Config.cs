@@ -6,7 +6,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Rewards.Items;
-using System.Linq;
+
 
 namespace Licenses {
 	public class LicensesConfig : ModConfig {
@@ -111,10 +111,10 @@ namespace Licenses {
 			};
 
 			this.FreeStarterItems = new HashSet<ItemDefinition> {
-				new ItemDefinition( LicensesMod.Instance.ItemType<LicenseItem>() ),
-				new ItemDefinition( LicensesMod.Instance.ItemType<WildcardLicenseItem>() ),
-				new ItemDefinition( LicensesMod.Instance.ItemType<TrialLicenseItem>() ),
-				new ItemDefinition( ModLoader.GetMod("Rewards").ItemType<ShopPackItem>() ),
+				new ItemDefinition( ModContent.ItemType<LicenseItem>() ),
+				new ItemDefinition( ModContent.ItemType<WildcardLicenseItem>() ),
+				new ItemDefinition( ModContent.ItemType<TrialLicenseItem>() ),
+				new ItemDefinition( ModContent.ItemType<ShopPackItem>() ),
 
 				new ItemDefinition( ItemID.CopperCoin ),
 				new ItemDefinition( ItemID.SilverCoin ),

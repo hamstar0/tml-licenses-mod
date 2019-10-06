@@ -11,7 +11,7 @@ namespace Licenses {
 			
 			if( npcType == NPCID.Merchant ) {
 				Item item = new Item();
-				item.SetDefaults( mymod.ItemType<TrialLicenseItem>(), true );
+				item.SetDefaults( ModContent.ItemType<TrialLicenseItem>(), true );
 
 				shop.item[nextSlot++] = item;
 			}

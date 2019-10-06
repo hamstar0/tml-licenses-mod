@@ -10,7 +10,7 @@ using Terraria.ModLoader.Config;
 namespace Licenses.Items {
 	class TrialLicenseItem : ModItem {
 		public static bool AttemptToTemporaryLicenseItem( Player player, Item item ) {
-			int trialLicenseType = LicensesMod.Instance.ItemType<TrialLicenseItem>();
+			int trialLicenseType = ModContent.ItemType<TrialLicenseItem>();
 			int totalLicenses = ItemFinderHelpers.CountTotalOfEach( player.inventory, new HashSet<int> { trialLicenseType } );
 			int needed = LicenseItem.ComputeCost( item );
 			

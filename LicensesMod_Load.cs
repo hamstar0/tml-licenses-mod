@@ -6,8 +6,10 @@ using Nihilism;
 using Rewards;
 using Rewards.Configs;
 using Rewards.Items;
+using System.Collections.Generic;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
+
 
 namespace Licenses {
     public partial class LicensesMod : Mod {
@@ -38,7 +40,7 @@ namespace Licenses {
 
 			if( this.Config.RemoveRewardsGrinding ) {
 				Mod rewMod = ModLoader.GetMod( "Rewards" );
-				RewardsPointsConfig rewConfig = rewMod.GetConfig<RewardsPointsConfig>();
+				RewardsPointsConfig rewConfig = ModContent.GetInstance<RewardsPointsConfig>();
 				rewConfig.GrindKillMultiplier = 0f;
 			}
 			if( this.Config.ForceSpawnWayfarer ) {
@@ -101,12 +103,12 @@ namespace Licenses {
 
 		private void LoadLicensePacks() {
 			var licDef = new ShopPackItemDefinition(
-				new ItemDefinition( this.ItemType<LicenseItem>() ),
+				new ItemDefinition( ModContent.ItemType<LicenseItem>() ),
 				this.Config.LicensesPerPack,
 				null
 			);
 			var wildLicDef = new ShopPackItemDefinition(
-				new ItemDefinition( this.ItemType<WildcardLicenseItem>() ),
+				new ItemDefinition( ModContent.ItemType<WildcardLicenseItem>() ),
 				this.Config.WildcardLicensesPerPack,
 				null
 			);
@@ -115,13 +117,13 @@ namespace Licenses {
 				null,
 				"Standard License Pack",
 				this.Config.LicensePackCostInPP,
-				new ShopPackItemDefinition[] { licDef }
+				new List<ShopPackItemDefinition> { licDef }
 			);
 			var def2 = new ShopPackDefinition(
 				null,
 				"Wildcard License Pack",
 				this.Config.WildcardLicensePackCostInPP,
-				new ShopPackItemDefinition[] { wildLicDef }
+				new List<ShopPackItemDefinition> { wildLicDef }
 			);
 			
 			if( this.Config.ResetWayfarerShop ) {

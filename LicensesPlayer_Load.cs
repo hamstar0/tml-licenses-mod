@@ -150,7 +150,7 @@ namespace Licenses {
 			if( mymod.Config.NewPlayerStarterLicenses == 0 ) { return; }
 
 			Item licenses = new Item();
-			licenses.SetDefaults( mymod.ItemType<LicenseItem>(), true );
+			licenses.SetDefaults( ModContent.ItemType<LicenseItem>(), true );
 			licenses.stack = mymod.Config.NewPlayerStarterLicenses;
 
 			items.Add( licenses );

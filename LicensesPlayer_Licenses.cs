@@ -20,11 +20,11 @@ namespace Licenses {
 			}
 			
 			// If the item is a type of License, we engage the respective mode:
-			if( item.type == this.mod.ItemType<LicenseItem>() ) {
+			if( item.type == ModContent.ItemType<LicenseItem>() ) {
 				this.LicenseMode = 1;
 				return;
 			}
-			if( item.type == this.mod.ItemType<TrialLicenseItem>() ) {
+			if( item.type == ModContent.ItemType<TrialLicenseItem>() ) {
 				this.LicenseMode = 2;
 				return;
 			}

@@ -36,7 +36,7 @@ namespace Licenses.Items {
 
 
 		public static bool AttemptToLicenseItem( Player player, Item item ) {
-			int licenseType = LicensesMod.Instance.ItemType<LicenseItem>();
+			int licenseType = ModContent.ItemType<LicenseItem>();
 			int totalLicenses = ItemFinderHelpers.CountTotalOfEach( player.inventory, new HashSet<int> { licenseType } );
 			int needed = LicenseItem.ComputeCost( item );
 

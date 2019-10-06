@@ -14,7 +14,7 @@ namespace Licenses {
 
 		////////////////
 
-		public LicensesConfig Config => this.GetConfig<LicensesConfig>();
+		public LicensesConfig Config => ModContent.GetInstance<LicensesConfig>();
 
 
 

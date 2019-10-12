@@ -51,7 +51,7 @@ namespace Licenses.Items {
 			this.item.maxStack = 999;
 			this.item.width = 16;
 			this.item.height = 16;
-			this.item.value = mymod.Config.TrialLicenseCost;
+			this.item.value = mymod.Config.TrialLicenseCoinCost;
 			this.item.rare = 1;
 		}
 

@@ -6,6 +6,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Rewards.Items;
+using HamstarHelpers.Classes.UI.ModConfig;
 
 
 namespace Licenses {
@@ -32,49 +33,71 @@ namespace Licenses {
 		public HashSet<ItemDefinition> FreeStarterItems = new HashSet<ItemDefinition>();
 
 
+		[Range( 0, 10000 )]
 		[DefaultValue( 10 )]
 		public int LicensePackCostInPP = 10;
 
+		[Range( 0, 999 )]
 		[DefaultValue( 6 )]
 		public int LicensesPerPack = 6;
 
+		[Range( 0, 10000 )]
 		[DefaultValue( 10 )]
 		public int WildcardLicensePackCostInPP = 10;
 
+		[Range( 0, 999 )]
 		[DefaultValue( 18 )]
 		public int WildcardLicensesPerPack = 18;
 
 
+		[Label( "Licenses needed to unlock an item (base amount)" )]
+		[Range( 0, 10000 )]
 		[DefaultValue( 1 )]
 		public int LicenseCostBase = 1;
 
+		[Label( "Multiplier of added license per item rarity grade" )]
+		[Range( 0f, 100f )]
 		[DefaultValue( 1f / 2f )]
+		[CustomModConfigItem( typeof( FloatInputElement ) )]
 		public float LicenseCostRarityMultiplier = 1f / 2f;
 
+		[Label( "Multiplier of licenses needed for armor" )]
+		[Range( 0f, 100f )]
 		[DefaultValue( 1f / 3f )]
+		[CustomModConfigItem( typeof( FloatInputElement ) )]
 		public float LicenseCostArmorMultiplier = 1f / 3f;
 
+		[Label( "Multiplier of licenses needed for accessories" )]
+		[Range( 0f, 100f )]
 		[DefaultValue( 1f )]
+		[CustomModConfigItem( typeof( FloatInputElement ) )]
 		public float LicenseCostAccessoryMultiplier = 1f;
 
 
+		[Label( "Wildcards needed to unlock an item (base amt)" )]
 		[DefaultValue( 1 )]
 		public int WildcardLicenseCostBase = 1;
 
+		[Label( "Multiplier of added wildcards per item rarity grade" )]
+		[Range( 0, 100 )]
 		[DefaultValue( 1 )]
 		public int WildcardLicenseCostRarityMultiplier = 1;
 
 
+		[Label( "Material items cost no licenses?" )]
 		[DefaultValue( true )]
 		public bool FreeMaterials = true;
 
+		[Label( "Placeable items cost no licenses?" )]
 		[DefaultValue( true )]
 		public bool FreePlaceables = true;
 
+		[Label( "Recipes cost no licenses?" )]
 		[DefaultValue( true )]
 		public bool FreeRecipes = true;
 
 
+		[Range( 0, 10000 )]
 		[DefaultValue( 10 )]
 		public int NewPlayerStarterLicenses = 10;
 
@@ -86,14 +109,23 @@ namespace Licenses {
 		public bool RemoveRewardsGrinding = true;
 
 
+		[Range( 1, 60 * 60 * 60 * 24 )]
 		[DefaultValue( 5 * 60 * 60 )]
 		public int TrialLicenseDurationInTicks = 5 * 60 * 60;   // 5 minutes
 
+		[Range( 0, 100000000 )]
 		[DefaultValue( 100 * 100 )]
-		public int TrialLicenseCost = 100 * 100;    // 1 gold
+		public int TrialLicenseCoinCost = 100 * 100;    // 1 gold
 
 		[DefaultValue( true )]
 		public bool TrialLicenseOncePerItem = true;
+
+
+		////
+
+		[Header("OBSOLETE SETTINGS BELOW")]
+		[Range( 0, 100000000 )]
+		public int TrialLicenseCost = 100 * 100;
 
 
 

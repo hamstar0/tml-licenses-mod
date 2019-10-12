@@ -10,6 +10,11 @@ using HamstarHelpers.Classes.UI.ModConfig;
 
 
 namespace Licenses {
+	class MyFloatInputElement : FloatInputElement { }
+
+
+
+
 	public class LicensesConfig : ModConfig {
 		public override ConfigScope Mode => ConfigScope.ServerSide;
 
@@ -58,19 +63,19 @@ namespace Licenses {
 		[Label( "Multiplier of added license per item rarity grade" )]
 		[Range( 0f, 100f )]
 		[DefaultValue( 1f / 2f )]
-		[CustomModConfigItem( typeof( FloatInputElement ) )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
 		public float LicenseCostRarityMultiplier = 1f / 2f;
 
 		[Label( "Multiplier of licenses needed for armor" )]
 		[Range( 0f, 100f )]
 		[DefaultValue( 1f / 3f )]
-		[CustomModConfigItem( typeof( FloatInputElement ) )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
 		public float LicenseCostArmorMultiplier = 1f / 3f;
 
 		[Label( "Multiplier of licenses needed for accessories" )]
 		[Range( 0f, 100f )]
 		[DefaultValue( 1f )]
-		[CustomModConfigItem( typeof( FloatInputElement ) )]
+		[CustomModConfigItem( typeof( MyFloatInputElement ) )]
 		public float LicenseCostAccessoryMultiplier = 1f;
 
 

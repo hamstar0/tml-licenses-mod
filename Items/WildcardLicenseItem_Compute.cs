@@ -8,42 +8,38 @@ using Terraria.ModLoader;
 namespace Licenses.Items {
 	partial class WildcardLicenseItem : ModItem {
 		public static int ComputeMaxCost() {
-			var mymod = LicensesMod.Instance;
-			
-			int maxRarityCost = mymod.Config.WildcardLicenseCostBase;
-			maxRarityCost += ItemRarityAttributeHelpers.HighestVanillaRarity * mymod.Config.WildcardLicenseCostRarityMultiplier;
+			int maxRarityCost = LicensesMod.Config.WildcardLicenseCostBase;
+			maxRarityCost += ItemRarityAttributeHelpers.HighestVanillaRarity * LicensesMod.Config.WildcardLicenseCostRarityMultiplier;
 			return maxRarityCost;
 		}
 
 
 		public static int ComputeTargetRarityOfLicenseStackSize( int stack ) {
-			var mymod = LicensesMod.Instance;
-			int rarity = (stack - mymod.Config.WildcardLicenseCostBase) / mymod.Config.WildcardLicenseCostRarityMultiplier;
+			int rarity = (stack - LicensesMod.Config.WildcardLicenseCostBase) / LicensesMod.Config.WildcardLicenseCostRarityMultiplier;
 
 			return Math.Max( -1, rarity );
 		}
 
 
 		public static int ComputeCost( Item item, out int savings ) {
-			var mymod = LicensesMod.Instance;
 			int rarity = Math.Max( 0, item.rare );
 
 			float totalSavings = 0;
-			float cost = (float)mymod.Config.WildcardLicenseCostBase;
-			cost += (float)item.stack * (float)rarity * (float)mymod.Config.WildcardLicenseCostRarityMultiplier;
+			float cost = (float)LicensesMod.Config.WildcardLicenseCostBase;
+			cost += (float)item.stack * (float)rarity * (float)LicensesMod.Config.WildcardLicenseCostRarityMultiplier;
 
-			if( mymod.Config.LicenseCostArmorMultiplier != 1f ) {
+			if( LicensesMod.Config.LicenseCostArmorMultiplier != 1f ) {
 				if( ItemAttributeHelpers.IsArmor( item ) ) {
-					float armorCost = (float)cost * mymod.Config.LicenseCostArmorMultiplier;
+					float armorCost = (float)cost * LicensesMod.Config.LicenseCostArmorMultiplier;
 
 					totalSavings += cost - armorCost;
 					cost = armorCost;
 				}
 			}
 
-			if( mymod.Config.LicenseCostAccessoryMultiplier != 1f ) {
+			if( LicensesMod.Config.LicenseCostAccessoryMultiplier != 1f ) {
 				if( item.accessory ) {
-					float accCost = (float)cost * mymod.Config.LicenseCostAccessoryMultiplier;
+					float accCost = (float)cost * LicensesMod.Config.LicenseCostAccessoryMultiplier;
 
 					totalSavings += cost - accCost;
 					cost = accCost;
@@ -51,7 +47,7 @@ namespace Licenses.Items {
 			}
 
 			savings = (int)totalSavings;
-			return (int)Math.Max( cost, mymod.Config.WildcardLicenseCostBase );
+			return (int)Math.Max( cost, LicensesMod.Config.WildcardLicenseCostBase );
 		}
 	}
 }

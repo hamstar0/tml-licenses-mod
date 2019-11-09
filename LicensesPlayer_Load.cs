@@ -22,11 +22,11 @@ namespace Licenses {
 		}
 
 
+
 		////////////////
 
 		public override void Load( TagCompound tag ) {
 			var self = this;
-			var mymod = (LicensesMod)this.mod;
 
 			this.TrialLicensedItems.Clear();
 			this.LicensedItems.Clear();
@@ -37,7 +37,7 @@ namespace Licenses {
 					string itemKey = tag.GetString( "trial_license_key_" + i );
 					this.PendingLoadTrialLicenses.Add( new ItemDefinition(itemKey) );
 				}
-				if( mymod.Config.DebugModeInfo ) {
+				if( LicensesMod.Config.DebugModeInfo ) {
 					LogHelpers.Alert( "  Loaded for player "+this.player.name+" ("+this.player.whoAmI+") "+count+" trial licensed items..." );
 				}
 			}
@@ -48,7 +48,7 @@ namespace Licenses {
 					string itemKey = tag.GetString( "license_key_" + i );
 					this.PendingLoadLicenses.Add( new ItemDefinition(itemKey) );
 				}
-				if( mymod.Config.DebugModeInfo ) {
+				if( LicensesMod.Config.DebugModeInfo ) {
 					LogHelpers.Alert( "  Loaded for player "+this.player.name+" ("+this.player.whoAmI+") "+count+" licensed items..." );
 				}
 			}
@@ -76,10 +76,51 @@ namespace Licenses {
 			return tags;
 		}
 
-		
+
 		////////////////
 
-		private void OnEnterWorldLocal() {
+		public override void SetupStartInventory( IList<Item> items, bool mediumcoreDeath ) {
+			if( LicensesMod.Config.NewPlayerStarterLicenses == 0 ) { return; }
+
+			Item licenses = new Item();
+			licenses.SetDefaults( ModContent.ItemType<LicenseItem>(), true );
+			licenses.stack = LicensesMod.Config.NewPlayerStarterLicenses;
+
+			items.Add( licenses );
+		}
+
+
+		////////////////
+
+		public void OnEnterWorldForSingle() {
+			if( LicensesMod.Config.DebugModeInfo ) {
+				LogHelpers.Alert( "Loading player for game mode..." );
+			}
+
+			this.OnEnterWorldLocal();
+			this.PostOnEnterWorld();
+		}
+
+		public void OnEnterWorldForClient() {
+			if( LicensesMod.Config.DebugModeInfo ) {
+				LogHelpers.Alert( "Loading player for game mode..." );
+			}
+
+			this.OnEnterWorldLocal();
+			this.PostOnEnterWorld();
+		}
+
+		public void OnEnterWorldForServer() {
+			if( LicensesMod.Config.DebugModeInfo ) {
+				LogHelpers.Alert( "Loading player for game mode..." );
+			}
+
+			this.PostOnEnterWorld();
+		}
+
+		////
+
+		internal void OnEnterWorldLocal() {
 			var mymod = (LicensesMod)this.mod;
 
 			foreach( ItemDefinition itemDef in this.PendingLoadTrialLicenses ) {
@@ -94,66 +135,12 @@ namespace Licenses {
 			this.PendingLoadLicenses.Clear();
 		}
 
-		private void PostOnEnterWorld() {
+		internal void PostOnEnterWorld() {
 			CustomLoadHooks.TriggerHook( LicensesPlayer.EnterWorldValidator, LicensesPlayer.MyValidatorKey );
 
 			LoadHooks.AddWorldUnloadOnceHook( () => {
 				CustomLoadHooks.ClearHook( LicensesPlayer.EnterWorldValidator, LicensesPlayer.MyValidatorKey );
 			} );
-		}
-
-		////////////////
-
-		public void OnEnterWorldForSingle() {
-			CustomLoadHooks.AddHook( LicensesMod.GameModeLoadValidator, (_) => {
-				var mymod = (LicensesMod)this.mod;
-				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Alert( "Loading player for game mode..." );
-				}
-
-				this.OnEnterWorldLocal();
-				this.PostOnEnterWorld();
-				return false;
-			} );
-		}
-
-		public void OnEnterWorldForClient() {
-			CustomLoadHooks.AddHook( LicensesMod.GameModeLoadValidator, (_) => {
-				var mymod = (LicensesMod)this.mod;
-				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Alert( "Loading player for game mode..." );
-				}
-
-				this.OnEnterWorldLocal();
-				this.PostOnEnterWorld();
-				return false;
-			} );
-		}
-
-		public void OnEnterWorldForServer() {
-			CustomLoadHooks.AddHook( LicensesMod.GameModeLoadValidator, (_) => {
-				var mymod = (LicensesMod)this.mod;
-				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Alert( "Loading player for game mode..." );
-				}
-
-				this.PostOnEnterWorld();
-				return false;
-			} );
-		}
-
-
-		////////////////
-
-		public override void SetupStartInventory( IList<Item> items, bool mediumcoreDeath ) {
-			var mymod = (LicensesMod)this.mod;
-			if( mymod.Config.NewPlayerStarterLicenses == 0 ) { return; }
-
-			Item licenses = new Item();
-			licenses.SetDefaults( ModContent.ItemType<LicenseItem>(), true );
-			licenses.stack = mymod.Config.NewPlayerStarterLicenses;
-
-			items.Add( licenses );
 		}
 	}
 }

@@ -29,13 +29,12 @@ namespace Licenses {
 				return;
 			}
 
-			var mymod = (LicensesMod)this.mod;
 			string realItemName = ItemAttributeHelpers.GetQualifiedName( item );
 			ItemDefinition itemDef = new ItemDefinition( item.type );
 
 			bool isTrialed = this.TrialLicensedItems.Contains( itemDef );
 			bool isLicensed = this.LicensedItems.Contains( itemDef )
-				|| mymod.Config.FreeStarterItems.Contains( itemDef );
+				|| LicensesMod.Config.FreeStarterItems.Contains( itemDef );
 
 			// When the item is NOT licenses, we apply the licensing effect to the item, if we can:
 			switch( this.LicenseMode ) {
@@ -57,9 +56,9 @@ namespace Licenses {
 			case 2:
 				this.LicenseMode = 0;
 				
-				if( !isLicensed && (!isTrialed || !mymod.Config.TrialLicenseOncePerItem) ) {
+				if( !isLicensed && (!isTrialed || !LicensesMod.Config.TrialLicenseOncePerItem) ) {
 					if( TrialLicenseItem.AttemptToTemporaryLicenseItem( this.player, item ) ) {
-						Main.NewText( realItemName + " is now licensed for " + ( LicensesMod.Instance.Config.TrialLicenseDurationInTicks / 60 ) + " seconds.", Color.LimeGreen );
+						Main.NewText( realItemName + " is now licensed for " + ( LicensesMod.Config.TrialLicenseDurationInTicks / 60 ) + " seconds.", Color.LimeGreen );
 					} else {
 						int needed = LicenseItem.ComputeCost( item );
 						Main.NewText( "Not enough trial licenses for " + realItemName + ": " + needed + " needed", Color.Red );
@@ -98,7 +97,7 @@ namespace Licenses {
 			NihilismAPI.SetItemWhitelistEntry( itemDef, true );
 
 			Timers.UnsetTimer( "LicensesTrialPeriod" );
-			Timers.SetTimer( "LicensesTrialPeriod", mymod.Config.TrialLicenseDurationInTicks, () => {
+			Timers.SetTimer( "LicensesTrialPeriod", LicensesMod.Config.TrialLicenseDurationInTicks, () => {
 				var myplayer = (LicensesPlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, mymod, "LicensesPlayer" );
 
 				if( !myplayer.LicensedItems.Contains( itemDef ) ) {
@@ -118,13 +117,11 @@ namespace Licenses {
 		}
 
 		internal void LicenseItemByDefinition( ItemDefinition itemDef, bool playSound ) {
-			var mymod = (LicensesMod)this.mod;
-
 			this.LicensedItems.Add( itemDef );
 			
 			NihilismAPI.SetItemWhitelistEntry( itemDef, true );
 
-			if( !mymod.Config.FreeRecipes ) {
+			if( !LicensesMod.Config.FreeRecipes ) {
 				NihilismAPI.SetRecipeWhitelistEntry( itemDef, true );
 			}
 

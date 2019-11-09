@@ -11,27 +11,26 @@ using Terraria.ModLoader.Config;
 namespace Licenses.Items {
 	class LicenseItem : ModItem {
 		public static int ComputeCost( Item item ) {
-			var mymod = LicensesMod.Instance;
 			Item defaultOfItem = new Item();
 			defaultOfItem.SetDefaults( item.type, true );
 
 			int rarity = Math.Max( 0, defaultOfItem.rare );
 
-			float cost = (float)mymod.Config.LicenseCostBase;
-			cost += (float)rarity * mymod.Config.LicenseCostRarityMultiplier;
+			float cost = (float)LicensesMod.Config.LicenseCostBase;
+			cost += (float)rarity * LicensesMod.Config.LicenseCostRarityMultiplier;
 
-			if( mymod.Config.LicenseCostArmorMultiplier != 1f ) {
+			if( LicensesMod.Config.LicenseCostArmorMultiplier != 1f ) {
 				if( ItemAttributeHelpers.IsArmor( defaultOfItem ) ) {
-					cost = (float)cost * mymod.Config.LicenseCostArmorMultiplier;
+					cost = (float)cost * LicensesMod.Config.LicenseCostArmorMultiplier;
 				}
 			}
-			if( mymod.Config.LicenseCostAccessoryMultiplier != 1f ) {
+			if( LicensesMod.Config.LicenseCostAccessoryMultiplier != 1f ) {
 				if( defaultOfItem.accessory ) {
-					cost = (float)cost * mymod.Config.LicenseCostAccessoryMultiplier;
+					cost = (float)cost * LicensesMod.Config.LicenseCostAccessoryMultiplier;
 				}
 			}
 
-			return (int)Math.Max( cost, mymod.Config.LicenseCostBase );
+			return (int)Math.Max( cost, LicensesMod.Config.LicenseCostBase );
 		}
 
 
@@ -75,11 +74,9 @@ namespace Licenses.Items {
 		////////////////
 
 		public override void ModifyTooltips( List<TooltipLine> tooltips ) {
-			var mymod = LicensesMod.Instance;
-
 			for( int i=0; i<ItemRarityAttributeHelpers.HighestVanillaRarity; i++ ) {
-				float cost = (float)mymod.Config.LicenseCostBase;
-				cost += (float)i * mymod.Config.LicenseCostRarityMultiplier;
+				float cost = (float)LicensesMod.Config.LicenseCostBase;
+				cost += (float)i * LicensesMod.Config.LicenseCostRarityMultiplier;
 
 				string str = cost + " licenses needed for " + ItemRarityAttributeHelpers.RarityColorText[i] + " items";
 

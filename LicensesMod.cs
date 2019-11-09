@@ -1,6 +1,5 @@
 ﻿using HamstarHelpers.Classes.Errors;
 using HamstarHelpers.Services.EntityGroups;
-using HamstarHelpers.Services.Hooks.LoadHooks;
 using System;
 using Terraria.ModLoader;
 using HamstarHelpers.Helpers.TModLoader.Mods;
@@ -10,11 +9,7 @@ namespace Licenses {
     public partial class LicensesMod : Mod {
 		public static LicensesMod Instance { get; private set; }
 
-
-
-		////////////////
-
-		public LicensesConfig Config => ModContent.GetInstance<LicensesConfig>();
+		public static LicensesConfig Config => ModContent.GetInstance<LicensesConfig>();
 
 
 
@@ -29,7 +24,7 @@ namespace Licenses {
 		public override void Load() {
 			EntityGroups.Enable();
 
-			LoadHooks.AddWorldLoadEachHook( this.LoadGameModeOnWorldLoad );
+			this.LoadGameMode();
 		}
 
 		public override void Unload() {

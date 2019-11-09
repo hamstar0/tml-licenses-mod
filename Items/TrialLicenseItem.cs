@@ -33,25 +33,22 @@ namespace Licenses.Items {
 		////////////////
 
 		public override void SetStaticDefaults() {
-			var mymod = (LicensesMod)this.mod;
-			string oneTimeMsg = mymod.Config.TrialLicenseOncePerItem ?
+			string oneTimeMsg = LicensesMod.Config.TrialLicenseOncePerItem ?
 				+'\n' + "Items cannot be trialed more than once"
 				: "";
 
 			this.DisplayName.SetDefault( "Trail License" );
 			this.Tooltip.SetDefault( "Select an item with this to temporarily license it"
-				+'\n'+"Trial licenses only last "+(mymod.Config.TrialLicenseDurationInTicks/60)+" seconds"
+				+'\n'+"Trial licenses only last "+( LicensesMod.Config.TrialLicenseDurationInTicks/60)+" seconds"
 				+'\n'+"Only 1 item may be trialed at a time"
 				+oneTimeMsg );
 		}
 
 		public override void SetDefaults() {
-			var mymod = (LicensesMod)this.mod;
-
 			this.item.maxStack = 999;
 			this.item.width = 16;
 			this.item.height = 16;
-			this.item.value = mymod.Config.TrialLicenseCoinCost;
+			this.item.value = LicensesMod.Config.TrialLicenseCoinCost;
 			this.item.rare = 1;
 		}
 
@@ -59,11 +56,9 @@ namespace Licenses.Items {
 		////////////////
 
 		public override void ModifyTooltips( List<TooltipLine> tooltips ) {
-			var mymod = LicensesMod.Instance;
-
 			for( int i = 0; i < ItemRarityAttributeHelpers.HighestVanillaRarity; i++ ) {
-				float cost = (float)mymod.Config.LicenseCostBase;
-				cost += (float)i * mymod.Config.LicenseCostRarityMultiplier;
+				float cost = (float)LicensesMod.Config.LicenseCostBase;
+				cost += (float)i * LicensesMod.Config.LicenseCostRarityMultiplier;
 
 				string str = cost + " trial licenses needed for " + ItemRarityAttributeHelpers.RarityColorText[i] + " items";
 

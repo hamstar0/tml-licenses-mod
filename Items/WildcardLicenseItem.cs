@@ -97,7 +97,7 @@ namespace Licenses.Items {
 			PlayerMessages.AddPlayerLabel( player, msg, color, 2 * 60, true );
 			Main.NewText( msg, color );
 
-			if( mymod.Config.DebugModeInfo ) {
+			if( LicensesMod.Config.DebugModeInfo ) {
 				LogHelpers.Alert( randItemName + " unlocked" );
 			}
 

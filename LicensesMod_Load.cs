@@ -51,20 +51,26 @@ namespace Licenses {
 				this.LoadLicensePacks();
 			} );
 
-			CustomLoadHooks.TriggerHook( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );
-
-			LoadHooks.AddWorldUnloadEachHook( () => {
-				CustomLoadHooks.ClearHook( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );
-				LoadHooks.AddWorldLoadOnceHook( () => {
-					CustomLoadHooks.TriggerHook( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );	// Whee!
-				} );
-			} );
+			this.PostLoadGameMode();
 
 			if( LicensesMod.Config.DebugModeInfo ) {
 				LogHelpers.Alert( "Finished loading game mode" );
 			}
 		}
 
+
+		private void PostLoadGameMode() {
+			CustomLoadHooks.TriggerHook( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );
+
+			LoadHooks.AddWorldUnloadEachHook( () => {
+				CustomLoadHooks.ClearHook( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );
+				LoadHooks.AddWorldLoadOnceHook( () => {
+					CustomLoadHooks.TriggerHook( LicensesMod.GameModeLoadValidator, LicensesMod.MyValidatorKey );   // Whee!
+				} );
+			} );
+		}
+
+		////
 
 		private void LoadNihilismFilters() {
 			if( LicensesMod.Config.OverrideNihilismDefaultFilters ) {
